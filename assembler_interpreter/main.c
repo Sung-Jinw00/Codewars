@@ -82,8 +82,13 @@ void	free_label_storages(char **array)
 
 void	free_array(char ***array)
 {
+	if (!array || !*array)
+		return ;
 	for (int i = 0; *array && (*array)[i]; i++)
+	{
+		printf("tab that is freed : %s\n", (*array)[i]);
 		free((*array)[i]);
+	}
 	free(*array);
 	*array = NULL;
 }
@@ -92,7 +97,7 @@ int	skip_wspaces(char *str)
 {
 	int i = 0;
 
-	while (isspace(str[i]))
+	while (str && isspace(str[i]))
 		i++;
 	return (i);
 }
@@ -107,6 +112,8 @@ int	strclen(char *program, char cut)
 
 int	count_words(char *program, char cut, int limit)
 {
+	if (!program)
+		return (0);
 	int trigger = 0, count = 0;
 
 	for (int i = 0; i < limit && program[i]; i++)
@@ -124,10 +131,10 @@ int	count_words(char *program, char cut, int limit)
 
 char	**split(char *program, char cut, int limit)
 {
-	int len_word = 0, trigger = 0;
-
 	if (!program || !program[0])
 		return (free(program), NULL);
+	int len_word = 0, trigger = 0;
+
 	int count = count_words(program, cut, limit);
 	if (!count)
 		return (free(program), NULL);
@@ -185,19 +192,22 @@ void	get_labels_and_sub_routines(char* program)
 		if (len != 0 && program[i + len - 1] == ':')
 		{
 			pos_label = label(program + i);
-			i += len + 1;//i go to the next line
-			int j = i;//i go to the next line
-			/* while i didn't reach the end of the sub_routine by encountering a `\n` or a `;`*/
-			while (program[j]) 
+			if (pos_label != -1)
 			{
-				if (program[j] != '\n')
-					j += skip_wspaces(program + j);
-				if (program[j] == '\n' || program[j] == ';')
-					break ;
-				j += strclen(program + j, '\n') + 1;
+				i += len + 1;//i go to the next line
+				int j = i;//i go to the next line
+				/* while i didn't reach the end of the sub_routine by encountering a `\n` or a `;`*/
+				while (program[j]) 
+				{
+					if (program[j] != '\n')
+						j += skip_wspaces(program + j);
+					if (program[j] == '\n' || program[j] == ';')
+						break ;
+					j += strclen(program + j, '\n') + 1;
+				}
+				label_sub_routines[pos_label] = remove_wspaces(split(strdup(program + i), '\n', j - i));
+				i = j;
 			}
-			label_sub_routines[pos_label] = remove_wspaces(split(strdup(program + i), '\n', j - i));
-			i = j;
 		}
 		i += strclen(program + i, '\n'), i += skip_wspaces(program + i);
 	}
@@ -254,6 +264,8 @@ char	*get_msg(char *msg)
 // - `mov x, y`: copies the value `y` (integer or register) into register `x`.
 void	mov(const char *instruction)
 {
+	if (!instruction || !*instruction)
+		return ;
 	char arg1[16] = {0}, arg2[16] = {0};
 
 	sscanf(instruction, "mov %16[^,],%*[, ] %15s", arg1, arg2);
@@ -266,6 +278,8 @@ void	mov(const char *instruction)
 // - `inc x`: increments the value of register `x` by 1.
 void	inc(const char *instruction)
 {
+	if (!instruction || !*instruction)
+		return ;
 	char arg1[16] = {0};
 
 	sscanf(instruction, "inc %s", arg1);
@@ -275,6 +289,8 @@ void	inc(const char *instruction)
 // - `dec x`: decrements the value of register `x` by 1.
 void	dec(const char *instruction)
 {
+	if (!instruction || !*instruction)
+		return ;
 	char arg1[16] = {0};
 
 	sscanf(instruction, "dec %s", arg1);
@@ -284,6 +300,8 @@ void	dec(const char *instruction)
 // - `add x, y`: adds `y` (integer or register) to `x` (register[x] += y).
 void	add(const char *instruction)
 {
+	if (!instruction || !*instruction)
+		return ;
 	char arg1[16] = {0}, arg2[16] = {0};
 
 	sscanf(instruction, "add %16[^,],%*[, ] %15s", arg1, arg2);
@@ -296,6 +314,8 @@ void	add(const char *instruction)
 // - `sub x, y`: subtracts `y` from `x` (register[x] -= y).
 void	sub(const char *instruction)
 {
+	if (!instruction || !*instruction)
+		return ;
 	char arg1[16] = {0}, arg2[16] = {0};
 
 	sscanf(instruction, "sub %16[^,],%*[, ] %15s", arg1, arg2);
@@ -308,6 +328,8 @@ void	sub(const char *instruction)
 // - `mul x, y`: multiplies `x` by `y` (register[x] *= y).
 void	mul(const char *instruction)
 {
+	if (!instruction || !*instruction)
+		return ;
 	char arg1[16] = {0}, arg2[16] = {0};
 
 	sscanf(instruction, "mul %16[^,],%*[, ] %15s", arg1, arg2);
@@ -320,6 +342,8 @@ void	mul(const char *instruction)
 // - `div x, y`: divides `x` by `y` using integer division (register[x] /= y).
 void	div_func(const char *instruction)
 {
+	if (!instruction || !*instruction)
+		return ;
 	char arg1[16] = {0}, arg2[16] = {0};
 
 	sscanf(instruction, "div %16[^,],%*[, ] %15s", arg1, arg2);
@@ -332,8 +356,10 @@ void	div_func(const char *instruction)
 // - `label:`: defines a label in the program (identifier followed by ":"), used for jumps or calls.
 int	label(const char *program)
 {
+	if (!program || !*program)
+		return (-1);
 	int i = 0;
-	char arg1[50] = {0};
+	char arg1[500] = {0};
 
 	sscanf(program, "%49[^:]:", arg1);
 	while (i < 500 && label_storages[i]) // check for label storage slot
@@ -346,6 +372,11 @@ int	label(const char *program)
 // - `cmp x, y`: compares `x` and `y`, used for conditional jumps.
 void	cmp(const char *instruction)
 {
+	if (!instruction || !*instruction)
+	{
+		last_cmp = 0;
+		return ;
+	}
 	char arg1[16] = {0}, arg2[16] = {0};
 
 	sscanf(instruction, "cmp %16[^,],%*[, ] %15s", arg1, arg2);
@@ -359,21 +390,28 @@ char	*exec_label(char *label);
 // - `jmp lbl`: jumps to the label `lbl`.
 char	*jmp(const char *instruction)
 {
+	if (!instruction || !*instruction)
+		return (NULL);
 	char label[50] = {0};
 
 	sscanf(instruction, "jmp %s", label);
 	if (label_exist(label))
 		return (exec_label(label));
+	ret = true;
 	return (NULL);
 }
 
 // - `jne lbl`: jumps to `lbl` if `x` != `y` (from last `cmp`).
 char	*jne(const char *instruction)
 {
+	if (!instruction || !*instruction)
+		return (NULL);
 	char label[50] = {0};
 
 	sscanf(instruction, "jne %s", label);
-	if (last_cmp && label_exist(label))
+	if (!label_exist(label))
+		ret = true;
+	else if (last_cmp)
 		return (exec_label(label));
 	return (NULL);
 }
@@ -381,10 +419,14 @@ char	*jne(const char *instruction)
 // - `je lbl`: jumps to `lbl` if `x` == `y`.
 char	*je(const char *instruction)
 {
+	if (!instruction || !*instruction)
+		return (NULL);
 	char label[50] = {0};
 
 	sscanf(instruction, "je %s", label);
-	if (!last_cmp && label_exist(label))
+	if (!label_exist(label))
+		ret = true;
+	else if (!last_cmp)
 		return (exec_label(label));
 	return (NULL);
 }
@@ -392,10 +434,14 @@ char	*je(const char *instruction)
 // - `jge lbl`: jumps to `lbl` if `x` >= `y`.
 char	*jge(const char *instruction)
 {
+	if (!instruction || !*instruction)
+		return (NULL);
 	char label[50] = {0};
 
 	sscanf(instruction, "jge %s", label);
-	if (last_cmp >= 0 && label_exist(label))
+	if (!label_exist(label))
+		ret = true;
+	else if (last_cmp >= 0)
 		return (exec_label(label));
 	return (NULL);
 }
@@ -403,10 +449,14 @@ char	*jge(const char *instruction)
 // - `jg lbl`: jumps to `lbl` if `x` > `y`.
 char	*jg(const char *instruction)
 {
+	if (!instruction || !*instruction)
+		return (NULL);
 	char label[50] = {0};
 
 	sscanf(instruction, "jg %s", label);
-	if (last_cmp > 0 && label_exist(label))
+	if (!label_exist(label))
+		ret = true;
+	else if (last_cmp > 0)
 		return (exec_label(label));
 	return (NULL);
 }
@@ -414,10 +464,14 @@ char	*jg(const char *instruction)
 // - `jle lbl`: jumps to `lbl` if `x` <= `y`.
 char	*jle(const char *instruction)
 {
+	if (!instruction || !*instruction)
+		return (NULL);
 	char label[50] = {0};
 
 	sscanf(instruction, "jle %s", label);
-	if (last_cmp <= 0 && label_exist(label))
+	if (!label_exist(label))
+		ret = true;
+	else if (last_cmp <= 0)
 		return (exec_label(label));
 	return (NULL);
 }
@@ -425,10 +479,14 @@ char	*jle(const char *instruction)
 // - `jl lbl`: jumps to `lbl` if `x` < `y`.
 char	*jl(const char *instruction)
 {
+	if (!instruction || !*instruction)
+		return (NULL);
 	char label[50] = {0};
 
 	sscanf(instruction, "jl %s", label);
-	if (last_cmp < 0 && label_exist(label))
+	if (!label_exist(label))
+		ret = true;
+	else if (last_cmp < 0)
 		return (exec_label(label));
 	return (NULL);
 }
@@ -486,7 +544,7 @@ char	*exec_routine(char **arr_cmds, int routine_lvl)
 {
 	if (!arr_cmds || !*arr_cmds)
 		return (NULL);
-	char *answer = NULL;
+	char *answer = (char *)-1;
 	
 	for (int j = 0; arr_cmds[j]; j++)//while i didn't reach the end of the asm
 	{
@@ -500,13 +558,13 @@ char	*exec_routine(char **arr_cmds, int routine_lvl)
 			return (ret = true, answer);
 		else if (!strncmp(arr_cmds[j], "msg ", 4))//if i have msg, i go get the message
 		{
-			if (answer)
+			if (answer != (char *)-1 && answer)
 				free(answer);
 			answer = get_msg(arr_cmds[j] + 4);
 		}
 		else if (!strncmp(arr_cmds[j], "call ", 5))//if i have call, i go execute the sub_routine of the label
 		{
-			if (answer)
+			if (answer != (char *)-1 && answer)
 				free(answer);
 			answer = exec_label(arr_cmds[j] + 5);
 		}
@@ -518,7 +576,7 @@ char	*exec_routine(char **arr_cmds, int routine_lvl)
 			{
 				if (!strncmp(arr_cmds[j], asm_commands[i + 8], len_commands[i + 8]))//if i find an instruction
 				{
-					if (answer)
+					if (answer != (char *)-1 && answer)
 						free(answer);
 					answer = command_functions_return[i]((const char *)arr_cmds[j]);//i go execute it
 					break ;
@@ -548,6 +606,7 @@ char	*assembler_interpreter(const char* program)
 {
 	if (!program || !*program)
 		return (NULL);
+	printf("program = %s\n\n\n", program);
 	for (int i = 0; i < 500; i++)
 	{
 		label_storages[i] = NULL;
@@ -560,7 +619,10 @@ char	*assembler_interpreter(const char* program)
 	if (!arr_cmds)
 		return (NULL);
 	char *answer = exec_routine(arr_cmds, 0);
+	for (int i = 0; arr_cmds[i]; i++)
+		printf("arr_cmds[%d] = %s\n", i, arr_cmds[i]);
 	free_array(&arr_cmds);
+	printf("%p\n", arr_cmds);
 	free_label_storages(label_storages);
 	for (int i = 0; label_sub_routines[i]; i++)
 		free_array(&label_sub_routines[i]);
@@ -790,40 +852,23 @@ print:\n\
 		
 	for(size_t i = 0; instructions[i]; i++)
 	{
-		char *result = assembler_interpreter("\
-mov   a, 2            ; value1\n\
-mov   b, 10           ; value2\n\
-ov   c, a            ; temp1\n\
-mov   d, b            ; temp2\n\
-call  proc_func\n\
-cal  print\n\
-call  proc_gcd\n\
-call  print\n\
-end\n\
-\n\
-proc_func:\n\
-    cmp   d, 1\n\
-    je    contnue\n\
-    mul   c, a\n\
-    dec   d\n\
-    call  proc_func\n\
-\n\
-continue:\n\
-    ret\n\
-\n\
-print:\n\
-    msg a, '^', b, ' = ', c\n\
-    ret\n\
-");
-		free(result);
-		continue ;
-		if (answer[i] == (char *)-1)
+		char *result = assembler_interpreter("vwe\nmove c\nw rve \nrver");
+		if (result == (char *)-1)
 		{
 			printf(CYAN UNDERLINE BOLD"\n\nTest %ld :"RESET CYAN" result = "RESET"|%p|\n", i + 1, (void *)result);
 			if (result == (char *)-1)
 				printf(GREEN"\nNo diff, congrats !\n"RESET);
 			else
 				printf(RED UNDERLINE"\ndifference !"RESET RED"\nanswer = "RESET"|0xffffffffffffffff|");
+			continue ;
+		}
+		else
+		{
+			if (!result)
+				printf(CYAN UNDERLINE BOLD"\n\nTest %ld :"RESET CYAN" result = "RESET"|(null)|\n", i + 1);
+			else
+				printf(CYAN UNDERLINE BOLD"\n\nTest %ld :"RESET CYAN" result = "RESET"|%s|\n", i + 1, result);
+			free(result);
 			continue ;
 		}
 		if (!result)
