@@ -33,7 +33,6 @@ int get_month(const char *str)
 	return (0);
 }
 
-
 char *driver(const char *data[])
 {
 	int i = 0;
