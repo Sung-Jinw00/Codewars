@@ -3,32 +3,94 @@
 /*                                                        :::      ::::::::   */
 /*   skyscraper.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: locagnio <locagnio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 13:22:47 by marvin            #+#    #+#             */
-/*   Updated: 2025/05/01 15:29:04 by marvin           ###   ########.fr       */
+/*   Updated: 2025/05/01 19:05:55 by locagnio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
-#define  SIZE  7
+#define  TAB_SIZE  7
 
-int answer[SIZE][SIZE] = {
-	{ 0, 0, 0, 0, 0, 0, 0},
-	{ 0, 0, 0, 0, 0, 0, 0},
-	{ 0, 0, 0, 0, 0, 0, 0},
-	{ 0, 0, 0, 0, 0, 0, 0},
-	{ 0, 0, 0, 0, 0, 0, 0},
-	{ 0, 0, 0, 0, 0, 0, 0},
-	{ 0, 0, 0, 0, 0, 0, 0}};
+int one[TAB_SIZE][TAB_SIZE] = {
+	{1, 1, 1, 1, 1, 1, 1},
+	{1, 1, 1, 1, 1, 1, 1},
+	{1, 1, 1, 1, 1, 1, 1},
+	{1, 1, 1, 1, 1, 1, 1},
+	{1, 1, 1, 1, 1, 1, 1},
+	{1, 1, 1, 1, 1, 1, 1},
+	{1, 1, 1, 1, 1, 1, 1}};
+
+int answer[TAB_SIZE][TAB_SIZE] = {
+	{0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0}};
+
+void	filter_available_nbs(int ***available_nbs, int *clues)
+{
+	for (int i = 0; i < TAB_SIZE * 4; i++)//while i didn't check all clues
+	{
+		if (clues[i] != 0)//if a clue is different than zero
+		{
+			if (clues[i] == TAB_SIZE)//if clue = max nb
+			{
+				if (i < TAB_SIZE)//if i'm in the first row of clues
+				{
+					for (int nb = 0; nb < TAB_SIZE; nb++)//while i didn't actualise all numbers
+					{
+						for (int line = 0; line < TAB_SIZE; line++)//while i didn't actualise because of each line
+						{
+							for (int column = 0; column < TAB_SIZE; column++)//while i didn't actualise every box of the line
+							{
+								if (column != i)//if the index is different than the box where i want to keep my number
+									available_nbs[nb][line][column] = 0;//i set to zero
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+int	***init_availability(void)
+{
+	int ***available_nbs = malloc(sizeof(int **) * TAB_SIZE);
+
+	for (int i = 0; i < TAB_SIZE; i++)
+	{
+		available_nbs[i] = malloc(sizeof(int *) * TAB_SIZE);
+		for (int j = 0; j < TAB_SIZE; j++)
+		{
+			available_nbs[i][j] = malloc(sizeof(int) * TAB_SIZE);
+			for (int k = 0; k < TAB_SIZE; k++)
+				available_nbs[i][j][k] = i + 1;
+		}
+	}
+	return (available_nbs);
+}
 
 int **SolvePuzzle(int *clues)
 {
-	(void)clues;
+	if (!clues)
+		return (NULL);
+	int ***available_nbs = init_availability();
+
+	filter_available_nbs(available_nbs, clues);
 	return (NULL);
 }
+
+//─────────────────────────────
+// Main Utils
+//─────────────────────────────
 
 #include <stdio.h>
 
@@ -61,7 +123,7 @@ int **SolvePuzzle(int *clues)
 #  define CYAN				"\033[36m"
 # endif
 
-void	print_array(int **array, int clues[SIZE * 4])
+void	print_array(int **array, int clues[TAB_SIZE * 4])
 {
 	if (!array || !array[0])
 	{
@@ -70,7 +132,7 @@ void	print_array(int **array, int clues[SIZE * 4])
 	}
 	printf("\n   ");
 	printf("\n   ");
-	for(int j = 0; j < SIZE; j++)
+	for(int j = 0; j < TAB_SIZE; j++)
 	{
 		if (clues[j])
 			printf(" %d  ", clues[j]);
@@ -80,26 +142,26 @@ void	print_array(int **array, int clues[SIZE * 4])
 	}
 	printf("\n");
 	printf("  ─────────────────────────────\n");
-	for (int i = SIZE - 1; i >= 0; i--)
+	for (int i = TAB_SIZE - 1; i >= 0; i--)
 	{
-		if (clues[SIZE * 3 + i])
-			printf("%d ", clues[SIZE * 3 + i]);
+		if (clues[TAB_SIZE * 3 + i])
+			printf("%d ", clues[TAB_SIZE * 3 + i]);
 		else
 			printf("  ");
 		printf("|");
-		for(int j = 0; j < SIZE; j++)
-			printf(" %d |", array[SIZE - i - 1][j]);
-		if (clues[SIZE + (SIZE - i - 1)])
-		printf(" %d", clues[SIZE + (SIZE - i - 1)]);
+		for(int j = 0; j < TAB_SIZE; j++)
+			printf(" %d |", array[TAB_SIZE - i - 1][j]);
+		if (clues[TAB_SIZE + (TAB_SIZE - i - 1)])
+		printf(" %d", clues[TAB_SIZE + (TAB_SIZE - i - 1)]);
 		else
 			printf("  ");
 		printf("\n  ─────────────────────────────\n");
 	}
 	printf("   ");
-	for(int j = SIZE - 1; j >= 0; j--)
+	for(int j = TAB_SIZE - 1; j >= 0; j--)
 	{
-		if (clues[SIZE * 2 + j])
-			printf(" %d  ", clues[SIZE * 2 + j]);
+		if (clues[TAB_SIZE * 2 + j])
+			printf(" %d  ", clues[TAB_SIZE * 2 + j]);
 		else
 			printf("    ");
 		
@@ -108,18 +170,18 @@ void	print_array(int **array, int clues[SIZE * 4])
 }
 
 //wrapper
-void	print_static_array(int static_array[SIZE][SIZE], int clues[SIZE * 4])
+void	print_static_array(int static_array[TAB_SIZE][TAB_SIZE], int clues[TAB_SIZE * 4])
 {
-	int *rows[SIZE];
-	for (int i = 0; i < SIZE; i++)
+	int *rows[TAB_SIZE];
+	for (int i = 0; i < TAB_SIZE; i++)
 		rows[i] = static_array[i];
 	print_array(rows, clues);
 }
 
-void	print_indices(int clues[SIZE * 4])
+void	print_indices(int clues[TAB_SIZE * 4])
 {
 	printf("\n   ");
-	for(int j = 0; j < SIZE; j++)
+	for(int j = 0; j < TAB_SIZE; j++)
 	{
 		if (clues[j])
 			printf(" %d  ", clues[j]);
@@ -129,52 +191,39 @@ void	print_indices(int clues[SIZE * 4])
 	}
 	printf("\n");
 	printf("  ─────────────────────────────\n");
-	for (int i = SIZE - 1; i >= 0; i--)
+	for (int i = TAB_SIZE - 1; i >= 0; i--)
 	{
-		if (clues[SIZE * 3 + i])
-			printf("%d ", clues[SIZE * 3 + i]);
+		if (clues[TAB_SIZE * 3 + i])
+			printf("%d ", clues[TAB_SIZE * 3 + i]);
 		else
 			printf("  ");
 		printf("|");
-		for(int j = 0; j < SIZE; j++)
+		for(int j = 0; j < TAB_SIZE; j++)
 			printf("   |");
-		if (clues[SIZE + (SIZE - i - 1)])
-		printf(" %d", clues[SIZE + (SIZE - i - 1)]);
+		if (clues[TAB_SIZE + (TAB_SIZE - i - 1)])
+		printf(" %d", clues[TAB_SIZE + (TAB_SIZE - i - 1)]);
 		else
 			printf("  ");
 		printf("\n  ─────────────────────────────\n");
 	}
 	printf("   ");
-	for(int j = SIZE - 1; j >= 0; j--)
+	for(int j = TAB_SIZE - 1; j >= 0; j--)
 	{
-		if (clues[SIZE * 2 + j])
-			printf(" %d  ", clues[SIZE * 2 + j]);
+		if (clues[TAB_SIZE * 2 + j])
+			printf(" %d  ", clues[TAB_SIZE * 2 + j]);
 		else
 			printf("    ");
 		
 	}
 	printf("\n");
 }
-
-/* 
-
-correct shittu :
-static int clues[][SIZE * 4] = {
-	  { 7, 0, 0, 0, 2, 2, 3,
-		0, 0, 2, 0, 0, 0, 0,
-		4, 0, 5, 0, 0, 2, 0,
-		0, 0, 0, 0, 1, 0, 3 },
-	  { 0, 2, 3, 0, 2, 0, 0,
-		6, 0, 3, 3, 0, 4, 0,
-		0, 4, 2, 0, 0, 0, 5,
-		5, 2, 4, 5, 3, 4, 1 }
-	};
-
-*/
+//─────────────────────────────
+// Main
+//─────────────────────────────
 
 int main(void)
 {
-	static int clues[][SIZE * 4] = {
+	static int clues[][TAB_SIZE * 4] = {
 	  { 7, 0, 0, 0, 2, 2, 3,
 		0, 0, 3, 0, 0, 0, 0,
 		3, 0, 3, 0, 0, 5, 0,
@@ -185,7 +234,7 @@ int main(void)
 		5, 2, 2, 2, 2, 4, 1 }
 	};
 	
-	static int expected[][SIZE][SIZE] = {
+	static int expected[][TAB_SIZE][TAB_SIZE] = {
 		{{ 1, 5, 6, 7, 4, 3, 2 },
 		 { 2, 7, 4, 5, 3, 1, 6 },
 		 { 3, 4, 5, 6, 7, 2, 1 },
@@ -207,9 +256,9 @@ int main(void)
 	{
 		int **result = SolvePuzzle(clues[i]);
 		printf(CYAN UNDERLINE BOLD"Test %d :\n"RESET, i);
-		for (int j = 0; j < SIZE; j++)
+		for (int j = 0; j < TAB_SIZE; j++)
 		{
-			if (!result || memcmp(result, expected[i], SIZE * sizeof(int)))
+			if (!result || memcmp(result, expected[i], TAB_SIZE * sizeof(int)))
 			{
 				diff = 1;
 				printf(RED "diff !\n"CYAN UNDERLINE"result of :"RESET);
