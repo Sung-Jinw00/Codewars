@@ -40,6 +40,10 @@ This project includes various features, such as:
 ## 💡 Usage <a id="usage"></a>
 
 You need to compile the files yourself.
+```bash
+git clone git@github.com:Sung-Jinw00/Codewars.git Codewars
+cd Codewars
+```
 
 ---
 
