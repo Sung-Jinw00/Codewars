@@ -15,7 +15,7 @@ This is a Codewars repository where i share all the codes i made to pass exercic
 
 ## 👀 Overview <a id="overview"></a>
 
-All functions are blended together, the only exceptions are Kyu 1's because they are the toughest exercices to do in Codewars.
+All functions are blended together, the only exceptions are Kyu 1's because they are the toughest exercices in Codewars.
 
 ---
 
