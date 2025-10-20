@@ -1,6 +1,6 @@
 # 🚀 Codewars
 
-This is a Codewars repository where i share all the codes i made to pass exercices on Codewars website.
+This is a Codewars repository where i share all the codes i made to pass exercices on [Codewars website](https://www.codewars.com/).
 
 ---
 
