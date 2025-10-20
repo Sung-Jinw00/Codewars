@@ -1,4 +1,5 @@
 # 🚀 Codewars
+<img width="513" height="120" alt="image" src="https://github.com/user-attachments/assets/bc95b8ff-5040-4eda-89c0-26a475fb9479" />
 
 This is a Codewars repository where i share all the codes i made to pass exercices on [Codewars website](https://www.codewars.com/).
 
@@ -7,7 +8,6 @@ This is a Codewars repository where i share all the codes i made to pass exercic
 ## 📋 Table of Contents
 - [Overview](#overview)
 - [Features](#features)
-- [Illustrations](#illustrations)
 - [Usage](#usage)
 - [Authors](#authors)
 
@@ -28,12 +28,6 @@ This project includes various features, such as:
 - Recursivity
 - Swaps
 - Original exercices creations
-
----
-
-## 🖼️ Illustrations <a id="illustrations"></a>
-
-<img width="513" height="120" alt="image" src="https://github.com/user-attachments/assets/bc95b8ff-5040-4eda-89c0-26a475fb9479" />
 
 ---
 
