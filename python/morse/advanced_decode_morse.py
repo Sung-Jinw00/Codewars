@@ -29,8 +29,8 @@ def decode_morse(morseCode):
 
 def test_and_print(got, expected):
 	if got == expected:
-		print("Congratulation, got '%s' as expected".format(got))
+		print("Congratulation, got '{}' as expected".format(got))
 	else:
-		print("<pre style='display:inline'>Got '%s', expected '%s'</pre>" % (got, expected))
+		print("Got '{}', expected '{}'" % (got, expected))
 
 test_and_print(decode_morse(decode_bits('1100110011001100000011000000111111001100111111001111110000000000000011001111110011111100111111000000110011001111110000001111110011001100000011')), 'HEY JUDE')

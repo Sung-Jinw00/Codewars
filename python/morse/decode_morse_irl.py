@@ -48,11 +48,12 @@ def decodeBitsAdvanced(bits):
 		groups_0.pop(1)
 	if len(groups_0) > 3:
 		groups_0 = groups_0[:2] + [sum(groups_0[2:], [])]
-	return ''.join(('.' if len(s) in groups_1[0] else '-') if s[0]=='1'
+	return ''.join(('.' if len(s) in groups_1[0] else '-') if s[0] == '1'
 		else '' if len(s) in groups_0[0] else '   ' if len(groups_0) > 2 and len(s) in groups_0[-1] else ' '
 		for s in seqs)
 
 def decodeMorse(morseCode):
+	print(morseCode)
 	return ' '.join(''.join(MORSE_CODE.get(c, '') for c in word.split()) for word in morseCode.strip().split('   ')) if morseCode else ''
 
 def test_and_print(got, expected):
