@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 19:34:35 by marvin            #+#    #+#             */
-/*   Updated: 2025/05/04 02:06:14 by marvin           ###   ########.fr       */
+/*   Updated: 2025/05/07 20:02:03 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,13 @@ int **SolvePuzzle(int *clues);
 //─────────────────────────────
 
 void	put_guessable_nbs(int ***available_nbs, int **solution, int *clues);
-void	backtracking_solve(int ***available_nbs, int **solution, int *clues);
+int		**backtracking_solve(int ***available_nbs, int **solution, int *clues);
 
 //─────────────────────────────
 // Backtracking Utils
 //─────────────────────────────
 
-void	sol_dup(int sol_save[TAB_SIZE][TAB_SIZE], int **solution);
+void	sol_dup(int sol_save[TAB_SIZE][TAB_SIZE], int **solution, int dest);
 void	set_available_amount(int available_amount[TAB_SIZE][TAB_SIZE], int ***available_nbs);
 void	get_pos_least_amount(int start_line, int start_col, int pos[2], int available_amount[TAB_SIZE][TAB_SIZE]);
 

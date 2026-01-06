@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 13:22:47 by marvin            #+#    #+#             */
-/*   Updated: 2025/05/04 01:22:37 by marvin           ###   ########.fr       */
+/*   Updated: 2025/05/07 19:05:32 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int **SolvePuzzle(int *clues)
 	set_guessable_nbs(available_nbs, solution, clues);
 	/* print_all_nb_arrays(available_nbs, clues);
 	printf("\n\n"); */
+	solution = backtracking_solve(available_nbs, solution, clues);
 	print_all_available_each_box(available_nbs, clues, solution);
 	return (solution);
 }
