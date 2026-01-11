@@ -1,0 +1,40 @@
+1.getTokens: ✅
+- accepts no arguments and returns the tokens present in source in order as an array. ✅
+- should ignore all whitespace characters and comments (except within a token) ✅
+- should throw if it encounters one or more invalid tokens in the process :
+	- F, L, R, Fn, Ln, Rn, (, ), )n, pn, Pn, q ✅
+	- positive n ✅
+	- Whitespaces ('pn', 'Fn', ')n' do not contain any whitespace themselves). ✅
+	- single line comments (optional code) // ... (\n|EOF) ✅
+	- multiline comments /* ... */ (ne peuvent pas etre imbriquer) ✅
+	they cannot be within a token itself (e.g. F/* ... */37, F// ... \n37, F    37). ✅
+	- Zero postfixes (e.g. F0, L0, and P0) ✅
+	- No Leading zeroes (e.g. F03, P065) ✅
+Do not perform any form of analysis checking the order of the tokens or whether a particular pattern invoked actually exists, etc. ✅
+Such errors should be left to later stages. ✅
+
+2.convertToRaw:
+- accepts 1 argument tokens (an array of tokens from getTokens) ✅
+- returns an array of raw commands from processing the tokens. ✅
+- "Raw commands" contains F, L and R only ✅
+- pattern declarations and calls position doesn't matter. ✅
+- patterns (p<n>...q) can "see" pattern definitions in its own scope and in any subsequent parent scopes.
+	If more than one pattern with the same identifier is defined, it's still valid if provided that they all appear in different scopes.
+	The definition of the pattern in the innermost scope takes precedence
+	Pattern redefinition in the same scope is not allowed and should throw an error at some stage.
+- Empty (pattern definitions / bracketed repeat sequences) p<n>q, (), ()23 is accepted. ✅
+- bracketed sequences with no pattern definitions are accepted ✅
+- bracketed sequence executed 0 times should simply be ignored. ✅
+- should throw :
+	- Unmatched bracketing and/or pattern definition sequences ✅
+	- Nesting pattern definitions within bracketed sequences, e.g. (p0/* ... */q), invoked or not. ✅
+	- invoke a non-existent pattern ✅
+	- Attempting to invoke an infinitely recursive pattern of any form
+
+3.executeRaw: ✅
+- receives an array of raw commands (only F, L and/or R) returned from your convertToRaw ✅
+- returns a string representation of the path that the MyRobot walks on the floor, e.g. "*  \r\n*  \r\n***\r\n  *\r\n***\r\n*  \r\n***\r\n  *\r\n***". ✅
+
+4.execute ✅
+- accepts no arguments ✅
+- combines the three previous instance methods in one go and returns the string representation of the MyRobot's path. ✅
