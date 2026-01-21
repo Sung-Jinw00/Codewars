@@ -3,15 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   s_backtracking.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: marvin <locagnio@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 13:22:47 by marvin            #+#    #+#             */
-/*   Updated: 2025/05/07 20:19:54 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/19 16:55:28 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "skyscraper.h"
 
+/**
+ * @brief
+ * find all one possibilities numbers in the answer sheet and actualise available numbers
+ * 
+ * @param available_nbs	the array of possible numbers
+ * @param solution		the solution board
+ * @param clues			the array of clues
+ */
 void	put_guessable_nbs(int ***available_nbs, int **solution, int *clues)
 {
 	for (bool changes = true; changes != false;)
@@ -19,12 +27,13 @@ void	put_guessable_nbs(int ***available_nbs, int **solution, int *clues)
 		changes = set_one_possibility_clue(available_nbs, solution, clues);
 		if (!changes)
 			changes = set_one_possibility_rules(available_nbs, solution, clues);
-		if (changes)
+		else
 			reduce_possibilities(available_nbs, solution, clues);
 	}
+	print_all_available_each_box(available_nbs, clues, solution);
 }
 
-int	least_available_nb(int ***available_nbs, int available_amount[TAB_SIZE][TAB_SIZE], int pos[2])
+int	least_available_nb(int ***available_nbs, int available_amount[N][N], int pos[2])
 {
 	static int nb;
 	static int save_pos[2] = {-1};
@@ -37,22 +46,22 @@ int	least_available_nb(int ***available_nbs, int available_amount[TAB_SIZE][TAB_
 		save_pos[0] = pos[0];
 		nb = 0;
 	}
-	while (nb < TAB_SIZE)
+	while (nb < N)
 	{
 		if (available_nbs[nb][pos[0]][pos[1]])
 			return (available_nbs[nb][pos[0]][pos[1]]);
 		nb++;
 	}
-	if (nb == TAB_SIZE)
+	if (nb == N)
 		nb = 0;
 	return (-1);
 }
 
 bool	all_boxes_filled(int **solution)
 {
-	for (int line = 0; line < TAB_SIZE - 1; line++)
+	for (int line = 0; line < N - 1; line++)
 	{
-		for (int col = 0; col < TAB_SIZE - 1; col++)
+		for (int col = 0; col < N - 1; col++)
 		{
 			if (!solution[line][col])
 				return (false);
@@ -61,15 +70,15 @@ bool	all_boxes_filled(int **solution)
 	return (true);
 }
 
-bool	towers_visible(reading_way way, int line, int col, int **solution, int clue)
+bool	towers_visible(Direction way, int line, int col, int **solution, int clue)
 {
 	int towers_visibl = 2, prev_tower = solution[line][col];
 
-	if (prev_tower == TAB_SIZE)
+	if (prev_tower == N)
 		return (clue == 1);
 	if (way == TTB)
 	{
-		while (solution[++line][col] != TAB_SIZE)
+		while (solution[++line][col] != N)
 		{
 			if (prev_tower < solution[line][col])
 			{
@@ -80,7 +89,7 @@ bool	towers_visible(reading_way way, int line, int col, int **solution, int clue
 	}
 	else if (way == RTL)
 	{
-		while (solution[line][--col] != TAB_SIZE)
+		while (solution[line][--col] != N)
 		{
 			if (prev_tower < solution[line][col])
 			{
@@ -91,7 +100,7 @@ bool	towers_visible(reading_way way, int line, int col, int **solution, int clue
 	}
 	else if (way == BTT)
 	{
-		while (solution[--line][col] != TAB_SIZE)
+		while (solution[--line][col] != N)
 		{
 			if (prev_tower < solution[line][col])
 			{
@@ -102,7 +111,7 @@ bool	towers_visible(reading_way way, int line, int col, int **solution, int clue
 	}
 	else
 	{
-		while (solution[line][++col] != TAB_SIZE)
+		while (solution[line][++col] != N)
 		{
 			if (prev_tower < solution[line][col])
 			{
@@ -116,17 +125,17 @@ bool	towers_visible(reading_way way, int line, int col, int **solution, int clue
 
 bool	all_conditions_respected(int **solution, int *clues)
 {
-	for (int i = 0; i < TAB_SIZE * 4; i++)
+	for (int i = 0; i < N * 4; i++)
 	{
 		if (clues[i])
 		{
-			if (i < TAB_SIZE && !towers_visible(TTB, 0, i, solution, clues[i]))
+			if (i < N && !towers_visible(TTB, 0, i, solution, clues[i]))
 				return (false);
-			else if (i < TAB_SIZE * 2 && !towers_visible(RTL, i % TAB_SIZE, TAB_SIZE - 1, solution, clues[i]))
+			else if (i < N * 2 && !towers_visible(RTL, i % N, N - 1, solution, clues[i]))
 				return (false);
-			else if (i < TAB_SIZE * 3 && !towers_visible(BTT, TAB_SIZE - 1, i % TAB_SIZE, solution, clues[i]))
+			else if (i < N * 3 && !towers_visible(BTT, N - 1, i % N, solution, clues[i]))
 				return (false);
-			else if (!towers_visible(LTR, i % TAB_SIZE, 0, solution, clues[i]))
+			else if (!towers_visible(LTR, i % N, 0, solution, clues[i]))
 				return (false);
 		}
 	}
@@ -146,13 +155,12 @@ display *solution[6]@7
 
 bool	put_random_nb(int ***available_nbs, int **solution, int *clues)
 {
-	print_array(solution, 0, clues);
-	int available_amount[TAB_SIZE][TAB_SIZE] = {0}, pos[2] = {0};
+	int available_amount[N][N] = {0}, pos[2] = {0};
 	set_available_amount(available_amount, available_nbs);
 
 	while (least_available_nb(available_nbs, available_amount, pos) == -1)
 		get_pos_least_amount(pos[0], pos[1], pos, available_amount);
-	if (pos[0] >= TAB_SIZE && pos[1] >= TAB_SIZE)
+	if (pos[0] >= N && pos[1] >= N)
 		return (false);
 	solution[pos[0]][pos[1]] = least_available_nb(available_nbs, available_amount, pos);
 	put_guessable_nbs(available_nbs, solution, clues);
@@ -163,7 +171,7 @@ bool	put_random_nb(int ***available_nbs, int **solution, int *clues)
 
 int	**backtracking_solve(int ***available_nbs, int **solution, int *clues)
 {
-	int sol_save[TAB_SIZE][TAB_SIZE] = {0};
+	int sol_save[N][N] = {0};
 	sol_dup(sol_save, solution, 0);
 	if (put_random_nb(available_nbs, solution, clues))
 		return (solution);

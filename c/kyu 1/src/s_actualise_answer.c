@@ -1,77 +1,84 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   skyscraper copy 4.c                                :+:      :+:    :+:   */
+/*   s_actualise_answer.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: marvin <locagnio@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 13:22:47 by marvin            #+#    #+#             */
-/*   Updated: 2025/05/03 19:49:22 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/19 13:54:46 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "skyscraper.h"
 
-void	actualise_valid_pos(int nb, int line, int col, int ***available_nbs, int **solution)
+/**
+ * @brief
+ * Set the number to the current box and remove the number from possibilities in the corresponding columns and lines
+ * 
+ * @param nb			the number
+ * @param line			the current line
+ * @param col			the curent column
+ * @param available_nbs	the array of possible numbers
+ * @param solution		the solution board
+ */
+void	set_valid_pos(int nb, int line, int col, int ***available_nbs, int **solution)
 {
-	for (int col_inc = 0; col_inc < TAB_SIZE; col_inc++)//set every other box on the same line to zero
-	{
+	//put the number in the solution board
+	solution[line][col] = nb + 1;
+	//set every other box on the same column to zero
+	for (int col_inc = 0; col_inc < N; col_inc++)
 		if (col_inc != col)
 			available_nbs[nb][line][col_inc] = 0;
-	}
-	for (int line_inc = 0; line_inc < TAB_SIZE; line_inc++)//set every other boxs on the same col to zero
-	{
+	//set every other boxs on the same line to zero
+	for (int line_inc = 0; line_inc < N; line_inc++)
 		if (line_inc != line)
 			available_nbs[nb][line_inc][col] = 0;
-	}
-	for (int nb_inc = 0; nb_inc < TAB_SIZE; nb_inc++)//set every other numbers at this position invalid
-	{
+	//remove every other numbers in the possibilities at this position
+	for (int nb_inc = 0; nb_inc < N; nb_inc++)
 		if (nb_inc != nb)
 			available_nbs[nb_inc][line][col] = 0;
-	}
-	solution[line][col] = nb + 1;
+	//add one to the found numbers in the current line and column
 	nbs_found[0][line]++;
 	nbs_found[1][col]++;
 }
 
-/* actualise lines from up to bottom and set the solution */
-void	actualise_all_lines(int nb, int cur_col, int ***available_nbs, int **solution)
+/**
+ * @brief
+ * Set the solution from up to bottom on the current column
+ * 
+ * @param nb			the starting number
+ * @param cur_col		the column to modify
+ * @param available_nbs	the array of possible numbers
+ * @param solution		the solution board
+ * */
+void	actualise_all_column(int nb, int cur_col, int ***available_nbs, int **solution)
 {
-	if (nb == TAB_SIZE - 1)//if the max towers was on the bottom
+	//nb is increase if it starts from 0, else it's decreased
+	const int i = (nb == 0) ? 1 : -1;
+	for (int line = 0; line < N; line++)
 	{
-		for (int line = 0; line < TAB_SIZE; line++)
-		{
-			actualise_valid_pos(nb, line, cur_col, available_nbs, solution);
-			nb--;
-		}
-	}
-	else if (nb == 0)
-	{
-		for (int line = 0; line < TAB_SIZE; line++)
-		{
-			actualise_valid_pos(nb, line, cur_col, available_nbs, solution);
-			nb++;
-		}
+		set_valid_pos(nb, line, cur_col, available_nbs, solution);
+		nb += i;
 	}
 }
 
-/* actualise columns from left to right and set the solution */
-void	actualise_all_cols(int nb, int cur_line, int ***available_nbs, int **solution)
+/**
+ * @brief
+ * Set the solution from left to right on the current line
+ * 
+ * @param nb			the starting number
+ * @param cur_line		the line to modify
+ * @param available_nbs	the array of possible numbers
+ * @param solution		the solution board
+ * */
+void	actualise_all_line(int nb, int cur_line, int ***available_nbs, int **solution)
 {
-	if (nb == TAB_SIZE - 1)//if the max towers was on the right
+	//nb is increase if it starts from 0, else it's decreased
+	const int i = (nb == 0) ? 1 : -1;
+	for (int col = 0; col < N; col++)
 	{
-		for (int col = 0; col < TAB_SIZE; col++)
-		{
-			actualise_valid_pos(nb, cur_line, col, available_nbs, solution);
-			nb--;
-		}
-	}
-	else if (nb == 0)
-	{
-		for (int col = 0; col < TAB_SIZE; col++)
-		{
-			actualise_valid_pos(nb, cur_line, col, available_nbs, solution);
-			nb++;
-		}
+		set_valid_pos(nb, cur_line, col, available_nbs, solution);
+		nb += i;
 	}
 }

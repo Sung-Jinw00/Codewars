@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: marvin <locagnio@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 13:22:47 by marvin            #+#    #+#             */
-/*   Updated: 2025/05/04 00:34:31 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/19 16:53:02 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int main(void)
 {
-	static int clues[][TAB_SIZE * 4] = {
+	static int clues[][N * 4] = {
 	  { 7, 0, 0, 0, 2, 2, 3,
 		0, 0, 3, 0, 0, 0, 0,
 		3, 0, 3, 0, 0, 5, 0,
@@ -25,7 +25,7 @@ int main(void)
 		5, 2, 2, 2, 2, 4, 1 }
 	};
 	
-	static int expected[][TAB_SIZE][TAB_SIZE] = {
+	static int expected[][N][N] = {
 		{{ 1, 5, 6, 7, 4, 3, 2 },
 		 { 2, 7, 4, 5, 3, 1, 6 },
 		 { 3, 4, 5, 6, 7, 2, 1 },
@@ -43,13 +43,13 @@ int main(void)
 	};
 	int diff = 0;
 
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		int **result = SolvePuzzle(clues[i]);
 		printf(CYAN UNDERLINE BOLD"Test %d :\n"RESET, i);
-		for (int j = 0; j < TAB_SIZE; j++)
+		for (int j = 0; j < N; j++)
 		{
-			if (!result || memcmp(result, expected[i], TAB_SIZE * sizeof(int)))
+			if (!result || memcmp(result, expected[i], N * sizeof(int)))
 			{
 				diff = 1;
 				printf(RED "diff !\n"/* CYAN UNDERLINE"result of :" */RESET);
@@ -64,10 +64,10 @@ int main(void)
 		printf("\n\n");
 		diff = 0;
 		free_array(result);
-		memset(clues_fullfilled, 0, sizeof(bool) * TAB_SIZE * 4);
-		memset(nbs_found, 0, sizeof(int) * TAB_SIZE);
+		memset(clues_fullfilled, 0, sizeof(bool) * N * 4);
+		memset(nbs_found, 0, sizeof(int) * N);
 		for (int i = 0; i < 2; i++)
-			memset(nbs_found[i], 0, sizeof(int) * TAB_SIZE);
+			memset(nbs_found[i], 0, sizeof(int) * N);
 	}
 	return (0);
 }

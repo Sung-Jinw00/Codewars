@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: marvin <locagnio@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 13:22:47 by marvin            #+#    #+#             */
-/*   Updated: 2025/05/04 00:34:04 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/19 16:47:47 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-void	print_answer(int **array, int **wrapper_array, int clues[TAB_SIZE * 4])
+void	print_answer(int **array, int **wrapper_array, int clues[N * 4])
 {
 	if (!array || !array[0])
 	{
@@ -20,9 +20,9 @@ void	print_answer(int **array, int **wrapper_array, int clues[TAB_SIZE * 4])
 		return ;
 	}
 	//print wrapper_array
-	/* printf(CYAN UNDERLINE"should be :\n"RESET);
+	printf(CYAN UNDERLINE"should be :\n"RESET);
 	printf("\n   ");
-	for(int j = 0; j < TAB_SIZE; j++)
+	for(int j = 0; j < N; j++)
 	{
 		if (clues[j])
 			printf(" %d  ", clues[j]);
@@ -32,35 +32,35 @@ void	print_answer(int **array, int **wrapper_array, int clues[TAB_SIZE * 4])
 	}
 	printf("\n");
 	printf("  ─────────────────────────────\n");
-	for (int i = TAB_SIZE - 1; i >= 0; i--)
+	for (int i = N - 1; i >= 0; i--)
 	{
-		if (clues[TAB_SIZE * 3 + i])
-			printf("%d ", clues[TAB_SIZE * 3 + i]);
+		if (clues[N * 3 + i])
+			printf("%d ", clues[N * 3 + i]);
 		else
 			printf("  ");
 		printf("|");
-		for(int j = 0; j < TAB_SIZE; j++)
-			printf(" %d |", wrapper_array[rev_pos(i)][j]);
-		if (clues[TAB_SIZE + (rev_pos(i))])
-		printf(" %d", clues[TAB_SIZE + (rev_pos(i))]);
+		for(int j = 0; j < N; j++)
+			printf(" %d |", wrapper_array[rev_nb(i)][j]);
+		if (clues[N + (rev_nb(i))])
+		printf(" %d", clues[N + (rev_nb(i))]);
 		else
 			printf("  ");
 		printf("\n  ─────────────────────────────\n");
 	}
 	printf("   ");
-	for(int j = TAB_SIZE - 1; j >= 0; j--)
+	for(int j = N - 1; j >= 0; j--)
 	{
-		if (clues[TAB_SIZE * 2 + j])
-			printf(" %d  ", clues[TAB_SIZE * 2 + j]);
+		if (clues[N * 2 + j])
+			printf(" %d  ", clues[N * 2 + j]);
 		else
 			printf("    ");
 		
 	}
-	printf("\n"); */
+	printf("\n");
 	//print array
 	printf(CYAN UNDERLINE"\ngot :\n"RESET);
 	printf("\n   ");
-	for(int j = 0; j < TAB_SIZE; j++)
+	for(int j = 0; j < N; j++)
 	{
 		if (clues[j])
 			printf(" %d  ", clues[j]);
@@ -70,31 +70,31 @@ void	print_answer(int **array, int **wrapper_array, int clues[TAB_SIZE * 4])
 	}
 	printf("\n");
 	printf("  ─────────────────────────────\n");
-	for (int i = TAB_SIZE - 1; i >= 0; i--)
+	for (int i = N - 1; i >= 0; i--)
 	{
-		if (clues[TAB_SIZE * 3 + i])
-			printf("%d ", clues[TAB_SIZE * 3 + i]);
+		if (clues[N * 3 + i])
+			printf("%d ", clues[N * 3 + i]);
 		else
 			printf("  ");
 		printf("|");
-		for(int j = 0; j < TAB_SIZE; j++)
+		for(int j = 0; j < N; j++)
 		{
-			if (array[rev_pos(i)][j] == wrapper_array[rev_pos(i)][j])
-				printf(" "GREEN"%d"RESET" |", array[rev_pos(i)][j]);
+			if (array[rev_nb(i)][j] == wrapper_array[rev_nb(i)][j])
+				printf(" "GREEN"%d"RESET" |", array[rev_nb(i)][j]);
 			else
-				printf(" "RED"%d"RESET" |", array[rev_pos(i)][j]);
+				printf(" "RED"%d"RESET" |", array[rev_nb(i)][j]);
 		}
-		if (clues[TAB_SIZE + (rev_pos(i))])
-		printf(" %d", clues[TAB_SIZE + (rev_pos(i))]);
+		if (clues[N + (rev_nb(i))])
+		printf(" %d", clues[N + (rev_nb(i))]);
 		else
 			printf("  ");
 		printf("\n  ─────────────────────────────\n");
 	}
 	printf("   ");
-	for(int j = TAB_SIZE - 1; j >= 0; j--)
+	for(int j = N - 1; j >= 0; j--)
 	{
-		if (clues[TAB_SIZE * 2 + j])
-			printf(" %d  ", clues[TAB_SIZE * 2 + j]);
+		if (clues[N * 2 + j])
+			printf(" %d  ", clues[N * 2 + j]);
 		else
 			printf("    ");
 		
@@ -103,18 +103,18 @@ void	print_answer(int **array, int **wrapper_array, int clues[TAB_SIZE * 4])
 }
 
 //wrapper
-int	**wrapped_array(int static_array[TAB_SIZE][TAB_SIZE])
+int	**wrapped_array(int static_array[N][N])
 {
-	static int *rows[TAB_SIZE];
-	for (int i = 0; i < TAB_SIZE; i++)
+	static int *rows[N];
+	for (int i = 0; i < N; i++)
 		rows[i] = static_array[i];
 	return (rows);
 }
 
-void	print_indices(int clues[TAB_SIZE * 4])
+void	print_indices(int clues[N * 4])
 {
 	printf("\n   ");
-	for(int j = 0; j < TAB_SIZE; j++)
+	for(int j = 0; j < N; j++)
 	{
 		if (clues[j])
 			printf(" %d  ", clues[j]);
@@ -124,26 +124,26 @@ void	print_indices(int clues[TAB_SIZE * 4])
 	}
 	printf("\n");
 	printf("  ─────────────────────────────\n");
-	for (int i = TAB_SIZE - 1; i >= 0; i--)
+	for (int i = N - 1; i >= 0; i--)
 	{
-		if (clues[TAB_SIZE * 3 + i])
-			printf("%d ", clues[TAB_SIZE * 3 + i]);
+		if (clues[N * 3 + i])
+			printf("%d ", clues[N * 3 + i]);
 		else
 			printf("  ");
 		printf("|");
-		for(int j = 0; j < TAB_SIZE; j++)
+		for(int j = 0; j < N; j++)
 			printf("   |");
-		if (clues[TAB_SIZE + (rev_pos(i))])
-		printf(" %d", clues[TAB_SIZE + (rev_pos(i))]);
+		if (clues[N + (rev_nb(i))])
+		printf(" %d", clues[N + (rev_nb(i))]);
 		else
 			printf("  ");
 		printf("\n  ─────────────────────────────\n");
 	}
 	printf("   ");
-	for(int j = TAB_SIZE - 1; j >= 0; j--)
+	for(int j = N - 1; j >= 0; j--)
 	{
-		if (clues[TAB_SIZE * 2 + j])
-			printf(" %d  ", clues[TAB_SIZE * 2 + j]);
+		if (clues[N * 2 + j])
+			printf(" %d  ", clues[N * 2 + j]);
 		else
 			printf("    ");
 		
@@ -153,7 +153,7 @@ void	print_indices(int clues[TAB_SIZE * 4])
 
 void	free_array(int **result)
 {
-	for (int i = 0; i < TAB_SIZE; i++)
+	for (int i = 0; i < N; i++)
 		free(result[i]);
 	free(result);
 }

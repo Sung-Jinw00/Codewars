@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   s_possibility_manage.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: marvin <locagnio@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 13:22:47 by marvin            #+#    #+#             */
-/*   Updated: 2025/05/04 00:32:27 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/19 15:56:34 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 // Manage possibilities
 //─────────────────────────────
 
-int	highest_low_nb(reading_way way, int ref, int line, int col, int **solution, int ***available_nbs)
+int	highest_low_nb(Direction way, int ref, int line, int col, int **solution, int ***available_nbs)
 {
 	int high_low_nb = ref, nb_tmp;
 
@@ -24,7 +24,7 @@ int	highest_low_nb(reading_way way, int ref, int line, int col, int **solution, 
 	{
 		for (int inc_col = 1; !solution[line][inc_col]; inc_col++)
 		{
-			for (int nb = 0; nb < TAB_SIZE; nb++)
+			for (int nb = 0; nb < N; nb++)
 			{
 				if ((nb_tmp = available_nbs[nb][line][inc_col]))
 				{
@@ -37,9 +37,9 @@ int	highest_low_nb(reading_way way, int ref, int line, int col, int **solution, 
 	}
 	else if (way == RTL)
 	{
-		for (int inc_col = TAB_SIZE - 2; !solution[line][inc_col]; inc_col--)
+		for (int inc_col = N - 2; !solution[line][inc_col]; inc_col--)
 		{
-			for (int nb = 0; nb < TAB_SIZE; nb++)
+			for (int nb = 0; nb < N; nb++)
 			{
 				if ((nb_tmp = available_nbs[nb][line][inc_col]))
 				{
@@ -54,7 +54,7 @@ int	highest_low_nb(reading_way way, int ref, int line, int col, int **solution, 
 	{
 		for (int inc_line = 1; !solution[inc_line][col]; inc_line++)
 		{
-			for (int nb = 0; nb < TAB_SIZE; nb++)
+			for (int nb = 0; nb < N; nb++)
 			{
 				if ((nb_tmp = available_nbs[nb][inc_line][col]))
 				{
@@ -67,9 +67,9 @@ int	highest_low_nb(reading_way way, int ref, int line, int col, int **solution, 
 	}
 	else
 	{
-		for (int inc_line = TAB_SIZE - 2; !solution[inc_line][col]; inc_line--)
+		for (int inc_line = N - 2; !solution[inc_line][col]; inc_line--)
 		{
-			for (int nb = 0; nb < TAB_SIZE; nb++)
+			for (int nb = 0; nb < N; nb++)
 			{
 				if ((nb_tmp = available_nbs[nb][inc_line][col]))
 				{
@@ -83,21 +83,21 @@ int	highest_low_nb(reading_way way, int ref, int line, int col, int **solution, 
 	return (ref == high_low_nb) ? 0 : high_low_nb;
 }
 
-void	remove_possibilities_onlfc(reading_way way, int line, int col, int **solution, int ***available_nbs)
+void	remove_possibilities_onlfc(Direction way, int line, int col, int **solution, int ***available_nbs)
 {
 	int high_low_nb, ref;
 
 	if (way == RTL)
 		col = 0;
 	else if (way == LTR)
-		col = TAB_SIZE - 1;
+		col = N - 1;
 	else if (way == TTB)
 		line = 0;
 	else
-		line = TAB_SIZE - 1;
+		line = N - 1;
 	if (solution[line][col])
 		return ;
-	for (int nb = NB(1); nb < TAB_SIZE; nb++)
+	for (int nb = NB(1); nb < N; nb++)
 		if ((ref = available_nbs[nb][line][col]))
 			break ;
 	high_low_nb = highest_low_nb(way, ref, line, col, solution, available_nbs);
@@ -110,14 +110,14 @@ void	remove_possibilities_onlfc(reading_way way, int line, int col, int **soluti
 	}
 }
 
-bool	one_nb_left_for_clue(reading_way way, int line, int col, int *clues, int **solution)
+bool	one_nb_left_for_clue(Direction way, int line, int col, int *clues, int **solution)
 {
 	int clue, last_nb = 0, towers_seen = 1;
 
 	if (way == LTR)
 	{
 		clue = clues[left_cond_nb(line)];
-		for (int inc_col = 0; solution[line][inc_col] != TAB_SIZE; inc_col++)
+		for (int inc_col = 0; solution[line][inc_col] != N; inc_col++)
 		{
 			if (last_nb < solution[line][inc_col])
 			{
@@ -129,7 +129,7 @@ bool	one_nb_left_for_clue(reading_way way, int line, int col, int *clues, int **
 	else if (way == RTL)
 	{
 		clue = clues[right_cond_nb(line)];
-		for (int inc_col = TAB_SIZE; solution[line][inc_col] != TAB_SIZE; inc_col--)
+		for (int inc_col = N; solution[line][inc_col] != N; inc_col--)
 		{
 			if (last_nb < solution[line][inc_col])
 			{
@@ -141,7 +141,7 @@ bool	one_nb_left_for_clue(reading_way way, int line, int col, int *clues, int **
 	else if (way == TTB)
 	{
 		clue = clues[col];
-		for (int inc_line = 0; solution[inc_line][col] != TAB_SIZE; inc_line++)
+		for (int inc_line = 0; solution[inc_line][col] != N; inc_line++)
 		{
 			if (last_nb < solution[inc_line][col])
 			{
@@ -153,7 +153,7 @@ bool	one_nb_left_for_clue(reading_way way, int line, int col, int *clues, int **
 	else
 	{
 		clue = clues[bottom_cond_nb(col)];
-		for (int inc_line = TAB_SIZE - 1; solution[inc_line][col] != TAB_SIZE; inc_line--)
+		for (int inc_line = N - 1; solution[inc_line][col] != N; inc_line--)
 		{
 			if (last_nb < solution[inc_line][col])
 			{
@@ -165,20 +165,20 @@ bool	one_nb_left_for_clue(reading_way way, int line, int col, int *clues, int **
 	return (towers_seen == clue - 1);
 }
 
-void	remv_six_or_put_fst_nb(reading_way way, int pos_7, int line, int col, int ***available_nbs, int **solution)
+void	remv_six_or_put_fst_nb(Direction way, int pos_7, int line, int col, int ***available_nbs, int **solution)
 {
 	if (way == LTR)
 	{
-		if (pos_7 > 1 && !solution[line][pos_7 - 1] && available_nbs[NB(TAB_SIZE - 1)][line][pos_7 - 1])
-			available_nbs[NB(TAB_SIZE - 1)][line][pos_7 - 1] = 0;
+		if (pos_7 > 1 && !solution[line][pos_7 - 1] && available_nbs[NB(N - 1)][line][pos_7 - 1])
+			available_nbs[NB(N - 1)][line][pos_7 - 1] = 0;
 		if (!solution[line][0])
 		{
 			if (last_boxs_are_filled(way, solution, line, col))
 			{
-				int nb = TAB_SIZE - 2;
+				int nb = N - 2;
 				while (nb >= 0 && !available_nbs[nb][line][0])
 					nb--;
-				actualise_valid_pos(nb, line, 0, available_nbs, solution);
+				set_valid_pos(nb, line, 0, available_nbs, solution);
 			}
 			else if (last_boxs_arent_filled(way, solution, line, col))
 			{
@@ -192,39 +192,39 @@ void	remv_six_or_put_fst_nb(reading_way way, int pos_7, int line, int col, int *
 	}
 	else if (way == RTL)
 	{
-		if (pos_7 < TAB_SIZE - 2 && !solution[line][pos_7 + 1] && available_nbs[NB(TAB_SIZE - 1)][line][pos_7 + 1])
-			available_nbs[NB(TAB_SIZE - 1)][line][pos_7 + 1] = 0;
-		if (!solution[line][TAB_SIZE - 1])
+		if (pos_7 < N - 2 && !solution[line][pos_7 + 1] && available_nbs[NB(N - 1)][line][pos_7 + 1])
+			available_nbs[NB(N - 1)][line][pos_7 + 1] = 0;
+		if (!solution[line][N - 1])
 		{
 			if (last_boxs_are_filled(way, solution, line, col))
 			{
-				int nb = TAB_SIZE - 2;
-				while (nb >= 0 && !available_nbs[nb][line][TAB_SIZE - 1])
+				int nb = N - 2;
+				while (nb >= 0 && !available_nbs[nb][line][N - 1])
 					nb--;
-				actualise_valid_pos(nb, line, TAB_SIZE - 1, available_nbs, solution);
+				set_valid_pos(nb, line, N - 1, available_nbs, solution);
 			}
 			else if (last_boxs_arent_filled(way, solution, line, col))
 			{
 				int low_limit = -1;
-				for (int inc_line = pos_7 + 1; inc_line <= TAB_SIZE - 1; inc_line++)
+				for (int inc_line = pos_7 + 1; inc_line <= N - 1; inc_line++)
 					low_limit++;
 				while (--low_limit >= 0)
-					available_nbs[low_limit][line][TAB_SIZE - 1] = 0;
+					available_nbs[low_limit][line][N - 1] = 0;
 			}
 		}
 	}
 	else if (way == TTB)
 	{
-		if (pos_7 > 1 && !solution[pos_7 - 1][col] && available_nbs[NB(TAB_SIZE - 1)][pos_7 - 1][col])
-			available_nbs[NB(TAB_SIZE - 1)][pos_7 - 1][col] = 0;
+		if (pos_7 > 1 && !solution[pos_7 - 1][col] && available_nbs[NB(N - 1)][pos_7 - 1][col])
+			available_nbs[NB(N - 1)][pos_7 - 1][col] = 0;
 		if (!solution[0][col])
 		{
 			if (last_boxs_are_filled(way, solution, line, col))
 			{
-				int nb = TAB_SIZE - 2;
+				int nb = N - 2;
 				while (nb >= 0 && !available_nbs[nb][0][col])
 					nb--;
-				actualise_valid_pos(nb, 0, col, available_nbs, solution);
+				set_valid_pos(nb, 0, col, available_nbs, solution);
 			}
 			else if (last_boxs_arent_filled(way, solution, line, col))
 			{
@@ -238,36 +238,44 @@ void	remv_six_or_put_fst_nb(reading_way way, int pos_7, int line, int col, int *
 	}
 	else
 	{
-		if (pos_7 < TAB_SIZE - 2 && !solution[pos_7 + 1][col] && available_nbs[NB(TAB_SIZE - 1)][pos_7 + 1][col])
-			available_nbs[NB(TAB_SIZE - 1)][pos_7 + 1][col] = 0;
-		if (!solution[TAB_SIZE - 1][col])
+		if (pos_7 < N - 2 && !solution[pos_7 + 1][col] && available_nbs[NB(N - 1)][pos_7 + 1][col])
+			available_nbs[NB(N - 1)][pos_7 + 1][col] = 0;
+		if (!solution[N - 1][col])
 		{
 			if (last_boxs_are_filled(way, solution, line, col))
 			{
-				int nb = TAB_SIZE - 2;
-				while (nb >= 0 && !available_nbs[nb][TAB_SIZE - 1][col])
+				int nb = N - 2;
+				while (nb >= 0 && !available_nbs[nb][N - 1][col])
 					nb--;
-				actualise_valid_pos(nb, TAB_SIZE - 1, col, available_nbs, solution);
+				set_valid_pos(nb, N - 1, col, available_nbs, solution);
 			}
 			else if (last_boxs_arent_filled(way, solution, line, col))
 			{
 				int low_limit = -1;
-				for (int inc_line = pos_7 + 1; inc_line <= TAB_SIZE - 1; inc_line++)
+				for (int inc_line = pos_7 + 1; inc_line <= N - 1; inc_line++)
 					low_limit++;
 				while (--low_limit >= 0)
-					available_nbs[low_limit][TAB_SIZE - 1][col] = 0;
+					available_nbs[low_limit][N - 1][col] = 0;
 			}
 		}
 	}
 }
 
+/**
+ * @brief
+ * Advanced possibility reduction
+ * 
+ * @param available_nbs	the array of possible numbers
+ * @param solution		the solution board
+ * @param clues			the array of clues
+ */
 void	reduce_possibilities(int ***available_nbs, int **solution, int *clues)
 {
 	int line, col, pos_line, pos_col;
 
-	for (line = 0, col = 0; line < TAB_SIZE; line++, col++)
+	for (line = 0, col = 0; line < N; line++, col++)
 	{
-		if (nbs_found[0][line] != TAB_SIZE && (pos_col = is_nb_on_line(TAB_SIZE, line, solution)))
+		if (nbs_found[0][line] != N && (pos_col = is_nb_on_line(N, line, solution)) != -1)
 		{
 			if (!clues_fullfilled[left_cond_nb(line)] && one_nb_left_for_clue(LTR, line, col, clues, solution))
 				remove_possibilities_onlfc(LTR, line, col, solution, available_nbs);
@@ -278,7 +286,7 @@ void	reduce_possibilities(int ***available_nbs, int **solution, int *clues)
 			if (clues[right_cond_nb(line)] == 2)
 				remv_six_or_put_fst_nb(RTL, pos_col, line, col, available_nbs, solution);
 		}
-		if (nbs_found[1][col] != TAB_SIZE && (pos_line = is_nb_on_col(TAB_SIZE, col, solution)))
+		if (nbs_found[1][col] != N && (pos_line = is_nb_on_col(N, col, solution)) != -1)
 		{
 			if (!clues_fullfilled[col] && one_nb_left_for_clue(TTB, line, col, clues, solution))
 				remove_possibilities_onlfc(TTB, line, col, solution, available_nbs);

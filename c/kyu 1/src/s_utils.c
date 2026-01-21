@@ -3,85 +3,124 @@
 /*                                                        :::      ::::::::   */
 /*   s_utils.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: marvin <locagnio@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 13:22:47 by marvin            #+#    #+#             */
-/*   Updated: 2025/05/04 01:32:03 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/19 17:27:27 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "skyscraper.h"
 
-int	rev_pos(int pos)
+/**
+ * @return the reverse position on a column or line
+ */
+int	rev_nb(int nb)
 {
-	return (TAB_SIZE - pos - 1);
+	return (N - nb - 1);
 }
 
-int	left_cond_nb(int line)
-{
-	return (TAB_SIZE * 3 + rev_pos(line));
-}
+//the 3 functions below return the matching position in the clue array
 
+/**
+ * @return the position on the right side of a condition
+ */
 int	right_cond_nb(int line)
 {
-	return (TAB_SIZE + line);
+	return (N + line);
 }
 
+/**
+ * @return the position on the bottom side of a condition
+ */
 int	bottom_cond_nb(int col)
 {
-	return (TAB_SIZE * 2 + rev_pos(col));
+	return (N * 2 + rev_nb(col));
 }
 
+/**
+ * @return the position on the left side of a condition
+ */
+int	left_cond_nb(int line)
+{
+	return (N * 3 + rev_nb(line));
+}
+
+/**
+ * @return The column in line if nb has been found, else return -1
+ */
 int	is_nb_on_line(int nb, int line, int **solution)
 {
-	for (int col = 0; col < TAB_SIZE; col++)
+	for (int col = 0; col < N; col++)
 		if (solution[line][col] == nb)
 			return (col);
-	return (0);
+	return (-1);
 }
 
 int	is_nb_on_col(int nb, int col, int **solution)
 {
-	for (int line = 0; line < TAB_SIZE; line++)
+	for (int line = 0; line < N; line++)
 		if (solution[line][col] == nb)
 			return (line);
-	return (0);
+	return (-1);
 }
 
-bool	lacking_towers(reading_way way, int line, int col, int **solution)
+/**
+ * @brief
+ * Check if between the start of a side and N, there's lacking towers
+ * 
+ * @param way		The reading way, of type @ref Direction
+ * @param solution	The array of solution
+ * @param line		The line in the `solution`
+ * @param col		The column in the `solution`
+ * 
+ * @return `true` if there's one missing nb, else return `false`
+ */
+bool	lacking_towers(Direction way, int line, int col, int **solution)
 {
 	if (way == LTR)
 	{
-		for (int inc_col = 0; inc_col < TAB_SIZE && solution[line][inc_col] != TAB_SIZE; inc_col++)
-			if (!solution[line][inc_col])
+		for (col = 0; col < N && solution[line][col] != N; col++)
+			if (!solution[line][col])
 				return (true);
 	}
 	else if (way == RTL)
 	{
-		for (int inc_col = TAB_SIZE - 1; inc_col >= 0 && solution[line][inc_col] != TAB_SIZE; inc_col--)
-			if (!solution[line][inc_col])
+		for (col = N - 1; col >= 0 && solution[line][col] != N; col--)
+			if (!solution[line][col])
 				return (true);
 	}
 	else if (way == TTB)
 	{
-	for (int inc_line = 0; line < TAB_SIZE && solution[inc_line][col] != TAB_SIZE; inc_line++)
-		if (!solution[inc_line][col])
-			return (true);
+		for (line = 0; line < N && solution[line][col] != N; line++)
+			if (!solution[line][col])
+				return (true);
 	}
 	else
 	{
-		for (int inc_line = TAB_SIZE - 1; inc_line >= 0 && solution[inc_line][col] != TAB_SIZE; inc_line--)
-			if (!solution[inc_line][col])
+		for (line = N - 1; line >= 0 && solution[line][col] != N; line--)
+			if (!solution[line][col])
 				return (true);
 	}
 	return (false);
 }
 
-bool	last_boxs_are_filled(reading_way way, int **solution, int line, int col)
+/**
+ * @brief
+ * Check if there's lacking towers between where line or col is and N
+ * 
+ * @param way		The reading way, of type @ref Direction
+ * @param solution	The array of solution
+ * @param line		The line in the `solution`
+ * @param col		The column in the `solution`
+ * 
+ * @return `true` if there's one missing nb, else return `false`
+ */
+bool	last_boxs_are_filled(Direction way, int **solution, int line, int col)
 {
 	if (way == LTR)
 	{
-		while (col < TAB_SIZE)
+		while (col < N)
 			if (!solution[line][col++])
 				return (false);
 	}
@@ -99,14 +138,25 @@ bool	last_boxs_are_filled(reading_way way, int **solution, int line, int col)
 	}
 	else
 	{
-		while (line < TAB_SIZE)
+		while (line < N)
 			if (!solution[line++][col])
 				return (false);
 	}
 	return (true);
 }
 
-bool	last_boxs_arent_filled(reading_way way, int **solution, int line, int col)
+/**
+ * @brief
+ * Check if there's lacking towers between where line or col is and N
+ * 
+ * @param way		The reading way, of type @ref Direction
+ * @param solution	The array of solution
+ * @param line		The line in the `solution`
+ * @param col		The column in the `solution`
+ * 
+ * @return `true` if there's one missing nb, else return `false`
+ */
+bool	last_boxs_arent_filled(Direction way, int **solution, int line, int col)
 {
 	if (way == LTR)
 	{
@@ -116,13 +166,13 @@ bool	last_boxs_arent_filled(reading_way way, int **solution, int line, int col)
 	}
 	else if (way == RTL)
 	{
-		while (++col < TAB_SIZE)
+		while (++col < N)
 			if (solution[line][col])
 				return (false);
 	}
 	else if (way == BTT)
 	{
-		while (++line < TAB_SIZE)
+		while (++line < N)
 			if (solution[line][col])
 				return (false);
 	}
@@ -135,26 +185,62 @@ bool	last_boxs_arent_filled(reading_way way, int **solution, int line, int col)
 	return (true);
 }
 
+/**
+ * @brief
+ * Find the tiniest available number and return it
+ * 
+ * @param available_nbs	The array of available numbers
+ * @param start_nb		The number that start the reasearch
+ * @param line			The line in `available_nbs`
+ * @param col			The column in `available_nbs`
+ * 
+ * @return the number if he exist, else 0
+ */
 int	tiniest_nb_in_box(int ***available_nbs, int start_nb, int line, int col)
 {
-	for (int nb = start_nb; nb < TAB_SIZE; nb++)
+	for (int nb = start_nb; nb < N; nb++)
 		if (available_nbs[nb][line][col])
-			return (available_nbs[nb][line][col]);
+			return (nb + 1);//cf init vailability below
 	return (0);
 }
-
+/**
+ * @brief
+ * Intialise and memory allocate an array of arrays of arrays of ints.
+ * 
+ * For example, if N = 4 :
+ */
+/**
+ *.....[0]..................[1]..................[2]..................[3]
+ */
+/**
+ * 	1, 1, 1, 1......2, 2, 2, 2......3, 3, 3, 3......4, 4, 4, 4
+ */
+/**
+ * 	1, 1, 1, 1......2, 2, 2, 2......3, 3, 3, 3......4, 4, 4, 4
+ */
+/**
+ * 	1, 1, 1, 1......2, 2, 2, 2......3, 3, 3, 3......4, 4, 4, 4
+ */
+/**
+ * 	1, 1, 1, 1......2, 2, 2, 2......3, 3, 3, 3......4, 4, 4, 4
+ * 
+ * @return
+ * The array of arrays of arrays of ints.
+ */
 int	***init_availability(void)
 {
-	int ***available_nbs = malloc(sizeof(int **) * TAB_SIZE);
-
-	for (int i = 0; i < TAB_SIZE; i++)
+	int ***available_nbs = malloc(sizeof(int **) * N);
+	//first int in the numbers placable
+	for (int nb = 0; nb < N; nb++)
 	{
-		available_nbs[i] = malloc(sizeof(int *) * TAB_SIZE);
-		for (int j = 0; j < TAB_SIZE; j++)
+		available_nbs[nb] = malloc(sizeof(int *) * N);
+		//second int is lines
+		for (int line = 0; line < N; line++)
 		{
-			available_nbs[i][j] = malloc(sizeof(int) * TAB_SIZE);
-			for (int k = 0; k < TAB_SIZE; k++)
-				available_nbs[i][j][k] = i + 1;
+			available_nbs[nb][line] = malloc(sizeof(int) * N);
+			//third line is columns
+			for (int column = 0; column < N; column++)
+				available_nbs[nb][line][column] = nb + 1;//nb starts at zero
 		}
 	}
 	return (available_nbs);

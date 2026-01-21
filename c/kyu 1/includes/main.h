@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: marvin <locagnio@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 19:34:35 by marvin            #+#    #+#             */
-/*   Updated: 2025/05/03 20:13:37 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/19 11:50:11 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ int		main(void);
 //utils
 
 void	free_array(int **result);
-void	print_indices(int clues[TAB_SIZE * 4]);
-int		**wrapped_array(int static_array[TAB_SIZE][TAB_SIZE]);
-void	print_answer(int **array, int **wrapper_array, int clues[TAB_SIZE * 4]);
+void	print_indices(int clues[N * 4]);
+int		**wrapped_array(int static_array[N][N]);
+void	print_answer(int **array, int **wrapper_array, int clues[N * 4]);
 
 #endif
