@@ -159,5 +159,17 @@ def main():
 				else:
 					print(f"{RED}Invalid function name '{func_name}'. Please try again.")
 
+from shutil import rmtree
+import os
+
 if __name__ == "__main__":
 	main()
+	print(f"{CYAN} Caches cleaned :")
+	for root, dirs, files in os.walk("."):
+		if "__pycache__" in dirs:
+			cache_dir = os.path.join(root, "__pycache__")
+			try:
+				rmtree(cache_dir)
+				print(f"\t{GREEN}- {cache_dir}{RESET}")
+			except Exception as e:
+				print(f"\t{RED}- Failed to remove '{cache_dir}': {e}{RESET}")
