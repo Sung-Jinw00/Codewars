@@ -1,18 +1,17 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   rgb.c                                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: locagnio <locagnio@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/29 15:29:44 by locagnio          #+#    #+#             */
-/*   Updated: 2025/03/29 16:46:41 by locagnio         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <stdio.h>
 
-void	rgb(int r, int g, int b, char hex[6 + 1])
+/**
+ * @brief Converts RGB values to a hexadecimal string.
+ *
+ * Clamps each component to 0-255 and writes the result as a 6-character
+ * haxadecimal string into the provided array.
+ *
+ * @param r Red component.
+ * @param g Green component.
+ * @param b Blue component.
+ * @param hex Output array for the haxadecimal string (6 chars).
+ */
+void	rgb(int r, int g, int b, char hex[6])
 {
 	int colours[3] = {r, g, b};
 

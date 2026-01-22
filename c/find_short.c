@@ -1,23 +1,22 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   find_short.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: locagnio <locagnio@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/29 15:11:38 by locagnio          #+#    #+#             */
-/*   Updated: 2025/03/29 15:24:27 by locagnio         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <sys/types.h>
 #include <string.h>
 
+/**
+ * @brief Find the length of the shortest word in a string.
+ * 
+ * This function scans the input string and returns the length of the shortest
+ * sequence of non-space characters (i.e., the shortest word). Words are
+ * assumed to be separated by one or more spaces.
+ * 
+ * @param s The input string to analyze. Should be null-terminated.
+ * 
+ * @return The length of the shortest word in the string. Returns 0 if the string is empty or contains only spaces.
+ */
 ssize_t find_short(const char *s)
 {
-	ssize_t len = 0, i = 0, j = 0;
+	ssize_t len = 0;
 
-	while (s[j] && j < (ssize_t)strlen(s))
+	for (ssize_t i = 0, j = 0; s[j] && j < (ssize_t)strlen(s);)
 	{
 		while (s[j] && s[j] != ' ')
 			j++;

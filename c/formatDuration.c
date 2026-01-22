@@ -1,35 +1,52 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   formatDuration.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/16 15:31:47 by marvin            #+#    #+#             */
-/*   Updated: 2025/04/16 15:31:47 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
+/**
+ * @brief Helper to format a single unit of time (year, day, hour, minute, second).
+ * 
+ * This function writes a formatted string into the provided buffer according to
+ * the value of `calc`. It automatically pluralizes the time unit.
+ * 
+ * @param calc The quantity of the time unit.
+ * @param str Output buffer (must be at least 500 chars).
+ * @param time Name of the time unit (e.g., "second", "minute").
+ */
 void	write_str(int calc, char *str, char *time)
 {
-	if (calc == 0)
-		return ;
-	else if (calc == 1)
-		snprintf(str, 500, "1 %s", time);
-	else
-		snprintf(str, 500, "%d %ss", calc, time);
+	if (calc == 0) return ;
+	snprintf(str, 500, (calc == 1) ? "%d %s" : "%d %ss", calc, time);
 }
 
+/**
+ * @brief Convert a duration in seconds to a human-readable string.
+ * 
+ * This function converts an integer number of seconds into a human-readable
+ * English string describing the duration in years, days, hours, minutes, and
+ * seconds. It handles singular/plural forms and inserts commas and "and"
+ * according to English grammar rules.
+ * 
+ * Examples:
+ * 
+ * - 0 → "now"
+ * 
+ * - 1 → "1 second"
+ * 
+ * - 62 → "1 minute and 2 seconds"
+ * 
+ * - 3662 → "1 hour, 1 minute and 2 seconds"
+ * 
+ * @param n Duration in seconds (non-negative).
+ * 
+ * @return A newly allocated string containing the formatted duration. 
+ * The caller is responsible for freeing this memory using `free()`.
+ */
 char *formatDuration(int n)
 {
 	if (n == 0) return (strdup("now"));
 	char str[5][100] = {0};
 	char answer[500] = {0}, *coma = ", ", *and = " and ";
-	int k = 0, count = 0;
+	int count = 0;
 
 	write_str(n % 60, str[4], "second");
 	write_str((n / 60) % 60, str[3], "minute");
@@ -42,17 +59,14 @@ char *formatDuration(int n)
 	{
 		if (str[i][0])
 		{
-			if (k && --count != 1)
-				for (int j = 0; coma[j]; j++)
-					answer[k++] = coma[j];
-			else if (k)
-				for (int j = 0; and[j]; j++)
-					answer[k++] = and[j];
-			for (int j = 0; str[i][j]; j++)
-				answer[k++] = str[i][j];
+			if (answer[0] && --count != 1)
+				strcat(answer, coma);
+			else if (answer[0])
+				strcat(answer, and);
+			strcat(answer, str[i]);
 		}
 	}
-  return (strdup(answer));
+	return (strdup(answer));
 }
 
 #include <stdio.h>

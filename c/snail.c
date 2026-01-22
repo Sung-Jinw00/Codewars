@@ -1,17 +1,36 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   snail.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/23 23:07:02 by marvin            #+#    #+#             */
-/*   Updated: 2025/04/23 23:07:02 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <stdlib.h>
 
+/**
+ * @brief Flattens a 2D matrix into a 1D array in "snail" order.
+ *
+ * Given a 2D matrix of integers with specified rows and columns,
+ * returns a dynamically allocated 1D array containing all elements
+ * in a clockwise spiral starting from the top-left corner.
+ *
+ * - Start from the top-left corner
+ * 
+ * - Move right across the top row
+ * 
+ * - Move down the rightmost column
+ * 
+ * - Move left across the bottom row
+ * 
+ * - Move up the leftmost column
+ * 
+ * - Repeat the above steps inward until all elements are traversed
+ *
+ * @param outsz Pointer to a size_t variable that will hold the length
+ *               of the resulting array.
+ * @param mx Pointer to an array of pointers to integer arrays representing
+ *           the matrix.
+ * @param rows Number of rows in the matrix.
+ * @param cols Number of columns in the matrix.
+ * 
+ * @return Pointer to a newly allocated 1D array containing the elements
+ *         in snail order, or NULL if rows or cols are zero. The caller
+ *         is responsible for freeing the allocated memory.
+ * 
+ */
 int	*snail(size_t *outsz, const int **mx, size_t rows, size_t cols)
 {
 	if (!rows || !cols)
@@ -50,11 +69,7 @@ int	*snail(size_t *outsz, const int **mx, size_t rows, size_t cols)
 	}
 	return (answer);
 }
-/* 
-display *answer@(*outsz)
-display *mx[i]@rows
-display mx[i][j]
- */
+
 #include <stdio.h>
 
 int	int_arr_cmp(int *result, const int *answer, size_t len_tabs)

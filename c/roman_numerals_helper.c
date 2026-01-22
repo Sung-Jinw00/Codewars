@@ -1,21 +1,19 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   roman_numerals_helper.c                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/26 13:53:42 by marvin            #+#    #+#             */
-/*   Updated: 2025/04/26 15:10:16 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <string.h>
 #include <stdio.h>
 
 const char			symbols[][3] = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
 const unsigned int	values[]     = {1000, 900,  500, 400,  100,  90,  50,   40,  10,   9,    5,   4,    1 };
 
+/**
+ * @brief Converts a Roman numeral string to its unsigned integer value.
+ *
+ * Parses the Roman numeral from left to right, adding values according
+ * to the Roman numeral rules.
+ *
+ * @param roman Input string containing a Roman numeral.
+ * 
+ * @return The unsigned integer equivalent of the Roman numeral.
+ */
 unsigned  from_roman(const char *roman)
 {
 	unsigned int answer = 0; int i = 0;
@@ -32,6 +30,16 @@ unsigned  from_roman(const char *roman)
 	}
 	return (answer);
 }
+
+/**
+ * @brief Converts an unsigned integer to a Roman numeral string.
+ *
+ * Writes the corresponding Roman numeral representation into the provided
+ * buffer. The buffer should be large enough to hold the result.
+ *
+ * @param number The number to convert.
+ * @param roman Output buffer for the Roman numeral string.
+ */
 void to_roman(unsigned number, char *roman)
 {
 	int i = 0; *roman = 0;

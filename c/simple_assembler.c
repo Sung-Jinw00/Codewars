@@ -1,20 +1,28 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   simple_assembler.c                                 :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/16 21:11:30 by marvin            #+#    #+#             */
-/*   Updated: 2025/04/16 21:11:30 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 
+/**
+ * @brief Executes a simple assembly-like program.
+ *
+ * Interprets and runs a small set of instructions on an array of registers.
+ * Supported instructions:
+ * 
+ * - "mov X Y" : moves the value Y (number or register) into register X
+ * 
+ * - "inc X"   : increments register X by 1
+ * 
+ * - "dec X"   : decrements register X by 1
+ * 
+ * - "jnz X Y" : jumps Y instructions forward/backward if X (value or register) is not zero
+ *
+ * Registers are accessed by their ASCII code (e.g., 'a' → registers['a']).
+ *
+ * @param n Number of instructions in the program.
+ * @param program Array of strings containing the instructions.
+ * @param registers Array of integers representing the registers (size >= 128 recommended).
+ */
 void simple_assembler(size_t n, const char *const program[n], int registers[])
 {
 	char arg1[16], arg2[16];
@@ -41,15 +49,6 @@ void simple_assembler(size_t n, const char *const program[n], int registers[])
 	}
 }
 
-/* 
-display *program@n
-display program[i]
-display registers['a']
-display registers['b']
-display registers['c']
-display registers['d']
-
-*/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

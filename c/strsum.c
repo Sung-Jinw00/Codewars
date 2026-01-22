@@ -1,18 +1,21 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   strsum.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/24 00:23:34 by marvin            #+#    #+#             */
-/*   Updated: 2025/04/24 00:23:34 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <stdlib.h>
 #include <string.h>
 
+/**
+ * @brief Computes the sum of two non-negative integer numbers represented as strings.
+ *
+ * - Aligns the numbers by their least significant digit.
+ * 
+ * - Adds digit by digit from right to left, handling carry.
+ * 
+ * - Removes leading zeros from the result.
+ *
+ * @param a The first number as a string.
+ * @param b The second number as a string.
+ * 
+ * @return A newly allocated string containing the sum of the two numbers.
+ *         The caller is responsible for freeing the memory.
+ */
 char *strsum(const char *a, const char *b)
 {
 	char result[5000] = {0};

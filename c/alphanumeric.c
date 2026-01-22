@@ -1,18 +1,14 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   alphanumeric.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/16 14:50:32 by marvin            #+#    #+#             */
-/*   Updated: 2025/04/16 14:50:32 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <stdbool.h>
 #include <ctype.h>
 
+/**
+ * @brief
+ * Check if a string is alphanumeric
+ * 
+ * @param str_in a string
+ * 
+ * @return `true` if str_in exist and is alphanumeric, else `false`
+ */
 bool alphanumeric(const char *str_in)
 {
 	if (!*str_in) return(false);

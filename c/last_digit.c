@@ -1,18 +1,27 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   last_digit.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/16 10:52:19 by marvin            #+#    #+#             */
-/*   Updated: 2025/04/16 10:52:19 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <math.h>
 #include <string.h>
 
+/**
+ * @brief Computes the last decimal digit of a^b for large numbers.
+ *
+ * This function calculates only the last digit of `a` raised to the power `b`.
+ * Both `a` and `b` are provided as strings to support very large numbers
+ * beyond standard integer types.
+ *
+ * @param a Base as a null-terminated string of digits.
+ * @param b Exponent as a null-terminated string of digits.
+ *
+ * @return
+ * 
+ * - The last digit of a^b (0-9).
+ * 
+ * - 1 if b is "0".
+ * 
+ * - 0 if a is "0".
+ *
+ * @note Only the last two digits of the exponent are used to determine the pattern
+ * of last digits, which is sufficient due to cyclicity of last digits in powers.
+ */
 int last_digit(const char *a, const char *b)
 {
     if (*b == '0')
@@ -21,11 +30,8 @@ int last_digit(const char *a, const char *b)
 		return (0);
     
 	size_t	len_b = strlen(b);
-    // take last digit of a
     int x = a[strlen(a) - 1] - '0';
-    // take last digit of b
     int y = (b[len_b - 1] - '0');
-	// take before-last digit of b
     if (len_b > 1)
 		y += (b[len_b - 2] - '0') * 10;
     y = y % 4 + 4;  

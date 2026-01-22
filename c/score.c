@@ -1,15 +1,30 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   score.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/16 15:06:26 by marvin            #+#    #+#             */
-/*   Updated: 2025/04/16 15:06:26 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
+/**
+ * @brief Calculates the score based on the count of each die value.
+ *
+ * Given an array representing the number of dice showing each value (1-6),
+ * computes the total score according to the game rules:
+ * 
+ * - Three 1s → 1000 points
+ * 
+ * - Each additional 1 → 100 points
+ * 
+ * - Three 6s → 600 points
+ * 
+ * - Three 5s → 500 points
+ * 
+ * - Each additional 5 → 50 points
+ * 
+ * - Three 4s → 400 points
+ * 
+ * - Three 3s → 300 points
+ * 
+ * - Three 2s → 200 points
+ *
+ * @param nb_amount Array of 6 integers, where nb_amount[i] is the number
+ *                  of dice showing the value i+1.
+ * 
+ * @return Total score for the given counts.
+ */
 int	get_score(int *nb_amount)
 {
 	int score = 0;
@@ -33,6 +48,16 @@ int	get_score(int *nb_amount)
 	return (score);
 }
 
+/**
+ * @brief Computes the score of a dice roll.
+ *
+ * Counts how many times each value appears in a 5-dice roll and
+ * calculates the total score using get_score().
+ *
+ * @param dice Array of 5 integers representing the dice roll (values 1-6).
+ * 
+ * @return The total score of the roll.
+ */
 int score(const int dice[5])
 {
 	int	nb_amount[6] = {0};

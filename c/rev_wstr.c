@@ -1,17 +1,12 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   rev_wstr.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: locagnio <locagnio@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/26 17:33:18 by locagnio          #+#    #+#             */
-/*   Updated: 2025/03/26 17:48:52 by locagnio         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <unistd.h>
 
+/**
+ * @brief Calculate the length of a null-terminated string.
+ *
+ * @param str Pointer to the string.
+ * 
+ * @return Length of the string (number of characters before '\0').
+ */
 int ft_strlen(char *str)
 {
 	int i;
@@ -22,12 +17,31 @@ int ft_strlen(char *str)
 	return (i);
 }
 
+/**
+ * @brief Write a substring of str from start to end (inclusive) to stdout.
+ *
+ * @param str Pointer to the string.
+ * @param start Starting index of the substring (inclusive).
+ * @param end Ending index of the substring (inclusive).
+ */
 void	ft_putnstr(char *str, int start, int end)
 {
 	while (start <= end)
 		write(1, &str[start++], 1);
 }
 
+/**
+ * @brief Main function: reverse the words of the input string.
+ *
+ * If exactly one argument is provided, it prints its words in reverse order.
+ * Words are separated by spaces or tabs. Multiple spaces/tabs are ignored.
+ * The output is followed by a newline.
+ *
+ * @param ac Argument count.
+ * @param av Argument vector (array of strings).
+ * 
+ * @return 0
+ */
 int main(int ac, char **av)
 {
 	int start;

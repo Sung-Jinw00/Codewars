@@ -1,19 +1,18 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   valid_braces.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: locagnio <locagnio@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/29 17:12:18 by locagnio          #+#    #+#             */
-/*   Updated: 2025/03/29 17:56:43 by locagnio         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 
+/**
+ * @brief Checks if a pair of characters are matching opening and closing braces.
+ *
+ * Supports (), [], {}.
+ *
+ * @param braces The string containing braces.
+ * @param i Index of the opening brace.
+ * @param j Index of the closing brace.
+ * 
+ * @return true if braces[i] and braces[j] form a valid pair, false otherwise.
+ */
 bool closed_quotes(const char *braces, int i, int j)
 {
 	return ((braces[i] == '(' && braces[j] == ')')
@@ -21,6 +20,15 @@ bool closed_quotes(const char *braces, int i, int j)
 		|| (braces[i] == '{' && braces[j] == '}'));
 }
 
+/**
+ * @brief Removes a substring from a string by shifting characters left.
+ *
+ * Removes characters from index i+1 up to j-1 inclusive.
+ *
+ * @param str The string to modify.
+ * @param i Start index of the removal.
+ * @param j End index of the removal.
+ */
 void	shorten_str(char *str, int i, int j)
 {
 	int len = (int)strlen(str);
@@ -31,6 +39,17 @@ void	shorten_str(char *str, int i, int j)
 		str[i++] = 0;
 }
 
+/**
+ * @brief Checks if a string of braces is valid.
+ *
+ * - A string is valid if all opening braces are properly closed in order.
+ * 
+ * - Uses a copy of the string and iteratively removes matched pairs.
+ *
+ * @param braces The string of braces to check.
+ * 
+ * @return true if the braces are valid, false otherwise.
+ */
 bool valid_braces(const char *braces)
 {
 	int i = 0, j = 0;

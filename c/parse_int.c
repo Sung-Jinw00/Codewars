@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parse_int.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/26 15:22:10 by marvin            #+#    #+#             */
-/*   Updated: 2025/04/26 19:31:41 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <string.h>
 
 typedef struct s_dico
@@ -51,9 +39,42 @@ t_dico dictionnary[] = {
 	{"two",			2},
 };
 
+/**
+ * @brief Convert a number written in English words into its integer value.
+ *
+ * This function parses a string containing a number in English words (like
+ * "one thousand three hundred and thirty-seven") and returns its numeric
+ * representation as a `long`.
+ *
+ * The function supports numbers up to "million" and handles "hundred",
+ * "thousand", "million", and the word "and" as used in English numbering.
+ *
+ * @param number A null-terminated string representing a number in English words.
+ * 
+ *               For example: "one thousand two hundred and thirty-four".
+ * 
+ *               The string "zero" can also be represented by starting with 'z'.
+ *
+ * @return
+ * The numeric value of the string as a `long`. Returns 0 if the input string
+ * represents "zero" or is empty.
+ *
+ * @note
+ * 
+ * - Supports only lowercase words separated by spaces or hyphens.
+ * 
+ * - The dictionary used is limited to numbers from one to ninety, multiples
+ *   of ten, hundred, thousand, and million.
+ * 
+ * - The user is responsible for providing a properly formatted string.
+ *
+ * @example
+ * long n = parse_int("one thousand three hundred and thirty-seven");
+ * printf("%ld\n", n); // prints 1337
+ */
 long	parse_int(const char* number)
 {
-	long	answer = 0, tmp = 0, i = 0, j = 0;
+	long answer = 0, tmp, i = 0;
 
 	if (*number == 'z')
 		return (0);
@@ -65,7 +86,7 @@ long	parse_int(const char* number)
 			for (i = 0; i < 30 ; i++)
 				if (*number == dictionnary[i].word[0])
 					break;
-			for (j = 0; *number && *number != ' ' && *number != '-' && dictionnary[i].word; j++)
+			for (long j = 0; *number && *number != ' ' && *number != '-' && dictionnary[i].word; j++)
 			{
 				while (dictionnary[i].word && (*number != dictionnary[i].word[j] || !dictionnary[i].word[j]))
 					i++;
@@ -91,15 +112,6 @@ long	parse_int(const char* number)
 	}
 	return (answer);
 }
-
-/* 
-display number
-display dictionnary[i].word
-display dictionnary[i].word + j
-display tmp
-display answer
-
-*/
 
 #include <stdio.h>
 

@@ -1,17 +1,20 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   tribonacci.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: locagnio <locagnio@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/29 14:35:51 by locagnio          #+#    #+#             */
-/*   Updated: 2025/03/29 15:44:30 by locagnio         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <stdlib.h>
 
+/**
+ * @brief Generates the first n elements of a Tribonacci sequence.
+ *
+ * - The sequence starts with the 3-element signature array.
+ * 
+ * - Each next element is the sum of the previous three elements.
+ * 
+ * - If n is 0, returns NULL.
+ *
+ * @param signature Array of 3 long long integers to start the sequence.
+ * @param n Number of elements to generate.
+ * 
+ * @return A newly allocated array of long long containing the Tribonacci sequence.
+ *         The caller is responsible for freeing the memory.
+ */
 long long *tribonacci(const long long signature[3], size_t n)
 {
 	long long *tab = calloc(sizeof(long long), n);

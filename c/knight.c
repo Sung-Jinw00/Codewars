@@ -1,38 +1,56 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   knight.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/24 01:26:25 by marvin            #+#    #+#             */
-/*   Updated: 2025/04/24 01:26:25 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <string.h>
 #include <limits.h>
 
+/**
+ * @brief Possible moves of a knight on a chessboard
+ */
 short moves[8][2] = {{2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}, {2, -1}};
 
-short recursive_srch(short alpha, short nb, short goal_alpha, short goal_nb, short depth)
+/**
+ * @brief Recursive search for the minimal number of knight moves
+ *
+ * This function recursively explores all possible knight moves up to a depth limit
+ * to determine the minimal number of moves to reach the goal position.
+ *
+ * @param x Current column (0-7)
+ * @param y Current row (0-7)
+ * @param goal_x Target column (0-7)
+ * @param goal_y Target row (0-7)
+ * @param depth Current recursion depth (used to limit search)
+ * 
+ * @return Minimum number of moves required to reach the target. 
+ *         Returns SHRT_MAX if target is unreachable within depth limit.
+ */
+short recursive_srch(short x, short y, short goal_x, short goal_y, short depth)
 {
-	if (alpha < 0 || alpha >= 8 || nb < 0 || nb >= 8 || depth > 6)
+	//out of bounds or too deep
+	if (x < 0 || x > 7 || y < 0 || y > 7 || depth > 6)
 		return (SHRT_MAX);
-	if (alpha == goal_alpha && nb == goal_nb)
+	if (x == goal_x && y == goal_y)
 		return (0);
-	short min_path = SHRT_MAX;
+	short min_moves = SHRT_MAX;
 	for (short i = 0; i < 8; i++)
 	{
-		short new_alpha = alpha + moves[i][0];
-		short new_nb = nb + moves[i][1];
-		short res = recursive_srch(new_alpha, new_nb, goal_alpha, goal_nb, depth + 1);
+		//send every possible move from the x, y position
+		short res = recursive_srch(x + moves[i][0], y + moves[i][1], goal_x, goal_y, depth + 1);
 		if (res != SHRT_MAX)
-			min_path = min_path < (res + 1) ? min_path : (res + 1);
+			min_moves = min_moves < (res + 1) ? min_moves : (res + 1);
 	}
-	return (min_path);
+	return (min_moves);
 }
 
+/**
+ * @brief Computes the minimum number of moves a knight needs to travel from one square to another on a chessboard
+ *
+ * Converts algebraic chess notation (e.g., "a1") into coordinates and calls a recursive search
+ * to find the minimal path.
+ *
+ * @param p1 Starting square as a string (e.g., "a1")
+ * @param p2 Target square as a string (e.g., "c1")
+ *
+ * @return Minimum number of knight moves from `p1` to `p2`. Returns 0 if positions are invalid
+ *         or identical.
+ */
 short knight(const char *p1, const char *p2)
 {
 	short x = p1[0] - 'a', y = p1[1] - '1', final_x = p2[0] - 'a', final_y = p2[1] - '1';

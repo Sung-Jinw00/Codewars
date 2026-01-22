@@ -1,3 +1,16 @@
+/**
+ * @brief Fills a square matrix with a clockwise spiral of 1s.
+ *
+ * - Initializes all elements to 0.
+ * 
+ * - Starts from the top-left corner and moves in a clockwise spiral.
+ * 
+ * - Changes direction whenever the next step would go out of bounds
+ *   or encounter a previously filled cell.
+ *
+ * @param n Size of the square matrix.
+ * @param spiral The n x n matrix to fill with the spiral pattern.
+ */
 void spiralize(int n, int spiral[n][n])
 {
 	for (int i = 0; i < n; i++)

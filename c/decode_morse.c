@@ -3,8 +3,16 @@
 #include <string.h>
 
 const char *const morse[55] = {".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--..", "-----", ".----", "..---", "...--", "....-", ".....", "-....", "--...", "---..", "----.", ".-.-.-", "--..--", "..--..", ".----.", "-.-.--", "-..-.", "-.--.", "-.--.-", ".-...", "---...", "-.-.-.", "-...-", ".-.-.", "-....-", "..--.-", ".-..-.", "...-..-", ".--.-.", "...---..."};  
-const char *const ascii[55] = {"A",  "B",    "C",    "D",   "E", "F",    "G",   "H",    "I",  "J",    "K",   "L",    "M",  "N",  "O",   "P",    "Q",    "R",   "S",   "T", "U",   "V",    "W",   "X",    "Y",    "Z",    "0",     "1",     "2",     "3",     "4",     "5",     "6",     "7",     "8",     "9",     ".",      ",",      "?",      "'",      "!",      "/",     "(",     ")",      "&",     ":",      ";",      "=",     "+",     "-",      "_",      "\"",     "$",       "@",      "SOS"};
+const char *const ascii[55] = {"A",  "B",    "C",    "D",   "E", "F",    "G",   "H",    "I",  "J",    "K",   "L",    "M",  "N",  "O",   "P",    "Q",    "R",   "S",   "T", "U",   "V",    "W",   "X",    "Y",    "Z",    "0",     "1",     "2",     "3",     "4",     "5",     "6",     "7",     "8",     "9",     ".",      ",",      "?",      "'",      "!",      "/",     "(",     ")",      "&",     ":",      ";",      "=",     "+",     "-",      "_",      "\"",     "$",       "@",		  "SOS"};
 
+/**
+ * @brief
+ * Decode morse code
+ * 
+ * @param morse_code a string of dots, dashes and spaces that correspond to morse code
+ * 
+ * @return a readable string
+ */
 char *decode_morse(const char* morse_code) 
 {
 	char *buf = calloc(strlen(morse_code), 1), *b = buf;
@@ -15,13 +23,13 @@ char *decode_morse(const char* morse_code)
 		{
 			if (!strcmp(tok, morse[i]))
 			{
-				strcpy(b, ascii[i]);
-				b += strlen(ascii[i]);
+				strcpy(buf, ascii[i]);
+				buf += strlen(ascii[i]);
 				break;
 			}      
 		}
 		if ((tok = strtok(NULL, " ")) && *(tok - 1) == ' ')
-			*b++ = ' '; 
+			*buf++ = ' '; 
 	}
 	
 	free(copy);

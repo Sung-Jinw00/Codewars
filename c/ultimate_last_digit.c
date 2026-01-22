@@ -1,19 +1,22 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ultimate_last_digit.c                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/16 14:11:20 by marvin            #+#    #+#             */
-/*   Updated: 2025/04/16 14:11:20 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <stdio.h>
 
 #define ulong unsigned long
 
+/**
+ * @brief Computes (base^exp) % mod efficiently using binary exponentiation.
+ *
+ * - Reduces the base modulo `mod` initially.
+ * 
+ * - Multiplies result by base whenever the current bit of `exp` is 1.
+ * 
+ * - Squares the base and shifts `exp` right until `exp` becomes 0.
+ *
+ * @param base The base number.
+ * @param exp The exponent.
+ * @param mod The modulus.
+ * 
+ * @return (base^exp) modulo mod.
+ */
 ulong mod_pow(ulong base, ulong exp, ulong mod)
 {
     ulong result = 1;
@@ -27,7 +30,21 @@ ulong mod_pow(ulong base, ulong exp, ulong mod)
     return (result);
 }
 
-int last_digit(const unsigned long int *arr, size_t arr_size)
+/**
+ * @brief Computes the last decimal digit of a "super-power" sequence.
+ *
+ * - Given an array `[a1, a2, ..., an]`, computes the last digit of a1^(a2^(...^an)).
+ * 
+ * - Uses modular exponentiation to avoid huge numbers.
+ * 
+ * - Handles edge cases where elements are 0.
+ *
+ * @param arr Pointer to an array of unsigned long integers.
+ * @param arr_size Number of elements in the array.
+ * 
+ * @return The last decimal digit of the computed power.
+ */
+int last_digit(const ulong int *arr, size_t arr_size)
 {
     if (arr_size == 0)
         return (1);

@@ -1,18 +1,12 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   mix.c                                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/15 23:33:59 by marvin            #+#    #+#             */
-/*   Updated: 2025/04/15 23:33:59 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <stdlib.h>
 #include <string.h>
 
+/**
+ * @brief Sort an array of strings by length (descending), then alphabetically.
+ *
+ * @param array Array of strings to sort. Must be NULL-terminated.
+ * @param len_array Number of elements in the array.
+ */
 void	sort_array(char **array, int len_array)
 {
 	char	*tmp;
@@ -22,8 +16,8 @@ void	sort_array(char **array, int len_array)
 	{
 		for (j = i + 1; j < len_array && array[j]; j++)
 		{
-			if (strlen(array[i]) < strlen(array[j])
-				|| (strlen(array[i]) == strlen(array[j]) && strcmp(array[i], array[j]) > 0))
+			size_t len_i = strlen(array[i]), len_j = strlen(array[j]);
+			if (len_i < len_j || (len_i == len_j && strcmp(array[i], array[j]) > 0))
 			{
 				tmp = array[i];
 				array[i] = array[j];
@@ -33,33 +27,48 @@ void	sort_array(char **array, int len_array)
 	}
 }
 
+/**
+ * @brief Join two strings into a new dynamically allocated string, optionally freeing the first string.
+ *
+ * @param s1 First string (may be freed if tab_to_free is 1).
+ * @param s2 Second string (not freed).
+ * @param tab_to_free 1 to free s1 after joining, 0 to keep it.
+ *
+ * @return
+ * Newly allocated string containing s1 followed by s2. User is responsible for freeing it.
+ */
 char	*strjoin_n_free(char *s1, char *s2, int tab_to_free)
 {
-	char	*new_string;
-	size_t	i;
-	size_t	j;
+	char	*new_string = malloc(strlen(s1) + strlen(s2) + 1);
+	size_t	i, j;
 
-	new_string = malloc(strlen(s1) + strlen(s2) + 1);
 	if (!new_string)
 		return (NULL);
-	i = -1;
-	while (s1 && s1[++i] != '\0')
+	for (i = 0; s1 && s1[i] != '\0'; i++)
 		new_string[i] = s1[i];
-	j = 0;
-	while (s2 && s2[j] != '\0')
-		new_string[i++] = s2[j++];
+	for (j = 0; s2 && s2[j] != '\0'; i++, j++)
+		new_string[i] = s2[j];
 	new_string[i] = '\0';
 	if (tab_to_free == 1)
-		return (free(s1), new_string);
+		free(s1);
 	return (new_string);
 }
 
+/**
+ * @brief Write a character multiple times after a prefix string.
+ *
+ * @param s1 Prefix string.
+ * @param c Character to repeat.
+ * @param rep_c Number of repetitions.
+ *
+ * @return
+ * Newly allocated string with s1 followed by c repeated rep_c times. User is responsible for freeing it.
+ */
 char	*write_alpha(char const *s1, char c, int rep_c)
 {
-	char	*new_string;
+	char	*new_string = malloc(strlen(s1) + rep_c + 1);
 	size_t	i;
 
-	new_string = malloc(strlen(s1) + rep_c + 1);
 	if (!new_string)
 		return (NULL);
 	for(i = 0; s1[i]; i++)
@@ -70,39 +79,56 @@ char	*write_alpha(char const *s1, char c, int rep_c)
 	return (new_string);
 }
 
+/**
+ * @brief Free all strings in a NULL-terminated array and then the array itself.
+ *
+ * @param array Array of strings to free.
+ */
 void	free_array(char **array)
 {
-	int i = 0;
-
-	for (i = 0; array[i]; i++)
+	for (int i = 0; array[i]; i++)
 		free(array[i]);
 	free(array);
 }
 
+/**
+ * @brief Mix two strings by comparing lowercase letter frequencies.
+ *
+ * Letters occurring more than once in either string are included with a prefix indicating
+ * the string with the highest count ('1:', '2:' or '=:'). Letters are then sorted by length
+ * and alphabetically, and joined with '/'.
+ *
+ * @param s1 First input string.
+ * @param s2 Second input string.
+ *
+ * @return
+ * Dynamically allocated string with the mixed result. User is responsible for freeing it.
+ */
 char *mix(const char *s1, const char *s2)
 {
-	char lowalpha[27] = {0}, *answer = NULL;
-	char c = 'a';
-	int *alpha_s1 = calloc(sizeof(int), 27);
-	int *alpha_s2 = calloc(sizeof(int), 27);
-	char **alpha_array = NULL;
-	int i, j = 0, nb_alpha = 0;
-	size_t k, len_s1 = strlen(s1), len_s2 = strlen(s2);
+	char lowalpha[27] = {0}, *answer = NULL, c = 'a';
+	int *alpha_s1 = calloc(sizeof(int), 27), *alpha_s2 = calloc(sizeof(int), 27), nb_alpha = 0;
+	size_t len_s1 = strlen(s1), len_s2 = strlen(s2);
 
-	for (k = 0; k < len_s1 ; k++)
-		if (s1[k] >= 'a' && s1[k] <= 'z')
-			alpha_s1[s1[k] - 'a']++;
-	for (k = 0; k < len_s2 ; k++)
-		if (s2[k] >= 'a' && s2[k] <= 'z')
-			alpha_s2[s2[k] - 'a']++;
-	for (k = 0; (k < 26) ; k++)
+	if (!alpha_s1 || !alpha_s2)
+		return (free(alpha_s1), free(alpha_s2), calloc(1, 1));
+	for (size_t i = 0; i < len_s1 && i < len_s2 ; i++)
 	{
-		lowalpha[k] = c++;
-		if (alpha_s1[k] >= 2 || alpha_s2[k] >= 2)
+		if (i < len_s1 && s1[i] >= 'a' && s1[i] <= 'z')
+			alpha_s1[s1[i] - 'a']++;
+		if (i < len_s2 && s2[i] >= 'a' && s2[i] <= 'z')
+			alpha_s2[s2[i] - 'a']++;
+	}
+	for (size_t i = 0; (i < 26) ; i++)
+	{
+		lowalpha[i] = c++;
+		if (alpha_s1[i] >= 2 || alpha_s2[i] >= 2)
 			nb_alpha++;
 	}
-	alpha_array = calloc(sizeof(char *), (nb_alpha + 1));
-	for (i = 0; i < 26; i++)
+	char **alpha_array = calloc(sizeof(char *), (nb_alpha + 1));
+	if (!alpha_array)
+		return (free(alpha_s1), free(alpha_s2), calloc(1, 1));
+	for (size_t i = 0, j = 0; i < 26; i++)
 	{
 		if (alpha_s1[i] > 1 || alpha_s2[i] > 1)
 		{
@@ -114,20 +140,16 @@ char *mix(const char *s1, const char *s2)
 				alpha_array[j++] = write_alpha("2:", lowalpha[i], alpha_s2[i]);
 		}
 	}
-	alpha_array[j] = NULL;
+	alpha_array[nb_alpha] = NULL;
 	free(alpha_s1);
 	free(alpha_s2);
 	sort_array(alpha_array, nb_alpha + 1);
 	if (!alpha_array[0])
-		return (free_array(alpha_array), strjoin_n_free("", "", 0));
+		return (free_array(alpha_array), calloc(1, 1));
 	answer = strjoin_n_free(alpha_array[0], "", 0);
-	for (i = 0; alpha_array[i + 1]; i++)
-	{
-		char *tmp = strjoin_n_free(answer, "/", 1);
-		answer = strjoin_n_free(tmp, alpha_array[i + 1], 1);
-	}
-	free_array(alpha_array);
-	return (answer);
+	for (size_t i = 0; alpha_array[i + 1]; i++)
+		answer = strjoin_n_free(strjoin_n_free(answer, "/", 1), alpha_array[i + 1], 1);
+	return (free_array(alpha_array), answer);
 }
 
 #include <stdio.h>

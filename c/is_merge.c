@@ -1,18 +1,27 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   is_merge.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/16 17:04:11 by marvin            #+#    #+#             */
-/*   Updated: 2025/04/16 17:04:11 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <stdbool.h>
 
-bool is_merge(const char *s, const char *part1, const char *part2) {
+/**
+ * @brief Check whether a string is a valid merge of two other strings.
+ *
+ * This function determines if the string `s` can be formed by interleaving
+ * the characters of `part1` and `part2` while preserving the relative order
+ * of characters from each string.
+ *
+ * The merge does not require characters from `part1` and `part2` to be
+ * contiguous, but their internal order must remain unchanged.
+ *
+ * @param s The target string to validate.
+ * @param part1 The first source string.
+ * @param part2 The second source string.
+ *
+ * @return true if `s` is a valid merge of `part1` and `part2`,
+ *         false otherwise.
+ *
+ * @note This implementation uses recursion and may have exponential
+ *       time complexity in the worst case due to overlapping subproblems.
+ */
+bool is_merge(const char *s, const char *part1, const char *part2)
+{
     if (!*s)
         return !*part1 && !*part2;
     return (*part1 == *s && is_merge(s + 1, part1 + 1, part2)) || (*part2 == *s && is_merge(s + 1, part1, part2 + 1));

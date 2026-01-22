@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   sum_dig_pow.c                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: locagnio <locagnio@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/29 19:22:21 by locagnio          #+#    #+#             */
-/*   Updated: 2025/03/29 20:37:10 by locagnio         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 //  don't allocate memory for the results array
 //  assign values to the provided results array
 //  set length pointer as size of results array
@@ -19,11 +7,22 @@
 #include <limits.h>
 #include <math.h>
 
-typedef unsigned long long ull;
-
-ull	pow_sum(ull cur_nb)
+/**
+ * @brief Computes the sum of the digits of a number, each raised to the power of the number of digits.
+ *
+ * - Determines the number of digits in the input number.
+ * 
+ * - Raises each digit to the power of the total number of digits.
+ * 
+ * - Returns the sum of these powers.
+ *
+ * @param cur_nb The input number.
+ * 
+ * @return The sum of the digits each raised to the power of the number of digits.
+ */
+size_t	pow_sum(size_t cur_nb)
 {
-	ull cpy = cur_nb, powr = 1, res = 0;
+	size_t cpy = cur_nb, powr = 1, res = 0;
 
 	while (cpy >= 10)
 	{
@@ -43,9 +42,27 @@ ull	pow_sum(ull cur_nb)
 	return (res);
 }
 
-ull *sum_dig_pow(ull a, ull b, ull *results, size_t *length)
+/**
+ * @brief Finds all numbers in a range whose digits raised to successive powers sum to the number itself.
+ *
+ * - Iterates from `a` to `b` inclusive.
+ * 
+ * - Checks each number using `pow_sum`.
+ * 
+ * - Stores matching numbers in the provided `results` array.
+ * 
+ * - Sets `*length` to the number of results found.
+ *
+ * @param a Start of the range.
+ * @param b End of the range.
+ * @param results Pre-allocated array to store the results.
+ * @param length Pointer to a size_t variable that will hold the number of results.
+ * 
+ * @return Pointer to the `results` array.
+ */
+size_t *sum_dig_pow(size_t a, size_t b, size_t *results, size_t *length)
 {
-    ull cur_nb = a, i = 1, sum = 0;
+    size_t cur_nb = a, i = 1, sum = 0;
 	int count = 0;
 
 	while (cur_nb <= b)
@@ -70,7 +87,7 @@ ull *sum_dig_pow(ull a, ull b, ull *results, size_t *length)
 
 int main(void)
 {
-	ull a = 0, b = 100, results[500] = {0};
+	size_t a = 0, b = 100, results[500] = {0};
 	size_t length = 0, i = 0;
 	sum_dig_pow(a, b, results, &length);
 	printf("%zu\n", length);

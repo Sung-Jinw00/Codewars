@@ -1,20 +1,19 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   square_digits.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: locagnio <locagnio@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/28 19:59:33 by locagnio          #+#    #+#             */
-/*   Updated: 2025/03/29 14:31:03 by locagnio         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <stdio.h>
 
-unsigned long long	times_10_cal(unsigned long long result)
+/**
+ * @brief Returns the smallest power of 10 greater than a given number.
+ *
+ * - If the input is 0, returns 1.
+ * 
+ * - Otherwise, multiplies 10 until it is greater than the input.
+ *
+ * @param result The input number.
+ * 
+ * @return The smallest power of 10 greater than or equal to the input.
+ */
+size_t	times_10_cal(size_t result)
 {
-	unsigned long long n = 10;
+	size_t n = 10;
 
 	if (result == 0)
 		return (1);
@@ -26,10 +25,23 @@ unsigned long long	times_10_cal(unsigned long long result)
 	return (n);
 }
 
-unsigned long long square_digits(unsigned n)
+/**
+ * @brief Squares each digit of a number and concatenates the results.
+ *
+ * - Processes each digit of the input number from least to most significant.
+ * 
+ * - Squares non-zero digits; leaves zeros as is.
+ * 
+ * - Concatenates the squared digits into a new number.
+ *
+ * @param n The input number.
+ * 
+ * @return The number formed by concatenating the squares of each digit.
+ */
+size_t square_digits(unsigned n)
 {
 	unsigned digit = 0, times_10 = 0;
-	unsigned long long result = 0;
+	size_t result = 0;
 
 	while (n > 0)
 	{
@@ -56,7 +68,7 @@ unsigned long long square_digits(unsigned n)
 
 int main(void)
 {
-	unsigned long long result, cmp;
+	size_t result, cmp;
 	
 	result = square_digits(3212);
 	if (result == 9414)

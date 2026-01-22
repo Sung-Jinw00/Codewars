@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   The_observed_pin.c                                 :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/26 19:42:31 by marvin            #+#    #+#             */
-/*   Updated: 2025/04/26 21:28:37 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #define _POSIX_C_SOURCE 200809L
 #include <stdlib.h>
 #include <math.h>
@@ -28,6 +16,18 @@ char *possibilities[] = {
 	(char []){"689"},	//9
 };
 
+/**
+ * @brief Recursively fills an array with all possible PIN variations for a given observed digit.
+ *
+ * - Uses the `possibilities` table to determine possible adjacent digits.
+ * 
+ * - Fills the array by trying all possibilities for the current digit and recursively for the next digits.
+ *
+ * @param array Array of strings to store the generated PINs.
+ * @param i Pointer to the current index in the array.
+ * @param j Current position in the observed PIN.
+ * @param observed The observed PIN as a string.
+ */
 void	get_all_last_digits(char **array, int *i, int j, const char* observed)
 {
 	int nb = observed[j] - '0', a = 0, trigger = 0;
@@ -48,6 +48,19 @@ void	get_all_last_digits(char **array, int *i, int j, const char* observed)
 		(*i)--;
 }
 
+/**
+ * @brief Generates all possible PINs from an observed PIN considering adjacent digits.
+ *
+ * - Allocates an array of strings containing all PIN variations.
+ * 
+ * - Calls `get_all_last_digits` to fill the array.
+ *
+ * @param observed The observed PIN as a string.
+ * @param count Pointer to a size_t variable that will hold the number of PIN variations.
+ * 
+ * @return A newly allocated array of strings containing all possible PINs.
+ *         The caller must free it using `free_pins`.
+ */
 const char** get_pins(const char* observed, size_t* count)
 {
 	int len_tabs = (int)pow(5, strlen(observed)) + 1;
@@ -69,6 +82,15 @@ const char** get_pins(const char* observed, size_t* count)
     return ((const char **)array);
 }
 
+/**
+ * @brief Frees the memory allocated for an array of PIN strings.
+ *
+ * - Frees each string in the array.
+ * 
+ * - Frees the array itself.
+ *
+ * @param pins The array of PIN strings to free.
+ */
 void free_pins(const char ** pins)
 {
 	if (!pins)
