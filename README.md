@@ -1,5 +1,5 @@
 # 🚀 Codewars
-<img width="513" height="120" alt="image" src="https://github.com/user-attachments/assets/bc95b8ff-5040-4eda-89c0-26a475fb9479" />
+<img width="497" height="123" alt="image" src="https://github.com/user-attachments/assets/a4e329e9-bb55-460a-b8ff-9a30f98379f6" />
 
 This is a Codewars repository where i share all the codes i made to pass exercices on [Codewars website](https://www.codewars.com/).
 
