@@ -1,5 +1,21 @@
 #include "skyscraper.h"
 
+/**
+ * @brief
+ * Print a 2D array representing a grid, including its surrounding clues.
+ *
+ * This function displays:
+ * 
+ * - the grid values
+ * 
+ * - the top, bottom, left and right clues
+ * 
+ * - handles NULL arrays safely
+ *
+ * @param array   The 2D array to print
+ * @param nb      The index of the number array (used for labeling)
+ * @param clues   The array containing all clues (size N * 4)
+ */
 void	print_array(int **array, int nb, int clues[N * 4])
 {
 	if (!array || !array[0])
@@ -53,6 +69,24 @@ void	print_array(int **array, int nb, int clues[N * 4])
 	printf("\n");
 }
 
+/**
+ * @brief
+ * Print all available numbers for each box of the grid.
+ *
+ * Displays, for every cell:
+ * 
+ * - possible values if the cell is empty
+ * 
+ * - the fixed value if the solution already contains one
+ * 
+ * - surrounding clues for better visualization
+ *
+ * Useful for debugging the solving process.
+ *
+ * @param available_nbs   3D array of available numbers per cell
+ * @param clues           The array containing all clues (size N * 4)
+ * @param solution        The current solution grid
+ */
 void	print_all_available_each_box(int ***available_nbs, int clues[N * 4], int **solution)
 {
 	int i = 0, j = 0, k = -1;
@@ -136,6 +170,18 @@ void	print_all_available_each_box(int ***available_nbs, int clues[N * 4], int **
 	printf("\n");
 }
 
+/**
+ * @brief
+ * Print all available-number arrays.
+ *
+ * Iterates over each number possibility array and prints it
+ * using print_array().
+ *
+ * This allows visualization of constraints per number.
+ *
+ * @param available_nbs   3D array of available numbers per cell
+ * @param clues           The array containing all clues (size N * 4)
+ */
 void	print_all_nb_arrays(int ***available_nbs, int clues[N * 4])
 {
 	for (int nb = 0; nb < N; nb++)

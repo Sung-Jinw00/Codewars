@@ -6,7 +6,17 @@
 
 /**
  * @brief
- * 
+ * Fill empty boxes from Left To Right with remaining numbers
+ * in ascending order when the rule conditions are met.
+ *
+ * This function is called when the number of remaining values
+ * equals (clue - 1) or when the last boxes are already filled.
+ *
+ * @param clue            The clue associated with the line (visible towers)
+ * @param line            The line index being processed
+ * @param solution        The current solution grid
+ * @param available_nbs   The table of available numbers per cell
+ * @param lbaf            True if last boxes are already filled
  */
 void	all_boxs_empty_ltr(int clue, int line, int **solution, int ***available_nbs, bool lbaf)
 {
@@ -44,15 +54,20 @@ void	all_boxs_empty_ltr(int clue, int line, int **solution, int ***available_nbs
 
 /**
  * @brief
- * Check if i can put numbers in ascending order, and do it if it's possible
- * 
- * @param clues			the array of clues
- * @param line			the line i should check on
- * @param solution		the solution board
- * @param available_nbs	the array of possible numbers
- * 
- * @return `true` if it works, `false` if it doesn't work
+ * Check whether the ascending rule is valid on a line
+ * when read from Left To Right.
+ *
+ * It validates spacing between existing numbers according
+ * to the clue and ensures an ascending sequence is possible.
+ *
+ * @param clues           The full array of clues
+ * @param line            The line index to check
+ * @param solution        The current solution grid
+ * @param available_nbs   The table of available numbers per cell
+ *
+ * @return true if the ascending rule is valid, false otherwise
  */
+
 bool	ascending_rule_works_ltr(int *clues, int line, int **solution, int ***available_nbs)
 {
 	int	clue = clues[left_cond_nb(line)], prev_nb, col = 0, next_nb, empty_boxs;
@@ -91,6 +106,21 @@ bool	ascending_rule_works_ltr(int *clues, int line, int **solution, int ***avail
 	return (true);
 }
 
+/**
+ * @brief
+ * Check whether the ascending rule is valid on a line
+ * when read from Left To Right.
+ *
+ * It validates spacing between existing numbers according
+ * to the clue and ensures an ascending sequence is possible.
+ *
+ * @param clues           The full array of clues
+ * @param line            The line index to check
+ * @param solution        The current solution grid
+ * @param available_nbs   The table of available numbers per cell
+ *
+ * @return true if the ascending rule is valid, false otherwise
+ */
 void	all_boxs_empty_ttb(int clue, int col, int **solution, int ***available_nbs, bool lbaf)
 {
 	int	remaining_nb[N] = {0};
@@ -163,6 +193,18 @@ bool	ascending_rule_works_ttb(int *clues, int col, int **solution, int ***availa
 	clues_fullfilled[col] = true;
 	return (true);
 }
+
+/**
+ * @brief
+ * Fill empty boxes from Bottom To Top with remaining numbers
+ * in ascending order when rule conditions are satisfied.
+ *
+ * @param clue            The clue associated with the column
+ * @param col             The column index being processed
+ * @param solution        The current solution grid
+ * @param available_nbs   The table of available numbers per cell
+ * @param lbaf            True if last boxes are already filled
+ */
 
 void	all_boxs_empty_btt(int clue, int col, int **solution, int ***available_nbs, bool lbaf)
 {
@@ -237,6 +279,17 @@ bool	ascending_rule_works_btt(int *clues, int col, int **solution, int ***availa
 	return (true);
 }
 
+/**
+ * @brief
+ * Fill empty boxes from Right To Left with remaining numbers
+ * in ascending order when rule conditions are satisfied.
+ *
+ * @param clue            The clue associated with the line
+ * @param line            The line index being processed
+ * @param solution        The current solution grid
+ * @param available_nbs   The table of available numbers per cell
+ * @param lbaf            True if last boxes are already filled
+ */
 void	all_boxs_empty_rtl(int clue, int line, int **solution, int ***available_nbs, bool lbaf)
 {
 	int	remaining_nb[N] = {0};

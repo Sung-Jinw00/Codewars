@@ -1,5 +1,27 @@
 #include "main.h"
 
+/**
+ * @brief
+ * Display the expected solution and the computed solution side by side.
+ *
+ * This function prints two boards:
+ * 
+ * - the expected solution (`wrapper_array`)
+ * 
+ * - the solver result (`array`)
+ *
+ * Each cell is colorized:
+ * 
+ * - green if the value matches the expected one
+ * 
+ * - red if the value differs
+ *
+ * The board is displayed with the surrounding `clues` to ease debugging.
+ *
+ * @param array           the solution returned by the solver
+ * @param wrapper_array   a wrapped 2D array containing the expected solution
+ * @param clues           the array of clues surrounding the board
+ */
 void	print_answer(int **array, int **wrapper_array, int clues[N * 4])
 {
 	if (!array || !array[0])
@@ -90,7 +112,19 @@ void	print_answer(int **array, int **wrapper_array, int clues[N * 4])
 	printf("\n");
 }
 
-//wrapper
+/**
+ * @brief
+ * Wrap a static 2D array into a double pointer.
+ *
+ * This function converts a static array `int[N][N]` into an `int **`
+ * by creating an array of row pointers.
+ *
+ * The returned pointer must NOT be freed.
+ *
+ * @param static_array    the static 2D array to wrap
+ *
+ * @return a pointer-to-pointer view of `static_array`
+ */
 int	**wrapped_array(int static_array[N][N])
 {
 	static int *rows[N];
@@ -99,6 +133,18 @@ int	**wrapped_array(int static_array[N][N])
 	return (rows);
 }
 
+/**
+ * @brief
+ * Print an empty board showing only the clue indices.
+ *
+ * This function displays the board layout with all `clues`
+ * but without any numbers inside the grid.
+ *
+ * It is useful to visualize clue placement independently
+ * from the solution.
+ *
+ * @param clues   the array of clues
+ */
 void	print_indices(int clues[N * 4])
 {
 	printf("\n   ");
@@ -139,6 +185,21 @@ void	print_indices(int clues[N * 4])
 	printf("\n");
 }
 
+/**
+ * @brief
+ * Free a dynamically allocated 2D array.
+ *
+ * This function frees:
+ * 
+ * - each row of `result`
+ * 
+ * - the main pointer itself
+ *
+ * It assumes the array was allocated with `malloc`
+ * for both rows and the outer pointer.
+ *
+ * @param result  the 2D array to free
+ */
 void	free_array(int **result)
 {
 	for (int i = 0; i < N; i++)

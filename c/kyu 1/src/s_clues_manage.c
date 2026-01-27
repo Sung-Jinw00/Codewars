@@ -2,12 +2,13 @@
 
 /**
  * @brief
- * Put all numbers in ascending order on the whole line or column that match the clue
- * 
- * @param solution		the solution board
- * @param available_nbs	the array of possible numbers
- * @param clues			the array of clues
- * @param pos			the current position {line, column}
+ * If the maximum number N is placed on a border cell, and the opposite clue is 2,
+ * this function forces or prepares a valid placement according to visibility rules.
+ *
+ * @param solution       The solution grid
+ * @param available_nbs  The 3D array of possible numbers
+ * @param clues          The array of clues
+ * @param pos            The current position {line, column}
  */
 void	clue_2_and_max_nb(int **solution, int ***available_nbs, int clues[N * 4], int pos[2])
 {
@@ -36,8 +37,12 @@ void	clue_2_and_max_nb(int **solution, int ***available_nbs, int clues[N * 4], i
 
 /**
  * @brief
- * Remove N - 1 in the second box away from the clue containing 2,
- * if N - 1 is placed at this position the clue can't be fullfilled.
+ * Remove N - 1 from the second cell away from a clue equal to 2.
+ *
+ * If N - 1 were placed at this position, the clue could not be satisfied.
+ *
+ * @param cur_clue       The index of the current clue
+ * @param available_nbs The 3D array of possible numbers
  */
 void	remv_before_max_nb(int cur_clue, int ***available_nbs)
 {
@@ -55,12 +60,15 @@ void	remv_before_max_nb(int cur_clue, int ***available_nbs)
 
 /**
  * @brief
- * Put all numbers in ascending order on the whole line or column that match the clue
- * 
- * @param cur_clue		the current clue position
- * @param available_nbs	the array of possible numbers
- * @param solution		the solution board
- * @param clues			the array of clues
+ * Handle a clue equal to N by placing all numbers in ascending order
+ * along the corresponding line or column.
+ *
+ * Also applies additional constraints related to clue 2 if applicable.
+ *
+ * @param cur_clue       The index of the current clue
+ * @param available_nbs The 3D array of possible numbers
+ * @param solution      The solution grid
+ * @param clues         The array of clues
  */
 void	actualise_max_clue(int cur_clue, int ***available_nbs, int **solution, int *clues)
 {
@@ -85,7 +93,13 @@ void	actualise_max_clue(int cur_clue, int ***available_nbs, int **solution, int 
 
 /**
  * @brief
- * This function put n on a line or column if 1 is found in the clues
+ * Handle a clue equal to 1 by placing the maximum number N
+ * in the first cell of the corresponding line or column.
+ *
+ * @param cur_clue       The index of the current clue
+ * @param available_nbs The 3D array of possible numbers
+ * @param solution      The solution grid
+ * @param clues         The array of clues
  */
 void	actualise_max_nb(int cur_clue, int ***available_nbs, int **solution, int *clues)
 {
@@ -109,19 +123,17 @@ void	actualise_max_nb(int cur_clue, int ***available_nbs, int **solution, int *c
 
 /**
  * @brief
- * The limit of possible numbers is set depending on the distance with the clue.
- * For example if the clue is 4, you can't have more than N - 3 in the first box because it would hide the towers behind.
- * By following this logic, the second box have a limit of N - 2, and the third box have a limit of N - 1.
- * 
- * so for `N` the max number, `clue` the amount of towers to show and `step` the number of box away from clue, starting at 1:
- * 
- * limit_in_box = `N` - `clue` + `step`
- * 
- * As long as `clue` is above `step`
- * 
- * @param clue			the clue
- * @param cur_clue		the clue pos
- * @param available_nbs	the array of possible numbers
+ * Set an upper limit on possible numbers depending on the distance from a clue.
+ *
+ * For a given clue, the maximum allowed number decreases as the distance
+ * from the clue increases, otherwise visibility would be broken.
+ *
+ * Formula used:
+ * limit = N - clue + step
+ *
+ * @param clue           The clue value
+ * @param cur_clue       The index of the clue
+ * @param available_nbs The 3D array of possible numbers
  */
 void	set_limit_nbs(int clue, int cur_clue, int ***available_nbs)
 {
@@ -146,13 +158,19 @@ void	set_limit_nbs(int clue, int cur_clue, int ***available_nbs)
 
 /**
  * @brief
- * Check if only one number is available in the current box
- * 
- * @param solution		the solution board
- * @param available_nbs	the array of possible numbers
- * @param nb			the number to test
- * @param ptr_line		a pointer on line
- * @param ptr_col		a pointer on column
+ * Check whether a given number has only one possible position
+ * on its line or column.
+ *
+ * If exactly one position is found, the corresponding pointer
+ * is updated with the valid coordinates.
+ *
+ * @param solution      The solution grid
+ * @param available_nbs The 3D array of possible numbers
+ * @param nb            The number to check
+ * @param ptr_line      Pointer to the line index
+ * @param ptr_col       Pointer to the column index
+ *
+ * @return true if only one position is possible, false otherwise
  */
 bool	only_one_possibility_clue(int **solution, int ***available_nbs, int nb, int *ptr_line, int *ptr_col)
 {
@@ -195,11 +213,17 @@ bool	only_one_possibility_clue(int **solution, int ***available_nbs, int nb, int
 
 /**
  * @brief
- * Look in diagonal if one line or column has only one possility for a number and set it in answer tab
- * 
- * @param available_nbs	the array of possible numbers
- * @param solution		the solution board
- * @param clues			the array of clues
+ * Search for numbers that have exactly one possible position
+ * on a line or column and place them in the solution grid.
+ *
+ * This function applies deterministic deductions based on
+ * remaining possibilities.
+ *
+ * @param available_nbs The 3D array of possible numbers
+ * @param solution      The solution grid
+ * @param clues         The array of clues
+ *
+ * @return ` if at least one change was made, false otherwise
  */
 bool	set_one_possibility_clue(int ***available_nbs, int **solution, int *clues)
 {

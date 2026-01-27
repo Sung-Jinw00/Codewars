@@ -2,11 +2,14 @@
 
 /**
  * @brief
- * find all one possibilities numbers in the answer sheet and actualise available numbers
- * 
- * @param available_nbs	the array of possible numbers
- * @param solution		the solution board
- * @param clues			the array of clues
+ * Iteratively place all deterministically guessable numbers in the solution grid.
+ *
+ * This function repeatedly applies deduction rules and clue-based reductions
+ * until no further changes can be made.
+ *
+ * @param available_nbs  The 3D array of possible numbers
+ * @param solution       The solution grid
+ * @param clues          The array of clues
  */
 void	put_guessable_nbs(int ***available_nbs, int **solution, int *clues)
 {
@@ -21,6 +24,19 @@ void	put_guessable_nbs(int ***available_nbs, int **solution, int *clues)
 	print_all_available_each_box(available_nbs, clues, solution);
 }
 
+/**
+ * @brief
+ * Return the next available number for the cell with the least possibilities.
+ *
+ * This function iterates over the available numbers of a given position and
+ * returns them one by one across successive calls.
+ *
+ * @param available_nbs     The 3D array of possible numbers
+ * @param available_amount The number of possibilities for each cell
+ * @param pos               The position {line, column}
+ *
+ * @return The selected available number, or -1 if none is available
+ */
 int	least_available_nb(int ***available_nbs, int available_amount[N][N], int pos[2])
 {
 	static int nb;
@@ -45,6 +61,14 @@ int	least_available_nb(int ***available_nbs, int available_amount[N][N], int pos
 	return (-1);
 }
 
+/**
+ * @brief
+ * Check whether all cells of the solution grid are filled.
+ *
+ * @param solution The solution grid
+ *
+ * @return true if all boxes are filled, false otherwise
+ */
 bool	all_boxes_filled(int **solution)
 {
 	for (int line = 0; line < N - 1; line++)
@@ -58,6 +82,18 @@ bool	all_boxes_filled(int **solution)
 	return (true);
 }
 
+/**
+ * @brief
+ * Check if the number of visible towers from a given direction matches a clue.
+ *
+ * @param way      The direction of observation
+ * @param line     The starting line index
+ * @param col      The starting column index
+ * @param solution The solution grid
+ * @param clue     The expected number of visible towers
+ *
+ * @return true if the clue is respected, false otherwise
+ */
 bool	towers_visible(Direction way, int line, int col, int **solution, int clue)
 {
 	int towers_visibl = 2, prev_tower = solution[line][col];
@@ -111,6 +147,15 @@ bool	towers_visible(Direction way, int line, int col, int **solution, int clue)
 	return (towers_visibl == clue);
 }
 
+/**
+ * @brief
+ * Check whether all visibility clues are respected by the current solution.
+ *
+ * @param solution The solution grid
+ * @param clues    The array of clues
+ *
+ * @return true if all conditions are respected, false otherwise
+ */
 bool	all_conditions_respected(int **solution, int *clues)
 {
 	for (int i = 0; i < N * 4; i++)
@@ -130,17 +175,19 @@ bool	all_conditions_respected(int **solution, int *clues)
 	return (true);
 }
 
-/* 
-display *solution[0]@7
-display *solution[1]@7
-display *solution[2]@7
-display *solution[3]@7
-display *solution[4]@7
-display *solution[5]@7
-display *solution[6]@7
-
-*/
-
+/**
+ * @brief
+ * Try to solve the grid by choosing a number in the cell with the least possibilities.
+ *
+ * This function applies a recursive backtracking strategy combined with
+ * deterministic deductions.
+ *
+ * @param available_nbs The 3D array of possible numbers
+ * @param solution      The solution grid
+ * @param clues         The array of clues
+ *
+ * @return true if a valid solution is found, false otherwise
+ */
 bool	put_random_nb(int ***available_nbs, int **solution, int *clues)
 {
 	int available_amount[N][N] = {0}, pos[2] = {0};
@@ -157,6 +204,18 @@ bool	put_random_nb(int ***available_nbs, int **solution, int *clues)
 	return (all_conditions_respected(solution, clues));
 }
 
+/**
+ * @brief
+ * Solve the skyscraper puzzle using backtracking.
+ *
+ * The current solution is saved before attempting recursive resolution.
+ *
+ * @param available_nbs The 3D array of possible numbers
+ * @param solution      The solution grid
+ * @param clues         The array of clues
+ *
+ * @return A pointer to the solved grid
+ */
 int	**backtracking_solve(int ***available_nbs, int **solution, int *clues)
 {
 	int sol_save[N][N] = {0};

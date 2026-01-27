@@ -4,6 +4,26 @@
 // Manage possibilities
 //─────────────────────────────
 
+/**
+ * @brief
+ * Find the highest possible lowest value reachable in a given direction.
+ *
+ * Starting from a reference value, this function scans forward in the given
+ * direction and determines the maximum possible value that could still be
+ * encountered based on the available numbers.
+ *
+ * Used to determine whether some low values can be safely removed.
+ *
+ * @param way             Direction to scan (LTR, RTL, TTB, BTT)
+ * @param ref             Reference value (first possible value found)
+ * @param line            Line index of the starting position
+ * @param col             Column index of the starting position
+ * @param solution        Current solution grid
+ * @param available_nbs   3D array of available numbers
+ *
+ * @return
+ * The highest possible value, or 0 if it does not exceed the reference.
+ */
 int	highest_low_nb(Direction way, int ref, int line, int col, int **solution, int ***available_nbs)
 {
 	int high_low_nb = ref, nb_tmp;
@@ -71,6 +91,21 @@ int	highest_low_nb(Direction way, int ref, int line, int col, int **solution, in
 	return (ref == high_low_nb) ? 0 : high_low_nb;
 }
 
+/**
+ * @brief
+ * Remove impossible values when only one number is left for a clue.
+ *
+ * Based on the direction and the current grid state, this function removes
+ * values that would make it impossible to satisfy the corresponding clue.
+ *
+ * It targets the edge cell affected by the clue.
+ *
+ * @param way             Direction of the clue
+ * @param line            Line index
+ * @param col             Column index
+ * @param solution        Current solution grid
+ * @param available_nbs   3D array of available numbers
+ */
 void	remove_possibilities_onlfc(Direction way, int line, int col, int **solution, int ***available_nbs)
 {
 	int high_low_nb, ref;
@@ -98,6 +133,23 @@ void	remove_possibilities_onlfc(Direction way, int line, int col, int **solution
 	}
 }
 
+/**
+ * @brief
+ * Check if only one additional tower can still satisfy a clue.
+ *
+ * Counts how many towers are already visible from a given direction.
+ * If exactly one more tower is required to reach the clue value,
+ * this function returns true.
+ *
+ * @param way         Direction of the clue
+ * @param line        Line index
+ * @param col         Column index
+ * @param clues       Array of clues
+ * @param solution    Current solution grid
+ *
+ * @return
+ * true if only one tower is missing to satisfy the clue, false otherwise.
+ */
 bool	one_nb_left_for_clue(Direction way, int line, int col, int *clues, int **solution)
 {
 	int clue, last_nb = 0, towers_seen = 1;
@@ -153,6 +205,26 @@ bool	one_nb_left_for_clue(Direction way, int line, int col, int *clues, int **so
 	return (towers_seen == clue - 1);
 }
 
+/**
+ * @brief
+ * Handle special case when the clue equals 2.
+ *
+ * Depending on the position of the tallest tower and the grid state,
+ * this function:
+ * 
+ * - removes the tallest value from forbidden positions
+ * 
+ * - or directly places the only possible value if forced
+ *
+ * This applies to all four directions.
+ *
+ * @param way             Direction of the clue
+ * @param pos_7           Position of the tallest number in the line/column
+ * @param line            Line index
+ * @param col             Column index
+ * @param available_nbs   3D array of available numbers
+ * @param solution        Current solution grid
+ */
 void	remv_six_or_put_fst_nb(Direction way, int pos_7, int line, int col, int ***available_nbs, int **solution)
 {
 	if (way == LTR)
@@ -251,11 +323,22 @@ void	remv_six_or_put_fst_nb(Direction way, int pos_7, int line, int col, int ***
 
 /**
  * @brief
- * Advanced possibility reduction
+ * Perform advanced possibility reduction on the grid.
+ *
+ * This function applies higher-level deduction rules using:
  * 
- * @param available_nbs	the array of possible numbers
- * @param solution		the solution board
- * @param clues			the array of clues
+ * - clue constraints
+ * 
+ * - visibility logic
+ * 
+ * - special cases (e.g. clue == 2)
+ *
+ * It iterates over all lines and columns and progressively
+ * reduces available possibilities.
+ *
+ * @param available_nbs   3D array of available numbers
+ * @param solution        Current solution grid
+ * @param clues           Array of clues
  */
 void	reduce_possibilities(int ***available_nbs, int **solution, int *clues)
 {

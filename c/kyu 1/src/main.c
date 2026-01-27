@@ -1,5 +1,28 @@
 #include "main.h"
 
+/**
+ * @brief
+ * Entry point of the Skyscraper solver test program.
+ *
+ * This function runs predefined test cases for the Skyscraper puzzle solver.
+ * For each test case:
+ * 
+ * - it calls `SolvePuzzle` with a set of `clues`
+ * 
+ * - compares the returned solution with the expected grid
+ * 
+ * - prints the result and highlights any difference
+ *
+ * After each test:
+ * 
+ * - allocated memory is freed
+ * 
+ * - global state (`clues_fullfilled`, `nbs_found`) is reset
+ *
+ * The program exits with status 0 after all tests are executed.
+ *
+ * @return 0 on normal execution
+ */
 int main(void)
 {
 	static int clues[][N * 4] = {
