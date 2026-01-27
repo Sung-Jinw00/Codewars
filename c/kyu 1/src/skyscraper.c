@@ -11,11 +11,25 @@ int nbs_found[2][7] = {
 
 /**
  * @brief
- * Find the solutions that can be determined solely by the conditions and numbers already present in the grid.
+ * Deduce all numbers that can be determined without backtracking.
+ *
+ * This function applies direct logical rules based on `clues`
+ * and the current state of `solution` to reduce `available_nbs`.
+ *
+ * It handles special cases such as:
  * 
- * @param available_nbs	the array of possible numbers
- * @param solution		the solution board
- * @param clues			the array of clues
+ * - a clue equal to `N`, which fully determines a row or column
+ * 
+ * - a clue equal to `1`, which forces the maximum number placement
+ * 
+ * - other clues, which restrict possible values near the clue
+ *
+ * Once all direct deductions are applied, it calls
+ * `put_guessable_nbs` to propagate constraints.
+ *
+ * @param available_nbs  the array of possible numbers for each cell
+ * @param solution       the current solution grid
+ * @param clues          the array of clues
  */
 void	set_guessable_nbs(int ***available_nbs, int **solution, int *clues)
 {
@@ -38,10 +52,24 @@ void	set_guessable_nbs(int ***available_nbs, int **solution, int *clues)
 
 /**
  * @brief
- * start of the solving program that will find the solution for a nxn skyscraper.
+ * Entry point of the skyscraper puzzle solver.
+ *
+ * This function initializes all required data structures:
  * 
+ * - marks empty clues as already fulfilled
+ * 
+ * - allocates and initializes `available_nbs`
+ * 
+ * - allocates and initializes the `solution` grid
+ *
+ * It then applies all deterministic deductions before
+ * entering the recursive backtracking phase.
+ *
+ * @param clues  the array of clues surrounding the board
+ *
  * @return
- * A memory allocated array of arrays of int
+ * A dynamically allocated 2D array representing the solution,
+ * or `NULL` if `clues` is invalid.
  */
 int **SolvePuzzle(int *clues)
 {
