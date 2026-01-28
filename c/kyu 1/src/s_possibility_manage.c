@@ -386,11 +386,6 @@ void	reduce_possibilities(int ***available_nbs, int **solution, int *clues)
 			int empty_boxes = all_empty_boxes[i];
 			int opposite = (i % 2 == 0) ? all_empty_boxes[i + 1] : all_empty_boxes[i - 1];
 			int missing_towers = four_clues[i] - visible_towers(dir, line, col, solution, four_clues[i]);
-			if (dir == BTT && four_clues[i] == 5)
-			{
-				print_col(solution, 1);
-				printf("found = %d\nempty_boxes = %d\nopposite = %d\nmissing_towers = %d\n", found[i / 2], empty_boxes, opposite, missing_towers);
-			}
 			if (four_clues[i] && found[i / 2] != N && empty_boxes && !opposite && empty_boxes == missing_towers)
 				put_ascending_possibilities(dir, line, col, solution, available_nbs);
 		}
