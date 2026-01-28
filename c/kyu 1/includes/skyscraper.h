@@ -91,6 +91,7 @@ void	all_boxs_empty_btt(int clue, int col, int **solution, int ***available_nbs,
 void	all_boxs_empty_ltr(int clue, int line, int **solution, int ***available_nbs, bool lbaf);
 void	all_boxs_empty_rtl(int clue, int line, int **solution, int ***available_nbs, bool lbaf);
 void	put_ascending_nbs(Direction way, int line, int col, int **solution, int ***available_nbs);
+void	put_ascending_possibilities(Direction way, int line, int col, int **solution, int ***available_nbs);
 
 //─────────────────────────────
 // Find with clues
@@ -116,6 +117,8 @@ void	set_valid_pos(int nb, int line, int col, int ***available_nbs, int **soluti
 // Print
 //─────────────────────────────
 
+void	print_col(int **solution, int col);
+void	print_line(int **solution, int line);
 void	print_array(int **array, int nb, int clues[N * 4]);
 void	print_all_nb_arrays(int ***available_nbs, int clues[N * 4]);
 void	print_all_available_each_box(int ***available_nbs, int clues[N * 4], int **solution);
@@ -131,9 +134,12 @@ int		bottom_cond_nb(int col);
 int		***init_availability(void);
 int		is_nb_on_col(int nb, int col, int **solution);
 int		is_nb_on_line(int nb, int line, int **solution);
+int		min_possibility(int ***available_nbs, int line, int col);
+int		visible_towers(Direction way, int line, int col, int **solution, int clue);
 bool	lacking_towers(Direction way, int line, int col, int **solution);
 bool	last_boxs_are_filled(Direction way, int **solution, int line, int col);
 int		tiniest_nb_in_box(int ***available_nbs, int start_nb, int line, int col);
 bool	last_boxs_arent_filled(Direction way, int **solution, int line, int col);
+int		empty_boxes_until_N(Direction way, int line, int col, int **solution);
 
 #endif

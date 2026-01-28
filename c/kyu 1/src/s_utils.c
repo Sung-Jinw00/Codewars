@@ -1,6 +1,21 @@
 #include "skyscraper.h"
 
 /**
+ * @param available_nbs The array of available numbers
+ * @param line The line
+ * @param col The column
+ * 
+ * @return the smallest possible number in a box
+ */
+int	min_possibility(int ***available_nbs, int line, int col)
+{
+	for (int nb = 0; nb < N; nb++)
+		if (available_nbs[nb][line][col])
+			return available_nbs[nb][line][col];
+	return -1;
+}
+
+/**
  * @return the reverse position on a column or line
  */
 int	rev_nb(int nb)
@@ -45,6 +60,9 @@ int	is_nb_on_line(int nb, int line, int **solution)
 	return (-1);
 }
 
+/**
+ * @return The line in column if nb has been found, else return -1
+ */
 int	is_nb_on_col(int nb, int col, int **solution)
 {
 	for (int line = 0; line < N; line++)
@@ -91,6 +109,109 @@ bool	lacking_towers(Direction way, int line, int col, int **solution)
 				return (true);
 	}
 	return (false);
+}
+
+/**
+ * @brief
+ * Check how much empty boxes there is until N is found
+ * 
+ * @param way		The reading way, of type @ref Direction
+ * @param solution	The array of solution
+ * @param line		The line in the `solution`
+ * @param col		The column in the `solution`
+ * 
+ * @return the amount of empty boxes before N
+ */
+int	empty_boxes_until_N(Direction way, int line, int col, int **solution)
+{
+	if (((way == BTT || way == TTB) && is_nb_on_col(N, col, solution) == -1)
+		|| ((way == RTL || way == LTR) && is_nb_on_line(N, line, solution) == -1))
+		return 0;
+	int empty_boxes = 0;
+
+	if (way == LTR)
+	{
+		for (col = 0; col < N && solution[line][col] != N; col++)
+			if (!solution[line][col])
+				empty_boxes++;
+	}
+	else if (way == RTL)
+	{
+		for (col = N - 1; col >= 0 && solution[line][col] != N; col--)
+			if (!solution[line][col])
+				empty_boxes++;
+	}
+	else if (way == TTB)
+	{
+		for (line = 0; line < N && solution[line][col] != N; line++)
+			if (!solution[line][col])
+				empty_boxes++;
+	}
+	else
+	{
+		for (line = N - 1; line >= 0 && solution[line][col] != N; line--)
+			if (!solution[line][col])
+				empty_boxes++;
+	}
+	return (empty_boxes);
+}
+
+/**
+ * @brief
+ * Check how much towers are visible until N, empty boxes are not considered visible
+ * 
+ * @param way		The reading way, of type @ref Direction
+ * @param solution	The array of solution
+ * @param line		The line in the `solution`
+ * @param col		The column in the `solution`
+ * 
+ * @return the amount of visible towers
+ */
+int	visible_towers(Direction way, int line, int col, int **solution, int clue)
+{
+	(void)clue;
+	if (((way == BTT || way == TTB) && is_nb_on_col(N, col, solution) == -1)
+		|| ((way == RTL || way == LTR) && is_nb_on_line(N, line, solution) == -1))
+		return 0;
+	int visible_towers = 1;
+	int prev_tower = 0;
+	if (way == LTR)
+	{
+		for (col = 0; col < N && solution[line][col] != N; col++)
+			if (solution[line][col] && prev_tower < solution[line][col])
+			{
+				visible_towers++;
+				prev_tower = solution[line][col];
+			}
+	}
+	else if (way == RTL)
+	{
+		for (col = N - 1; col >= 0 && solution[line][col] != N; col--)
+			if (solution[line][col] && prev_tower < solution[line][col])
+			{
+				visible_towers++;
+				prev_tower = solution[line][col];
+			}
+	}
+	else if (way == TTB)
+	{
+		for (line = 0; line < N && solution[line][col] != N; line++)
+			if (solution[line][col] && prev_tower < solution[line][col])
+			{
+				visible_towers++;
+				prev_tower = solution[line][col];
+			}
+	}
+	else
+	{
+		for (line = N - 1; line >= 0 && solution[line][col] != N; line--)
+			if (solution[line][col] && prev_tower < solution[line][col])
+			{
+				visible_towers++;
+				prev_tower = solution[line][col];
+			}
+	}
+	return (visible_towers);
 }
 
 /**

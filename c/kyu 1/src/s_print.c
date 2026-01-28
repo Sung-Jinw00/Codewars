@@ -14,7 +14,7 @@
  *
  * @param array   The 2D array to print
  * @param nb      The index of the number array (used for labeling)
- * @param clues   The array containing all clues (size N * 4)
+ * @param clues   The array of clues
  */
 void	print_array(int **array, int nb, int clues[N * 4])
 {
@@ -83,13 +83,13 @@ void	print_array(int **array, int nb, int clues[N * 4])
  *
  * Useful for debugging the solving process.
  *
- * @param available_nbs   3D array of available numbers per cell
- * @param clues           The array containing all clues (size N * 4)
+ * @param available_nbs   the array of possible numbers
+ * @param clues           The array of clues
  * @param solution        The current solution grid
  */
 void	print_all_available_each_box(int ***available_nbs, int clues[N * 4], int **solution)
 {
-	int i = 0, j = 0, k = -1;
+	int i = 0, j = 0, k = -1, l_clue;
 	if (!available_nbs || !available_nbs[0])
 	{
 		printf("(null)\n");
@@ -122,7 +122,10 @@ void	print_all_available_each_box(int ***available_nbs, int clues[N * 4], int **
 			printf(" |");
 		}
 		printf("\n");
-		printf("%d |", clues[left_cond_nb(i)]);
+		if ((l_clue = clues[left_cond_nb(i)]))
+			printf("%d |", l_clue);
+		else
+			printf("  |");
 		for (k = 0; k < N; k++)
 		{
 			for (j = 3; j < 6; j++)
@@ -179,11 +182,41 @@ void	print_all_available_each_box(int ***available_nbs, int clues[N * 4], int **
  *
  * This allows visualization of constraints per number.
  *
- * @param available_nbs   3D array of available numbers per cell
- * @param clues           The array containing all clues (size N * 4)
+ * @param available_nbs   the array of possible numbers
+ * @param clues           The array of clues
  */
 void	print_all_nb_arrays(int ***available_nbs, int clues[N * 4])
 {
 	for (int nb = 0; nb < N; nb++)
 		print_array(available_nbs[nb], nb, clues);
+}
+
+/**
+ * @brief
+ * Print a column
+ * 
+ * @param solution The answer sheet
+ * @param col The column to print
+ */
+void print_col(int **solution, int col)
+{
+	printf("col %d:\n", col + 1);
+	for (int line = 0; line < N; line++)
+		printf("|%d|\n", solution[line][col]);
+}
+
+/**
+ * @brief
+ * Print a line
+ * 
+ * @param solution The answer sheet
+ * @param line The line to print
+ */
+void print_line(int **solution, int line)
+{
+	printf("line %d:\n", line + 1);
+	printf("--------------\n");
+	for (int col = 0; col < N; col++)
+		printf("%d \n", solution[line][col]);
+	printf("--------------\n");
 }

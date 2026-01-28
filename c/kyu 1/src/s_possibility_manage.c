@@ -19,7 +19,7 @@
  * @param line            Line index of the starting position
  * @param col             Column index of the starting position
  * @param solution        Current solution grid
- * @param available_nbs   3D array of available numbers
+ * @param available_nbs   the array of possible numbers
  *
  * @return
  * The highest possible value, or 0 if it does not exceed the reference.
@@ -104,7 +104,7 @@ int	highest_low_nb(Direction way, int ref, int line, int col, int **solution, in
  * @param line            Line index
  * @param col             Column index
  * @param solution        Current solution grid
- * @param available_nbs   3D array of available numbers
+ * @param available_nbs   the array of possible numbers
  */
 void	remove_possibilities_onlfc(Direction way, int line, int col, int **solution, int ***available_nbs)
 {
@@ -222,7 +222,7 @@ bool	one_nb_left_for_clue(Direction way, int line, int col, int *clues, int **so
  * @param pos_7           Position of the tallest number in the line/column
  * @param line            Line index
  * @param col             Column index
- * @param available_nbs   3D array of available numbers
+ * @param available_nbs   the array of possible numbers
  * @param solution        Current solution grid
  */
 void	remv_six_or_put_fst_nb(Direction way, int pos_7, int line, int col, int ***available_nbs, int **solution)
@@ -336,7 +336,7 @@ void	remv_six_or_put_fst_nb(Direction way, int pos_7, int line, int col, int ***
  * It iterates over all lines and columns and progressively
  * reduces available possibilities.
  *
- * @param available_nbs   3D array of available numbers
+ * @param available_nbs   the array of possible numbers
  * @param solution        Current solution grid
  * @param clues           Array of clues
  */
@@ -346,27 +346,53 @@ void	reduce_possibilities(int ***available_nbs, int **solution, int *clues)
 
 	for (line = 0, col = 0; line < N; line++, col++)
 	{
+		int four_clues[4] = {clues[left_cond_nb(line)], clues[right_cond_nb(line)], clues[bottom_cond_nb(col)], clues[col]};
+		//if not all numbers aren't found on the line and there's no N on the line
 		if (nbs_found[0][line] != N && (pos_col = is_nb_on_line(N, line, solution)) != -1)
 		{
 			if (!clues_fullfilled[left_cond_nb(line)] && one_nb_left_for_clue(LTR, line, col, clues, solution))
 				remove_possibilities_onlfc(LTR, line, col, solution, available_nbs);
 			if (!clues_fullfilled[right_cond_nb(line)] && one_nb_left_for_clue(RTL, line, col, clues, solution))
 				remove_possibilities_onlfc(RTL, line, col, solution, available_nbs);
-			if (clues[left_cond_nb(line)] == 2)
+			if (four_clues[0] == 2)
 				remv_six_or_put_fst_nb(LTR, pos_col, line, col, available_nbs, solution);
-			if (clues[right_cond_nb(line)] == 2)
+			if (four_clues[1] == 2)
 				remv_six_or_put_fst_nb(RTL, pos_col, line, col, available_nbs, solution);
 		}
+		//if not all numbers aren't found on the column and there's no N on the column
 		if (nbs_found[1][col] != N && (pos_line = is_nb_on_col(N, col, solution)) != -1)
 		{
 			if (!clues_fullfilled[col] && one_nb_left_for_clue(TTB, line, col, clues, solution))
 				remove_possibilities_onlfc(TTB, line, col, solution, available_nbs);
 			if (!clues_fullfilled[bottom_cond_nb(col)] && one_nb_left_for_clue(BTT, line, col, clues, solution))
 				remove_possibilities_onlfc(BTT, line, col, solution, available_nbs);
-			if (clues[col] == 2)
-				remv_six_or_put_fst_nb(TTB, pos_line, line, col, available_nbs, solution);
-			if (clues[bottom_cond_nb(col)] == 2)
+			if (four_clues[2] == 2)
 				remv_six_or_put_fst_nb(BTT, pos_line, line, col, available_nbs, solution);
+			if (four_clues[3] == 2)
+				remv_six_or_put_fst_nb(TTB, pos_line, line, col, available_nbs, solution);
+		}
+		Direction dirs[4] = {LTR, RTL, BTT, TTB};
+		int all_empty_boxes[4] = {
+			empty_boxes_until_N(LTR, line, col, solution),
+			empty_boxes_until_N(RTL, line, col, solution),
+			empty_boxes_until_N(BTT, line, col, solution),
+			empty_boxes_until_N(TTB, line, col, solution)
+		};
+		int found[2] = {nbs_found[0][line], nbs_found[1][col]};
+		//if not all numbers aren't found on the line or column and the amount of empty boxes = clue - visible towers
+		for (int i = 0; i < 4; i++)
+		{
+			Direction dir = dirs[i];
+			int empty_boxes = all_empty_boxes[i];
+			int opposite = (i % 2 == 0) ? all_empty_boxes[i + 1] : all_empty_boxes[i - 1];
+			int missing_towers = four_clues[i] - visible_towers(dir, line, col, solution, four_clues[i]);
+			if (dir == BTT && four_clues[i] == 5)
+			{
+				print_col(solution, 1);
+				printf("found = %d\nempty_boxes = %d\nopposite = %d\nmissing_towers = %d\n", found[i / 2], empty_boxes, opposite, missing_towers);
+			}
+			if (four_clues[i] && found[i / 2] != N && empty_boxes && !opposite && empty_boxes == missing_towers)
+				put_ascending_possibilities(dir, line, col, solution, available_nbs);
 		}
 	}
 }

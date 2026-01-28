@@ -7,7 +7,7 @@
  * This function repeatedly applies deduction rules and clue-based reductions
  * until no further changes can be made.
  *
- * @param available_nbs  The 3D array of possible numbers
+ * @param available_nbs  the array of possible numbers
  * @param solution       The solution grid
  * @param clues          The array of clues
  */
@@ -18,8 +18,7 @@ void	put_guessable_nbs(int ***available_nbs, int **solution, int *clues)
 		changes = set_one_possibility_clue(available_nbs, solution, clues);
 		if (!changes)
 			changes = set_one_possibility_rules(available_nbs, solution, clues);
-		else
-			reduce_possibilities(available_nbs, solution, clues);
+		reduce_possibilities(available_nbs, solution, clues);
 	}
 	print_all_available_each_box(available_nbs, clues, solution);
 }
@@ -31,7 +30,7 @@ void	put_guessable_nbs(int ***available_nbs, int **solution, int *clues)
  * This function iterates over the available numbers of a given position and
  * returns them one by one across successive calls.
  *
- * @param available_nbs     The 3D array of possible numbers
+ * @param available_nbs     the array of possible numbers
  * @param available_amount The number of possibilities for each cell
  * @param pos               The position {line, column}
  *
@@ -182,7 +181,7 @@ bool	all_conditions_respected(int **solution, int *clues)
  * This function applies a recursive backtracking strategy combined with
  * deterministic deductions.
  *
- * @param available_nbs The 3D array of possible numbers
+ * @param available_nbs the array of possible numbers
  * @param solution      The solution grid
  * @param clues         The array of clues
  *
@@ -210,7 +209,7 @@ bool	put_random_nb(int ***available_nbs, int **solution, int *clues)
  *
  * The current solution is saved before attempting recursive resolution.
  *
- * @param available_nbs The 3D array of possible numbers
+ * @param available_nbs the array of possible numbers
  * @param solution      The solution grid
  * @param clues         The array of clues
  *

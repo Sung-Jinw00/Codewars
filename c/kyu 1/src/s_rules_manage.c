@@ -372,8 +372,6 @@ bool	ascending_rule_works_rtl(int *clues, int line, int **solution, int ***avail
  * @param col			the column i should check on, depending on `way`
  * @param solution		the solution board
  * @param available_nbs	the array of possible numbers
- * 
- * @return `true` if it works, `false` if it doesn't work
  */
 void	put_ascending_nbs(Direction way, int line, int col, int **solution, int ***available_nbs)
 {
@@ -413,7 +411,7 @@ void	put_ascending_nbs(Direction way, int line, int col, int **solution, int ***
 		}
 		clues_fullfilled[right_cond_nb(line)] = true;
 	}
-	else if (way == BTT)
+	else if (way == TTB)
 	{
 		inc_line = 0;
 		while (!solution[inc_line][col])
@@ -442,6 +440,85 @@ void	put_ascending_nbs(Direction way, int line, int col, int **solution, int ***
 			while (!solution[inc_line][col])
 			{
 				set_valid_pos(NB(solution[inc_line + 1][col] + 1), inc_line, col, available_nbs, solution);
+				inc_line--;
+			}
+		}
+		clues_fullfilled[col] = true;
+	}
+}
+
+/**
+ * @brief
+ * Put numbers in ascending order
+ * 
+ * @param way		The reading way, of type @ref Direction
+ * @param line			the line i should check on, depending on `way`
+ * @param col			the column i should check on, depending on `way`
+ * @param solution		the solution board
+ * @param available_nbs	the array of possible numbers
+ */
+void	put_ascending_possibilities(Direction way, int line, int col, int **solution, int ***available_nbs)
+{
+	int inc_col = 0, inc_line = 0;
+
+	if (way == LTR)
+	{
+		inc_col = 0;
+		while (solution[line][inc_col] != N)
+		{
+			while (solution[line][inc_col] && solution[line][inc_col] != N)
+				inc_col++;
+			while (!solution[line][inc_col])
+			{
+				int nb = min_possibility(available_nbs, line, inc_col);
+				set_valid_pos(NB(nb), line, inc_col, available_nbs, solution);
+				inc_col++;
+			}
+		}
+		clues_fullfilled[left_cond_nb(line)] = true;
+	}
+	else if (way == RTL)
+	{
+		inc_col = N - 1;
+		while (solution[line][inc_col] != N)
+		{
+			while (solution[line][inc_col] && solution[line][inc_col] != N)
+				inc_col--;
+			while (!solution[line][inc_col])
+			{
+				int nb = min_possibility(available_nbs, line, inc_col);
+				set_valid_pos(NB(nb), line, inc_col, available_nbs, solution);
+				inc_col--;
+			}
+		}
+		clues_fullfilled[right_cond_nb(line)] = true;
+	}
+	else if (way == TTB)
+	{
+		while (solution[inc_line][col] != N)
+		{
+			while (solution[inc_line][col] && solution[inc_line][col] != N)
+				inc_line++;
+			while (!solution[inc_line][col])
+			{
+				int nb = min_possibility(available_nbs, inc_line, col);
+				set_valid_pos(NB(nb), inc_line, col, available_nbs, solution);
+				inc_line++;
+			}
+		}
+		clues_fullfilled[bottom_cond_nb(col)] = true;
+	}
+	else
+	{
+		inc_line = N - 1;
+		while (solution[inc_line][col] != N)
+		{
+			while (solution[inc_line][col] && solution[inc_line][col] != N)
+				inc_line--;
+			while (!solution[inc_line][col])
+			{
+				int nb = min_possibility(available_nbs, inc_line, col);
+				set_valid_pos(NB(nb), inc_line, col, available_nbs, solution);
 				inc_line--;
 			}
 		}

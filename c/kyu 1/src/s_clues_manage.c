@@ -6,7 +6,7 @@
  * this function forces or prepares a valid placement according to visibility rules.
  *
  * @param solution       The solution grid
- * @param available_nbs  The 3D array of possible numbers
+ * @param available_nbs  the array of possible numbers
  * @param clues          The array of clues
  * @param pos            The current position {line, column}
  */
@@ -42,7 +42,7 @@ void	clue_2_and_max_nb(int **solution, int ***available_nbs, int clues[N * 4], i
  * If N - 1 were placed at this position, the clue could not be satisfied.
  *
  * @param cur_clue       The index of the current clue
- * @param available_nbs The 3D array of possible numbers
+ * @param available_nbs the array of possible numbers
  */
 void	remv_before_max_nb(int cur_clue, int ***available_nbs)
 {
@@ -66,7 +66,7 @@ void	remv_before_max_nb(int cur_clue, int ***available_nbs)
  * Also applies additional constraints related to clue 2 if applicable.
  *
  * @param cur_clue       The index of the current clue
- * @param available_nbs The 3D array of possible numbers
+ * @param available_nbs the array of possible numbers
  * @param solution      The solution grid
  * @param clues         The array of clues
  */
@@ -97,7 +97,7 @@ void	actualise_max_clue(int cur_clue, int ***available_nbs, int **solution, int 
  * in the first cell of the corresponding line or column.
  *
  * @param cur_clue       The index of the current clue
- * @param available_nbs The 3D array of possible numbers
+ * @param available_nbs the array of possible numbers
  * @param solution      The solution grid
  * @param clues         The array of clues
  */
@@ -133,7 +133,7 @@ void	actualise_max_nb(int cur_clue, int ***available_nbs, int **solution, int *c
  *
  * @param clue           The clue value
  * @param cur_clue       The index of the clue
- * @param available_nbs The 3D array of possible numbers
+ * @param available_nbs the array of possible numbers
  */
 void	set_limit_nbs(int clue, int cur_clue, int ***available_nbs)
 {
@@ -165,7 +165,7 @@ void	set_limit_nbs(int clue, int cur_clue, int ***available_nbs)
  * is updated with the valid coordinates.
  *
  * @param solution      The solution grid
- * @param available_nbs The 3D array of possible numbers
+ * @param available_nbs the array of possible numbers
  * @param nb            The number to check
  * @param ptr_line      Pointer to the line index
  * @param ptr_col       Pointer to the column index
@@ -219,7 +219,7 @@ bool	only_one_possibility_clue(int **solution, int ***available_nbs, int nb, int
  * This function applies deterministic deductions based on
  * remaining possibilities.
  *
- * @param available_nbs The 3D array of possible numbers
+ * @param available_nbs the array of possible numbers
  * @param solution      The solution grid
  * @param clues         The array of clues
  *
