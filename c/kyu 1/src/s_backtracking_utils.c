@@ -99,11 +99,19 @@ bool no_possible_numbers(int **solution, int ***available_nbs)
 	{
 		for (int col = 0; col < N; col++)
 		{
+			if (solution[line][col] != 0)
+				continue;
+			bool has_possible = false;
 			for (int nb = 0; nb < N; nb++)
-				if (available_nbs[nb][line][col] && !solution[line][col])
-					return false;
-				else if (nb == N - 1 && !available_nbs[nb][line][col] && !solution[line][col])
-					return true;
+			{
+				if (available_nbs[nb][line][col])
+				{
+					has_possible = true;
+					break;
+				}
+			}
+			if (!has_possible)
+				return true;
 		}
 	}
 	return false;
