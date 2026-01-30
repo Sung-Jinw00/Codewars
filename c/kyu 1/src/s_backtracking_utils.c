@@ -18,13 +18,14 @@ void	sol_dup(int **dest, int **src)
  * @brief
  * Copy the shittu
  * 
- * @param available_nbs		The numbers available in the board
+ * @param dest		The array duplicate
+ * @param src		The source array
  * 
  */
-void copy_available(int ***avail_nbs_dup, int ***available_nbs)
+void copy_available(int ***dest, int ***src)
 {
 	for (int nb = NB(1); nb < N; nb++)
-		sol_dup(avail_nbs_dup[nb], available_nbs[nb]);
+		sol_dup(dest[nb], src[nb]);
 }
 
 /**
