@@ -61,15 +61,17 @@ int **SolvePuzzle(int *clues);
 //─────────────────────────────
 
 void	put_guessable_nbs(int ***available_nbs, int **solution, int *clues);
-int		**backtracking_solve(int ***available_nbs, int **solution, int *clues);
+int		**backtracking_solve(int ***available_nbs, int **solution, int *clues, int depth, int prev_empty_box);
 
 //─────────────────────────────
 // Backtracking Utils
 //─────────────────────────────
 
-void	sol_dup(int sol_save[N][N], int **solution, int dest);
-void	set_available_amount(int available_amount[N][N], int ***available_nbs);
-void	get_pos_least_amount(int start_line, int start_col, int pos[2], int available_amount[N][N]);
+void	sol_dup(int **dest, int **src);
+int		find_empty_box(int **solution, int start);
+int		***available_nbs_dup(int ***available_nbs);
+bool	no_possible_numbers(int **solution, int ***available_nbs);
+void	get_available_nbs_in_box(int ***available_nbs, int empty_box, int nbs[N], int *len);
 
 //─────────────────────────────
 // Manage possibilities
@@ -81,6 +83,7 @@ void	reduce_possibilities(int ***available_nbs, int **solution, int *clues);
 // Find with rules
 //─────────────────────────────
 
+void	set_guessable_nbs(int ***available_nbs, int **solution, int *clues);
 bool	set_one_possibility_rules(int ***available_nbs, int **solution, int *clues);
 bool	ascending_rule_works_btt(int *clues, int col, int **solution, int ***available_nbs);
 bool	ascending_rule_works_ltr(int *clues, int line, int **solution, int ***available_nbs);
@@ -103,7 +106,6 @@ bool	set_one_possibility_clue(int ***available_nbs, int **solution, int *clues);
 void	actualise_max_nb(int cur_col_or_line, int ***available_nbs, int **solution, int *clues);
 void	actualise_max_clue(int cur_col_or_line, int ***available_nbs, int **solution, int *clues);
 void	clue_2_and_max_nb(int **solution, int ***available_nbs, int clues[N * 4], int pos[2]);
-bool	olny_one_possibility_clue(int **solution, int ***available_nbs, int nb, int *ptr_line, int *ptr_col);
 
 //─────────────────────────────
 // Actualise solution
@@ -131,6 +133,8 @@ int		rev_nb(int pos);
 int		left_cond_nb(int line);
 int		right_cond_nb(int line);
 int		bottom_cond_nb(int col);
+void	free_array2(int **arr2);
+void	free_array3(int ***arr3);
 int		***init_availability(void);
 int		is_nb_on_col(int nb, int col, int **solution);
 int		is_nb_on_line(int nb, int line, int **solution);

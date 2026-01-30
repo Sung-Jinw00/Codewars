@@ -2,6 +2,29 @@
 
 /**
  * @brief
+ * Iteratively place all deterministically guessable numbers in the solution grid.
+ *
+ * This function repeatedly applies deduction rules and clue-based reductions
+ * until no further changes can be made.
+ *
+ * @param available_nbs  the array of possible numbers
+ * @param solution       The solution grid
+ * @param clues          The array of clues
+ */
+void	put_guessable_nbs(int ***available_nbs, int **solution, int *clues)
+{
+	for (bool changes = true; changes != false;)
+	{
+		changes = set_one_possibility_clue(available_nbs, solution, clues);
+		if (!changes)
+			changes = set_one_possibility_rules(available_nbs, solution, clues);
+		reduce_possibilities(available_nbs, solution, clues);
+	}
+	print_all_available_each_box(available_nbs, clues, solution);
+}
+
+/**
+ * @brief
  * If the maximum number N is placed on a border cell, and the opposite clue is 2,
  * this function forces or prepares a valid placement according to visibility rules.
  *

@@ -2,117 +2,106 @@
 
 /**
  * @brief
- * Duplicate or restore a solution grid.
+ * Copy `src` in `dest`
  *
- * Depending on the value of `dest`, this function either:
- * 
- * - saves the current `solution` into `sol_save`
- * 
- * - or restores `solution` from `sol_save`
- *
- * @param sol_save Backup solution array
- * @param solution Current solution grid
- * @param dest     0 to save `solution` → `sol_save`, non-zero to restore `sol_save` → `solution`
+ * @param dest		The solution duplicate
+ * @param src		The source solution
  */
-void	sol_dup(int sol_save[N][N], int **solution, int dest)
+void	sol_dup(int **dest, int **src)
 {
-	if (dest == 0)
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++)
+			dest[i][j] = src[i][j];
+}
+
+/**
+ *
+ * @param available_nbs		The numbers available in the board
+ * 
+ * @return a duplicate of `available_nbs`
+ */
+int	***available_nbs_dup(int ***available_nbs)
+{
+	int ***dup_available_nbs = init_availability();
+	for (int nb = NB(1); nb < N; nb++)
+		sol_dup(dup_available_nbs[nb], available_nbs[nb]);
+	return dup_available_nbs;
+}
+
+/**
+ * @brief
+ * Find the first empty box and return the position in an int.
+ *
+ * @param solution      The solution grid
+ * @param start      	Where the function should start to search for empty boxes
+ *
+ * @return The position of the first empty box or -1 if everything is filled
+ *
+ * @note The position is returned as if the solution array was a simple array of ints, same for start.
+ */
+int find_empty_box(int **solution, int start)
+{
+	if (!solution)
+		return -1;
+	int empty_box = start, line = 0, col = 0;
+	if (empty_box >= 0)
 	{
-		for (int i = 0; i < N; i++)
-			for (int j = 0; j < N; j++)
-				sol_save[i][j] = solution[i][j];
+		line = empty_box / N;
+		col = empty_box % N - 1;
 	}
-	else
+	for (; line < N; line++)
 	{
-		for (int i = 0; i < N; i++)
-			for (int j = 0; j < N; j++)
-				solution[i][j] = sol_save[i][j];
+		for (; col < N; col++)
+			if (!solution[line][col])
+				return ((line + 1) * N - (N - (col + 1)));
+		col = 0;
+	}
+	return -1;
+}
+
+/**
+ * @brief
+ * Get the numbers available in an empty box
+ * 
+ * @param available_nbs The numbers available in the board
+ * @param empty_box		The position of the empty box
+ * @param len			A pointer on an int that will get the len of the array returned
+ * 
+ * @return The array of available numbers in the box
+ */
+void	get_available_nbs_in_box(int ***available_nbs, int empty_box, int nbs[N], int *len)
+{
+	int line = empty_box / N, col = empty_box % N - 1;
+
+	*len = 0;
+	for (int nb = NB(1); nb < N; nb++)
+	{
+		if (available_nbs[nb][line][col])
+		{
+			nbs[*len] = available_nbs[nb][line][col];
+			(*len)++;
+		}
 	}
 }
 
 /**
  * @brief
- * Compute the number of available possibilities for each cell.
- *
- * This function fills `available_amount` with the count of possible
- * numbers remaining for every box of the grid, based on `available_nbs`.
- *
- * @param available_amount 2D array storing the number of possibilities per cell
- * @param available_nbs    3D array of possible numbers
+ * Find if there's no possible numbers left in empty boxes
+ * 
+ * @param available_nbs The numbers available in the board
+ * @param solution		The answer sheet
+ * 
+ * @return `false` if a number is usable in a box, else `true`
  */
-void set_available_amount(int available_amount[N][N], int ***available_nbs)
+bool no_possible_numbers(int **solution, int ***available_nbs)
 {
-	for (int line = 0; line < N; line++)
+	int empty_box = -2;
+	
+	while ((empty_box = find_empty_box(solution, empty_box + 1)) != -1)
 	{
-		for (int col = 0; col < N; col++)
-		{
-			for (int nb = 0; nb < N; nb++)
-			{
-				if (available_nbs[nb][line][col])
-					available_amount[line][col]++;
-			}
-		}
+		for (int nb = NB(1); nb < N; nb++)
+			if (available_nbs[nb][empty_box / N][empty_box % N - 1])
+				return false;
 	}
-}
-
-/**
- * @brief
- * Find the position of the cell with the least available possibilities.
- *
- * Starting from (`start_line`, `start_col`), this function scans the grid and
- * updates `pos` with the coordinates of the cell that has the smallest number
- * of possibilities greater than 1.
- *
- * @param start_line       Starting line index
- * @param start_col        Starting column index
- * @param pos              Output position `{line, column}`
- * @param available_amount 2D array of possibility counts
- */
-void	get_pos_least_amount(int start_line, int start_col, int pos[2], int available_amount[N][N])
-{
-	int line = start_line, col = start_col;
-	if (line || col)
-	{
-		if (col + 1 == N)
-		{
-			col = 0;
-			line++;
-		}
-		else
-			col++;
-		if (line == N)
-			return ;
-	}
-	while (line < N)
-	{
-		while (col < N)
-		{
-			if (available_amount[line][col] != 1)
-				break ;
-			col++;
-		}
-		if (available_amount[line][col] != 1)
-				break ;
-		line++;
-		col = 0;
-	}
-	int least_amount = available_amount[line][col];
-	while (line < N)
-	{
-		while (col < N)
-		{
-			int cur_amount = available_amount[line][col];
-			if (cur_amount > 1 && cur_amount < least_amount)
-			{
-				least_amount = cur_amount;
-				pos[0] = line;
-				pos[1] = col;
-				if (cur_amount == 2)
-					return ;
-			}
-			col++;
-		}
-		line++;
-		col = 0;
-	}
+	return true;
 }

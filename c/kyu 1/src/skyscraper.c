@@ -33,6 +33,8 @@ int nbs_found[2][7] = {
  */
 void	set_guessable_nbs(int ***available_nbs, int **solution, int *clues)
 {
+	if (find_empty_box(solution, -1) == -1)
+		return ;
 	for (int i = 0; i < N * 4; i++)//while i didn't checked all clues
 	{
 		if (clues[i] != 0)//if a clue is found
@@ -90,9 +92,8 @@ int **SolvePuzzle(int *clues)
 	set_guessable_nbs(available_nbs, solution, clues);
 	/* print_all_nb_arrays(available_nbs, clues);
 	printf("\n\n"); */
-	return solution;
 	//recursive search
-	solution = backtracking_solve(available_nbs, solution, clues);
+	solution = backtracking_solve(available_nbs, solution, clues, 0, -1);
 	//print the solution found
 	print_all_available_each_box(available_nbs, clues, solution);
 	//return the solution

@@ -189,20 +189,24 @@ void	print_indices(int clues[N * 4])
  * @brief
  * Free a dynamically allocated 2D array.
  *
- * This function frees:
- * 
- * - each row of `result`
- * 
- * - the main pointer itself
- *
- * It assumes the array was allocated with `malloc`
- * for both rows and the outer pointer.
- *
- * @param result  the 2D array to free
+ * @param arr2  the 2D array to free
  */
-void	free_array(int **result)
+void	free_array2(int **arr2)
 {
 	for (int i = 0; i < N; i++)
-		free(result[i]);
-	free(result);
+		free(arr2[i]);
+	free(arr2);
+}
+
+/**
+ * @brief
+ * Free a dynamically allocated 3D array.
+ *
+ * @param arr2  the 3D array to free
+ */
+void free_array3(int ***arr3)
+{
+	for (int nb = NB(1); nb < N; nb++)
+		free_array2(arr3[nb]);
+	free(arr3);
 }
