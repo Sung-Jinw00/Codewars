@@ -15,6 +15,19 @@ void	sol_dup(int **dest, int **src)
 }
 
 /**
+ * @brief
+ * Copy the shittu
+ * 
+ * @param available_nbs		The numbers available in the board
+ * 
+ */
+void copy_available(int ***avail_nbs_dup, int ***available_nbs)
+{
+	for (int nb = NB(1); nb < N; nb++)
+		sol_dup(avail_nbs_dup[nb], available_nbs[nb]);
+}
+
+/**
  *
  * @param available_nbs		The numbers available in the board
  * 

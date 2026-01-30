@@ -38,6 +38,7 @@ int	**backtracking_solve(int ***available_nbs, int **solution, int *clues, int d
 		get_available_nbs_in_box(avail_nbs_dup, empty_box, nbs_for_box, &len_array);//i get the possible solutions
 		while (--len_array >= 0)//while i didn't got through all the numbers
 		{
+			copy_available(avail_nbs_dup, available_nbs);
 			set_valid_pos(NB(nbs_for_box[len_array]), empty_box / N, empty_box % N, avail_nbs_dup, solution_dup);//i put the highest number because they are the ones with the least amount of positions, easy find
 			int **result = backtracking_solve(avail_nbs_dup, solution_dup, clues, depth + 1, empty_box);//i give the solution found to solution
 			if (!result)

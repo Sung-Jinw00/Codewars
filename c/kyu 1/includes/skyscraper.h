@@ -71,6 +71,7 @@ void	sol_dup(int **dest, int **src);
 int		find_empty_box(int **solution, int start);
 int		***available_nbs_dup(int ***available_nbs);
 bool	no_possible_numbers(int **solution, int ***available_nbs);
+void	copy_available(int ***avail_nbs_dup, int ***available_nbs);
 void	get_available_nbs_in_box(int ***available_nbs, int empty_box, int nbs[N], int *len);
 
 //─────────────────────────────
