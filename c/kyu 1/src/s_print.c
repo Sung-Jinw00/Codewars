@@ -89,6 +89,8 @@ void	print_array(int **array, int nb, int clues[N * 4])
  */
 void	print_all_available_each_box(int ***available_nbs, int clues[N * 4], int **solution)
 {
+	if (!solution)
+		return ;
 	int i = 0, j = 0, k = -1, l_clue;
 	if (!available_nbs || !available_nbs[0])
 	{

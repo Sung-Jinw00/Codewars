@@ -47,13 +47,13 @@ int find_empty_box(int **solution, int start)
 	if (empty_box >= 0)
 	{
 		line = empty_box / N;
-		col = empty_box % N - 1;
+		col = empty_box % N;
 	}
 	for (; line < N; line++)
 	{
 		for (; col < N; col++)
 			if (!solution[line][col])
-				return ((line + 1) * N - (N - (col + 1)));
+				return (line * N + col);
 		col = 0;
 	}
 	return -1;
@@ -71,7 +71,7 @@ int find_empty_box(int **solution, int start)
  */
 void	get_available_nbs_in_box(int ***available_nbs, int empty_box, int nbs[N], int *len)
 {
-	int line = empty_box / N, col = empty_box % N - 1;
+	int line = empty_box / N, col = empty_box % N;
 
 	*len = 0;
 	for (int nb = NB(1); nb < N; nb++)
@@ -95,13 +95,16 @@ void	get_available_nbs_in_box(int ***available_nbs, int empty_box, int nbs[N], i
  */
 bool no_possible_numbers(int **solution, int ***available_nbs)
 {
-	int empty_box = -2;
-	
-	while ((empty_box = find_empty_box(solution, empty_box + 1)) != -1)
+	for (int line = 0; line < N; line++)
 	{
-		for (int nb = NB(1); nb < N; nb++)
-			if (available_nbs[nb][empty_box / N][empty_box % N - 1])
-				return false;
+		for (int col = 0; col < N; col++)
+		{
+			for (int nb = 0; nb < N; nb++)
+				if (available_nbs[nb][line][col] && !solution[line][col])
+					return false;
+				else if (nb == N - 1 && !available_nbs[nb][line][col] && !solution[line][col])
+					return true;
+		}
 	}
-	return true;
+	return false;
 }

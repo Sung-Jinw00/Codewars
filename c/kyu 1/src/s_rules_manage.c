@@ -92,7 +92,11 @@ bool	ascending_rule_works_ltr(int *clues, int line, int **solution, int ***avail
 		{
 			empty_boxs = 1;
 			while (!solution[line][col + empty_boxs])
+			{
+				if (!available_nbs[NB(prev_nb + empty_boxs)][line][col + empty_boxs])//check that numbers can be placed
+					return (false);
 				empty_boxs++;
+			}
 			next_nb = solution[line][col + empty_boxs];
 			if (empty_boxs != (next_nb - prev_nb - 1))
 				return (false);
@@ -180,7 +184,12 @@ bool	ascending_rule_works_ttb(int *clues, int col, int **solution, int ***availa
 		{
 			empty_boxs = 1;
 			while (!solution[line + empty_boxs][col])
+			{
+				printf("is %d available on solution[%d][%d] ?\n%s\n", prev_nb + empty_boxs, line + empty_boxs, col, available_nbs[NB(prev_nb + empty_boxs)][line + empty_boxs][col] ? "yes" : "no");
+				if (!available_nbs[NB(prev_nb + empty_boxs)][line + empty_boxs][col])//check that numbers can be placed
+					return (false);
 				empty_boxs++;
+			}
 			next_nb = solution[line + empty_boxs][col];
 			if (empty_boxs != (next_nb - prev_nb - 1))
 				return (false);
@@ -265,7 +274,11 @@ bool	ascending_rule_works_btt(int *clues, int col, int **solution, int ***availa
 		{
 			empty_boxs = 1;
 			while (!solution[line - empty_boxs][col])
+			{
+				if (!available_nbs[NB(prev_nb + empty_boxs)][line - empty_boxs][col])//check that numbers can be placed
+					return (false);
 				empty_boxs++;
+			}
 			next_nb = solution[line - empty_boxs][col];
 			if (empty_boxs != (next_nb - prev_nb - 1))
 				return (false);
@@ -349,7 +362,11 @@ bool	ascending_rule_works_rtl(int *clues, int line, int **solution, int ***avail
 		{
 			empty_boxs = 1;
 			while (!solution[line][col - empty_boxs])
+			{
+				if (!available_nbs[NB(prev_nb + empty_boxs)][line][col - empty_boxs])//check that numbers can be placed
+					return (false);
 				empty_boxs++;
+			}
 			next_nb = solution[line][col - empty_boxs];
 			if (empty_boxs != (next_nb - prev_nb - 1))
 				return (false);
@@ -587,23 +604,23 @@ bool	set_one_possibility_rules(int ***available_nbs, int **solution, int *clues)
 		if (nbs_found[0][line] != N && is_nb_on_line(N, line, solution) != -1)
 		{
 			//if the clue is not fullfilled on the left, towers missing and i can put ascending order, i put it
-			if (!clues_fullfilled[left_cond_nb(line)]
-				&& lacking_towers(LTR, line, col, solution) && ascending_rule_works_ltr(clues, line, solution, available_nbs))
+			if (!clues_fullfilled[left_cond_nb(line)] && lacking_towers(LTR, line, col, solution)
+				&& ascending_rule_works_ltr(clues, line, solution, available_nbs))
 				put_ascending_nbs(LTR, line, col, solution, available_nbs), changes = true;
 			//if the clue is not fullfilled on the right, towers missing and i can put ascending order, i put it
-			if (!clues_fullfilled[right_cond_nb(line)]
-				&& lacking_towers(RTL, line, col, solution) && ascending_rule_works_rtl(clues, line, solution, available_nbs))
+			if (!clues_fullfilled[right_cond_nb(line)] && lacking_towers(RTL, line, col, solution)
+				&& ascending_rule_works_rtl(clues, line, solution, available_nbs))
 				put_ascending_nbs(RTL, line, col, solution, available_nbs), changes = true;
 		}
 		if (nbs_found[1][col] != N && is_nb_on_col(N, col, solution) != -1)
 		{
 			//if the clue is not fullfilled at the bottom, towers missing and i can put ascending order, i put it
-			if (!clues_fullfilled[bottom_cond_nb(col)]
-				&& lacking_towers(BTT, line, col, solution) && ascending_rule_works_btt(clues, col, solution, available_nbs))
+			if (!clues_fullfilled[bottom_cond_nb(col)] && lacking_towers(BTT, line, col, solution)
+				&& ascending_rule_works_btt(clues, col, solution, available_nbs))
 				put_ascending_nbs(BTT, line, col, solution, available_nbs), changes = true;
 			//if the clue is not fullfilled on the top, towers missing and i can put ascending order, i put it
-			if (!clues_fullfilled[col]
-				&& lacking_towers(TTB, line, col, solution) && ascending_rule_works_ttb(clues, col, solution, available_nbs))
+			if (!clues_fullfilled[col] && lacking_towers(TTB, line, col, solution)
+				&& ascending_rule_works_ttb(clues, col, solution, available_nbs))
 				put_ascending_nbs(TTB, line, col, solution, available_nbs), changes = true;
 		}
 		nb_in_one_box(available_nbs, line, col, solution, &changes);

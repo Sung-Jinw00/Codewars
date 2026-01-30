@@ -74,7 +74,8 @@ int main(void)
 			printf(GREEN"no diff !"CYAN" congrats !\n"RESET);
 		printf("\n\n");
 		diff = 0;
-		free_array2(result);
+		if (result)
+			free_array2(result);
 		memset(clues_fullfilled, 0, sizeof(bool) * N * 4);
 		memset(nbs_found, 0, sizeof(int) * N);
 		for (int i = 0; i < 2; i++)
