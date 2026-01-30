@@ -12,6 +12,8 @@
  */
 void	set_valid_pos(int nb, int line, int col, int ***available_nbs, int **solution)
 {
+	if (!available_nbs[nb][line][col])
+		return ;
 	//put the number in the solution board
 	solution[line][col] = nb + 1;
 	//set every other box on the same column to zero
