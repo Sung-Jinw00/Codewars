@@ -238,6 +238,7 @@ void	remv_six_or_put_fst_nb(Direction way, int pos_7, int line, int col, int ***
 				int nb = N - 2;
 				while (nb >= 0 && !available_nbs[nb][line][0])
 					nb--;
+				printf("LTR number on first box : %d\n", nb);
 				set_valid_pos(nb, line, 0, available_nbs, solution);
 			}
 			else if (last_boxs_arent_filled(way, solution, line, col))
@@ -261,6 +262,7 @@ void	remv_six_or_put_fst_nb(Direction way, int pos_7, int line, int col, int ***
 				int nb = N - 2;
 				while (nb >= 0 && !available_nbs[nb][line][N - 1])
 					nb--;
+				printf("RTL number on first box : %d\n", nb);
 				set_valid_pos(nb, line, N - 1, available_nbs, solution);
 			}
 			else if (last_boxs_arent_filled(way, solution, line, col))
@@ -284,6 +286,7 @@ void	remv_six_or_put_fst_nb(Direction way, int pos_7, int line, int col, int ***
 				int nb = N - 2;
 				while (nb >= 0 && !available_nbs[nb][0][col])
 					nb--;
+				printf("TTB number on first box : %d\n", nb);
 				set_valid_pos(nb, 0, col, available_nbs, solution);
 			}
 			else if (last_boxs_arent_filled(way, solution, line, col))
@@ -307,6 +310,7 @@ void	remv_six_or_put_fst_nb(Direction way, int pos_7, int line, int col, int ***
 				int nb = N - 2;
 				while (nb >= 0 && !available_nbs[nb][N - 1][col])
 					nb--;
+				printf("BTT number on first box : %d\n", nb);
 				set_valid_pos(nb, N - 1, col, available_nbs, solution);
 			}
 			else if (last_boxs_arent_filled(way, solution, line, col))

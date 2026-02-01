@@ -44,6 +44,7 @@ void	all_boxs_empty_ltr(int clue, int line, int **solution, int ***available_nbs
 			//i put numbers in ascending order
 			while (i < N && !remaining_nb[i])
 				i++;
+			printf("LTR all box empty ascending nb on line %d = %d\n", line, remaining_nb[i]);
 			set_valid_pos(NB(remaining_nb[i]), line, col, available_nbs, solution);
 			i++;
 		}
@@ -113,7 +114,7 @@ bool	ascending_rule_works_ltr(int *clues, int line, int **solution, int ***avail
 /**
  * @brief
  * Check whether the ascending rule is valid on a line
- * when read from Left To Right.
+ * when read from Top To Bottom.
  *
  * It validates spacing between existing numbers according
  * to the clue and ensures an ascending sequence is possible.
@@ -147,6 +148,7 @@ void	all_boxs_empty_ttb(int clue, int col, int **solution, int ***available_nbs,
 		{
 			while (i < N && !remaining_nb[i])
 				i++;
+			printf("TTB all box empty ascending nb on column %d = %d\n", col, remaining_nb[i]);
 			set_valid_pos(NB(remaining_nb[i]), line, col, available_nbs, solution);
 			i++;
 		}
@@ -237,6 +239,7 @@ void	all_boxs_empty_btt(int clue, int col, int **solution, int ***available_nbs,
 		{
 			while (i < N && !remaining_nb[i])
 				i++;
+			printf("BTT all box empty ascending nb on column %d = %d\n", col, remaining_nb[i]);
 			set_valid_pos(NB(remaining_nb[i]), line, col, available_nbs, solution);
 			i++;
 		}
@@ -325,6 +328,7 @@ void	all_boxs_empty_rtl(int clue, int line, int **solution, int ***available_nbs
 		{
 			while (i < N && !remaining_nb[i])
 				i++;
+			printf("RTL all box empty ascending nb on line %d = %d\n", line, remaining_nb[i]);
 			set_valid_pos(NB(remaining_nb[i]), line, col, available_nbs, solution);
 			i++;
 		}
@@ -405,6 +409,7 @@ void	put_ascending_nbs(Direction way, int line, int col, int **solution, int ***
 				inc_col++;
 			while (!solution[line][inc_col])
 			{
+				printf("LTR ascending nb on line %d = %d\n", line, solution[line][inc_col - 1] + 1);
 				set_valid_pos(NB(solution[line][inc_col - 1] + 1), line, inc_col, available_nbs, solution);
 				inc_col++;
 			}
@@ -422,6 +427,7 @@ void	put_ascending_nbs(Direction way, int line, int col, int **solution, int ***
 				inc_col--;
 			while (!solution[line][inc_col])
 			{
+				printf("RTL ascending nb on line %d = %d\n", line, solution[line][inc_col + 1] + 1);
 				set_valid_pos(NB(solution[line][inc_col + 1] + 1), line, inc_col, available_nbs, solution);
 				inc_col--;
 			}
@@ -439,6 +445,7 @@ void	put_ascending_nbs(Direction way, int line, int col, int **solution, int ***
 				inc_line++;
 			while (!solution[inc_line][col])
 			{
+				printf("TTB ascending nb on column %d = %d\n", col, solution[inc_line - 1][col] + 1);
 				set_valid_pos(NB(solution[inc_line - 1][col] + 1), inc_line, col, available_nbs, solution);
 				inc_line++;
 			}
@@ -456,6 +463,7 @@ void	put_ascending_nbs(Direction way, int line, int col, int **solution, int ***
 				inc_line--;
 			while (!solution[inc_line][col])
 			{
+				printf("BTT ascending nb on column %d = %d\n", col, solution[inc_line + 1][col] + 1);
 				set_valid_pos(NB(solution[inc_line + 1][col] + 1), inc_line, col, available_nbs, solution);
 				inc_line--;
 			}
@@ -488,6 +496,7 @@ void	put_ascending_possibilities(Direction way, int line, int col, int **solutio
 			while (!solution[line][inc_col])
 			{
 				int nb = min_possibility(available_nbs, line, inc_col);
+				printf("LTR min_possibility on line %d = %d\n", line, nb);
 				set_valid_pos(NB(nb), line, inc_col, available_nbs, solution);
 				inc_col++;
 			}
@@ -504,6 +513,7 @@ void	put_ascending_possibilities(Direction way, int line, int col, int **solutio
 			while (!solution[line][inc_col])
 			{
 				int nb = min_possibility(available_nbs, line, inc_col);
+				printf("RTL min_possibility on line %d = %d\n", line, nb);
 				set_valid_pos(NB(nb), line, inc_col, available_nbs, solution);
 				inc_col--;
 			}
@@ -519,6 +529,7 @@ void	put_ascending_possibilities(Direction way, int line, int col, int **solutio
 			while (!solution[inc_line][col])
 			{
 				int nb = min_possibility(available_nbs, inc_line, col);
+				printf("TTB min_possibility on column %d = %d\n", col, nb);
 				set_valid_pos(NB(nb), inc_line, col, available_nbs, solution);
 				inc_line++;
 			}
@@ -535,6 +546,7 @@ void	put_ascending_possibilities(Direction way, int line, int col, int **solutio
 			while (!solution[inc_line][col])
 			{
 				int nb = min_possibility(available_nbs, inc_line, col);
+				printf("BTT min_possibility on column %d = %d\n", col, nb);
 				set_valid_pos(NB(nb), inc_line, col, available_nbs, solution);
 				inc_line--;
 			}
@@ -565,6 +577,7 @@ void	nb_in_one_box(int ***available_nbs, int line, int col, int **solution, bool
 		{
 			for (inc_line = 0; !available_nbs[nb][inc_line][col];)
 				inc_line++;
+			printf("only nb on solution[%d][%d] = %d\n", inc_line, col, nb + 1);
 			set_valid_pos(nb, inc_line, col, available_nbs, solution);
 			*changes = true;
 			return ;
@@ -577,6 +590,7 @@ void	nb_in_one_box(int ***available_nbs, int line, int col, int **solution, bool
 		{
 			for (inc_col = 0; !available_nbs[nb][line][inc_col];)
 				inc_col++;
+			printf("only nb on solution[%d][%d] = %d\n", line, inc_col, nb + 1);
 			set_valid_pos(nb, line, inc_col, available_nbs, solution);
 			*changes = true;
 			return ;

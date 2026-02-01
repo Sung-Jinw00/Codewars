@@ -262,6 +262,7 @@ bool	set_one_possibility_clue(int ***available_nbs, int **solution, int *clues)
 			if (only_one_possibility_clue(solution, available_nbs, nb, &line, &col))
 			{
 				//the pointers already have the right coordinates
+				printf("one possibility in solution[%d][%d] : %d\n", line, col, nb);
 				set_valid_pos(nb, line, col, available_nbs, solution);
 				if (solution[line][col] == N)
 					clue_2_and_max_nb(solution, available_nbs, clues, (int[2]){line, col});
