@@ -313,43 +313,42 @@ int	tiniest_nb_in_box(int ***available_nbs, int start_nb, int line, int col)
 }
 /**
  * @brief
- * Intialise and memory allocate an array of arrays of arrays of ints.
+ * Intialise an array of arrays of arrays of ints.
  * 
  * For example, if N = 4 :
- */
-/**
- *.....[0]..................[1]..................[2]..................[3]
- */
-/**
+ * 
+ *.....[0]................[1]................[2]................[3]
+ *
  * 	1, 1, 1, 1......2, 2, 2, 2......3, 3, 3, 3......4, 4, 4, 4
- */
-/**
+ * 
  * 	1, 1, 1, 1......2, 2, 2, 2......3, 3, 3, 3......4, 4, 4, 4
- */
-/**
+ * 
  * 	1, 1, 1, 1......2, 2, 2, 2......3, 3, 3, 3......4, 4, 4, 4
- */
-/**
+ * 
  * 	1, 1, 1, 1......2, 2, 2, 2......3, 3, 3, 3......4, 4, 4, 4
  * 
  * @return
  * The array of arrays of arrays of ints.
  */
-int	***init_availability(void)
+void	init_availability(int available_nbs[N][N][N])
 {
-	int ***available_nbs = malloc(sizeof(int **) * N);
 	//first int in the numbers placable
 	for (int nb = 0; nb < N; nb++)
 	{
-		available_nbs[nb] = malloc(sizeof(int *) * N);
 		//second int is lines
 		for (int line = 0; line < N; line++)
 		{
-			available_nbs[nb][line] = malloc(sizeof(int) * N);
 			//third line is columns
 			for (int column = 0; column < N; column++)
 				available_nbs[nb][line][column] = nb + 1;//nb starts at zero
 		}
 	}
-	return (available_nbs);
+}
+
+int	**init_solution(void)
+{
+	int **solution = calloc(sizeof(int *), N);
+	for (int i = 0; i < N; i++)
+		solution[i] = calloc(sizeof(int), N);
+		return solution;
 }

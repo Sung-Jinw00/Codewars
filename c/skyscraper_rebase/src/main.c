@@ -25,32 +25,26 @@
  */
 int main(void)
 {
-	static int clues[][N * 4] = {
-	  { 7, 0, 0, 0, 2, 2, 3,
-		0, 0, 3, 0, 0, 0, 0,
-		3, 0, 3, 0, 0, 5, 0,
-		0, 0, 0, 0, 5, 0, 4 },
-	  { 0, 2, 3, 0, 2, 0, 0,
-		5, 0, 4, 5, 0, 4, 0,
-		0, 4, 2, 0, 0, 0, 6,
-		5, 2, 2, 2, 2, 4, 1 }
+	static int clues[][4 * 4] = {
+	  { 1, 3, 2, 2,
+		3, 1, 2, 2,
+		2, 2, 1, 3,
+		2, 3, 2, 1 },
+	  { 2, 2, 1, 3,
+		2, 2, 1, 3,
+		2, 3, 2, 1,
+		1, 3, 2, 2 }
 	};
 	
-	static int expected[][N][N] = {
-		{{ 1, 5, 6, 7, 4, 3, 2 },
-		 { 2, 7, 4, 5, 3, 1, 6 },
-		 { 3, 4, 5, 6, 7, 2, 1 },
-		 { 4, 6, 3, 1, 2, 7, 5 },
-		 { 5, 3, 1, 2, 6, 4, 7 },
-		 { 6, 2, 7, 3, 1, 5, 4 },
-		 { 7, 1, 2, 4, 5, 6, 3 }},
-		{{ 7, 6, 2, 1, 5, 4, 3 },
-		 { 1, 3, 5, 4, 2, 7, 6 },
-		 { 6, 5, 4, 7, 3, 2, 1 },
-		 { 5, 1, 7, 6, 4, 3, 2 },
-		 { 4, 2, 1, 3, 7, 6, 5 },
-		 { 3, 7, 6, 2, 1, 5, 4 },
-		 { 2, 4, 3, 5, 6, 1, 7 }}
+	static int expected[][4][4] = {
+		{{ 4, 2, 3, 1 },
+		 { 3, 1, 2, 4 },
+		 { 1, 3, 4, 2 },
+		 { 2, 4, 1, 3 }},
+		{{ 3, 2, 4, 1 },
+		 { 1, 4, 2, 3 },
+		 { 2, 1, 3, 4 },
+		 { 4, 3, 1, 2 }}
 	};
 	int diff = 0;
 
@@ -58,9 +52,9 @@ int main(void)
 	{
 		int **result = SolvePuzzle(clues[i]);
 		fprintf(stderr, CYAN UNDERLINE BOLD"Test %d :\n"RESET, i);
-		for (int j = 0; j < N; j++)
+		for (int j = 0; j < 4; j++)
 		{
-			if (!result || memcmp(result, expected[i], N * sizeof(int)))
+			if (!result || memcmp(result, expected[i], 4 * sizeof(int)))
 			{
 				diff = 1;
 				fprintf(stderr, RED "diff !\n"RESET);
@@ -75,10 +69,6 @@ int main(void)
 		diff = 0;
 		if (result)
 			free_array2(result);
-		memset(clues_fullfilled, 0, sizeof(bool) * N * 4);
-		memset(nbs_found, 0, sizeof(int) * N);
-		for (int i = 0; i < 2; i++)
-			memset(nbs_found[i], 0, sizeof(int) * N);
 	}
 	return (0);
 }

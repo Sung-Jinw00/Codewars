@@ -10,9 +10,7 @@
 // Defines
 //─────────────────────────────
 
-# define  N  7
-//i'm lazy to write N - 1 for the right position in the array
-# define NB(x) (x - 1)
+# define  N  4
 
 # ifndef RESET
 #  define RESET				"\033[0m"
@@ -23,12 +21,6 @@
 #  define GREEN				"\033[32m"
 # endif
 
-//─────────────────────────────
-// Global variables
-//─────────────────────────────
-
-extern int		nbs_found[2][7];
-extern bool	clues_fullfilled[N * 4];
 
 /**
  * @enum Direction
@@ -61,20 +53,14 @@ int **SolvePuzzle(int *clues);
 //─────────────────────────────
 
 void	put_guessable_nbs(int ***available_nbs, int **solution, int *clues);
-int		**backtracking_solve(int ***available_nbs, int **solution, int *clues, int depth, int prev_empty_box);
+int		**backtracking_solve(int ***available_nbs, int **solution, int *clues, int depth);
 
 //─────────────────────────────
 // Backtracking Utils
 //─────────────────────────────
 
-void	sol_dup(int **dest, int **src);
-bool	different_towers(int **solution);
-int		find_empty_box(int **solution, int start);
-int		***available_nbs_dup(int ***available_nbs);
-bool	clues_respected(int **solution, int *clues);
-bool	no_possible_numbers(int **solution, int ***available_nbs);
-void	copy_available(int ***avail_nbs_dup, int ***available_nbs);
-void	get_available_nbs_in_box(int ***available_nbs, int empty_box, int nbs[N], int *len);
+void	empty_box_coords(int **solution, int *line, int *col);
+int		lowest_available(int available_nbs[N][N][N], int line, int col);
 
 //─────────────────────────────
 // Manage possibilities
@@ -133,12 +119,13 @@ void	print_all_available_each_box(int ***available_nbs, int clues[N * 4], int **
 //─────────────────────────────
 
 int		rev_nb(int pos);
+int		**init_solution(void);
 int		left_cond_nb(int line);
 int		right_cond_nb(int line);
 int		bottom_cond_nb(int col);
 void	free_array2(int **arr2);
 void	free_array3(int ***arr3);
-int		***init_availability(void);
+void	init_availability(int available_nbs[N][N][N]);
 int		is_nb_on_col(int nb, int col, int **solution);
 int		is_nb_on_line(int nb, int line, int **solution);
 int		min_possibility(int ***available_nbs, int line, int col);

@@ -78,25 +78,10 @@ int **SolvePuzzle(int *clues)
 	//return NULL if clues == NULL
 	if (!clues)
 		return (NULL);
-	//set to 'true' empty clues
-	for (int i = 0; i < N * 4; i++)
-		if (!clues[i])
-			clues_fullfilled[i] = true;
+
 	//init the boards of available numbers
-	int ***available_nbs = init_availability();
-	//init the solution array of ints
-	int **solution = calloc(sizeof(int *), N);
-	for (int i = 0; i < N; i++)
-		solution[i] = calloc(sizeof(int), N);
-	//find guessable numbers before recursive search
-	set_guessable_nbs(available_nbs, solution, clues);
-	/* print_all_nb_arrays(available_nbs, clues);
-	fprintf(stderr, "\n\n"); */
-	//recursive search
-	solution = backtracking_solve(available_nbs, solution, clues, 0, -1);
-	//print the solution found
-	print_all_available_each_box(available_nbs, clues, solution);
-	free_array3(available_nbs);
+	int available_nbs[N][N][N] = {0}, **solution = init_solution();
+	init_availability(available_nbs);
 	//return the solution
-	return (solution);
+	return (backtracking_solve(available_nbs, solution, clues, 0));
 }
