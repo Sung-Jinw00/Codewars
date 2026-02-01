@@ -57,22 +57,22 @@ int main(void)
 	for (int i = 0; i < 1; i++)
 	{
 		int **result = SolvePuzzle(clues[i]);
-		printf(CYAN UNDERLINE BOLD"Test %d :\n"RESET, i);
+		fprintf(stderr, CYAN UNDERLINE BOLD"Test %d :\n"RESET, i);
 		for (int j = 0; j < N; j++)
 		{
 			if (!result || memcmp(result, expected[i], N * sizeof(int)))
 			{
 				diff = 1;
-				printf(RED "diff !\n"/* CYAN UNDERLINE"result of :" */RESET);
+				fprintf(stderr, RED "diff !\n"/* CYAN UNDERLINE"result of :" */RESET);
 				/* print_indices(clues[i]); */
 				print_answer(result, wrapped_array(expected[i]), clues[i]);
-				printf(RESET);
+				fprintf(stderr, RESET);
 				break ;
 			}
 		}
 		if (!diff)
-			printf(GREEN"no diff !"CYAN" congrats !\n"RESET);
-		printf("\n\n");
+			fprintf(stderr, GREEN"no diff !"CYAN" congrats !\n"RESET);
+		fprintf(stderr, "\n\n");
 		diff = 0;
 		if (result)
 			free_array2(result);

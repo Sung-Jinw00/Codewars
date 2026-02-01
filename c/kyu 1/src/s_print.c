@@ -20,53 +20,53 @@ void	print_array(int **array, int nb, int clues[N * 4])
 {
 	if (!array || !array[0])
 	{
-		printf("array of %d's :\n", nb + 1);
-		printf("(null)\n");
+		fprintf(stderr, "array of %d's :\n", nb + 1);
+		fprintf(stderr, "(null)\n");
 		return ;
 	}
 	//print wrapper_array
-	printf("array of %d's :\n", nb + 1);
-	printf("\n   ");
+	fprintf(stderr, "array of %d's :\n", nb + 1);
+	fprintf(stderr, "\n   ");
 	for(int j = 0; j < N; j++)
 	{
 		if (clues[j])
-			printf(" %d  ", clues[j]);
+			fprintf(stderr, " %d  ", clues[j]);
 		else
-			printf("    ");
+			fprintf(stderr, "    ");
 		
 	}
-	printf("\n");
-	printf("  ─────────────────────────────\n");
+	fprintf(stderr, "\n");
+	fprintf(stderr, "  ─────────────────────────────\n");
 	for (int i = N - 1; i >= 0; i--)
 	{
 		if (clues[N * 3 + i])
-			printf("%d ", clues[N * 3 + i]);
+			fprintf(stderr, "%d ", clues[N * 3 + i]);
 		else
-			printf("  ");
-		printf("|");
+			fprintf(stderr, "  ");
+		fprintf(stderr, "|");
 		for(int j = 0; j < N; j++)
 		{
 			if (array[(rev_nb(i))][j])
-				printf(" %d |", array[(rev_nb(i))][j]);
+				fprintf(stderr, " %d |", array[(rev_nb(i))][j]);
 			else
-				printf("   |");
+				fprintf(stderr, "   |");
 		}
 		if (clues[N + (rev_nb(i))])
-			printf(" %d", clues[N + (rev_nb(i))]);
+			fprintf(stderr, " %d", clues[N + (rev_nb(i))]);
 		else
-			printf("  ");
-		printf("\n  ─────────────────────────────\n");
+			fprintf(stderr, "  ");
+		fprintf(stderr, "\n  ─────────────────────────────\n");
 	}
-	printf("   ");
+	fprintf(stderr, "   ");
 	for(int j = N - 1; j >= 0; j--)
 	{
 		if (clues[N * 2 + j])
-			printf(" %d  ", clues[N * 2 + j]);
+			fprintf(stderr, " %d  ", clues[N * 2 + j]);
 		else
-			printf("    ");
+			fprintf(stderr, "    ");
 		
 	}
-	printf("\n");
+	fprintf(stderr, "\n");
 }
 
 /**
@@ -94,85 +94,85 @@ void	print_all_available_each_box(int ***available_nbs, int clues[N * 4], int **
 	int i = 0, j = 0, k = -1, l_clue;
 	if (!available_nbs || !available_nbs[0])
 	{
-		printf("(null)\n");
+		fprintf(stderr, "(null)\n");
 		return ;
 	}
-	printf("all nbs available :\n\n    ");
+	fprintf(stderr, "all nbs available :\n\n    ");
 	while (i < N)
 	{
 		if (clues[i])
-			printf("  %d  ", clues[i]);
+			fprintf(stderr, "  %d  ", clues[i]);
 		else
-			printf("     ");
-		printf("   ");
+			fprintf(stderr, "     ");
+		fprintf(stderr, "   ");
 		i++;
 	}
-	printf("\n");
-	printf("  ─────────────────────────────────────────────────────────\n");
+	fprintf(stderr, "\n");
+	fprintf(stderr, "  ─────────────────────────────────────────────────────────\n");
 	for (i = 0; i < N; i++)
 	{
-		printf("  |");
+		fprintf(stderr, "  |");
 		for (k = 0; k < N; k++)
 		{
 			for (j = 0; j < 3; j++)
 			{
 				if (!solution[i][k] && j < N && available_nbs[j][i][k])
-					printf(" %d", available_nbs[j][i][k]);
+					fprintf(stderr, " %d", available_nbs[j][i][k]);
 				else
-					printf("  ");
+					fprintf(stderr, "  ");
 			}
-			printf(" |");
+			fprintf(stderr, " |");
 		}
-		printf("\n");
+		fprintf(stderr, "\n");
 		if ((l_clue = clues[left_cond_nb(i)]))
-			printf("%d |", l_clue);
+			fprintf(stderr, "%d |", l_clue);
 		else
-			printf("  |");
+			fprintf(stderr, "  |");
 		for (k = 0; k < N; k++)
 		{
 			for (j = 3; j < 6; j++)
 			{
 				if (solution[i][k])
 				{
-					printf(GREEN"   %d  "RESET, solution[i][k]);
+					fprintf(stderr, GREEN"   %d  "RESET, solution[i][k]);
 					break ;
 				}	
 				if (j < N && available_nbs[j][i][k])
-					printf(" %d", available_nbs[j][i][k]);
+					fprintf(stderr, " %d", available_nbs[j][i][k]);
 				else
-					printf("  ");
+					fprintf(stderr, "  ");
 			}
-			printf(" |");
+			fprintf(stderr, " |");
 		}
 		if (clues[right_cond_nb(i)])
-			printf(" %d\n", clues[right_cond_nb(i)]);
+			fprintf(stderr, " %d\n", clues[right_cond_nb(i)]);
 		else
-			printf("\n");
-		printf("  |");
+			fprintf(stderr, "\n");
+		fprintf(stderr, "  |");
 		for (k = 0; k < N; k++)
 		{
 			for (j = 6; j < 9; j++)
 			{
 				if (!solution[i][k] && j < N && available_nbs[j][i][k])
-					printf(" %d", available_nbs[j][i][k]);
+					fprintf(stderr, " %d", available_nbs[j][i][k]);
 				else
-					printf("  ");
+					fprintf(stderr, "  ");
 			}
-			printf(" |");
+			fprintf(stderr, " |");
 		}
-		printf("\n  ─────────────────────────────────────────────────────────\n");
+		fprintf(stderr, "\n  ─────────────────────────────────────────────────────────\n");
 	}
-	printf("    ");
+	fprintf(stderr, "    ");
 	for(j = 0; j < N; j++)
 	{
 		if (clues[bottom_cond_nb(j)])
-			printf("  %d  ", clues[bottom_cond_nb(j)]);
+			fprintf(stderr, "  %d  ", clues[bottom_cond_nb(j)]);
 		else
-			printf("     ");
-		printf("   ");
+			fprintf(stderr, "     ");
+		fprintf(stderr, "   ");
 		
 	}
-	printf("\n");
+	fprintf(stderr, "\n");
 }
 
 /**
@@ -202,9 +202,9 @@ void	print_all_nb_arrays(int ***available_nbs, int clues[N * 4])
  */
 void print_col(int **solution, int col)
 {
-	printf("col %d:\n", col + 1);
+	fprintf(stderr, "col %d:\n", col + 1);
 	for (int line = 0; line < N; line++)
-		printf("|%d|\n", solution[line][col]);
+		fprintf(stderr, "|%d|\n", solution[line][col]);
 }
 
 /**
@@ -216,9 +216,9 @@ void print_col(int **solution, int col)
  */
 void print_line(int **solution, int line)
 {
-	printf("line %d:\n", line + 1);
-	printf("--------------\n");
+	fprintf(stderr, "line %d:\n", line + 1);
+	fprintf(stderr, "--------------\n");
 	for (int col = 0; col < N; col++)
-		printf("%d \n", solution[line][col]);
-	printf("--------------\n");
+		fprintf(stderr, "%d \n", solution[line][col]);
+	fprintf(stderr, "--------------\n");
 }

@@ -26,90 +26,90 @@ void	print_answer(int **array, int **wrapper_array, int clues[N * 4])
 {
 	if (!array || !array[0])
 	{
-		printf("(null)\n");
+		fprintf(stderr, "(null)\n");
 		return ;
 	}
 	//print wrapper_array
-	printf(CYAN UNDERLINE"should be :\n"RESET);
-	printf("\n   ");
+	fprintf(stderr, CYAN UNDERLINE"should be :\n"RESET);
+	fprintf(stderr, "\n   ");
 	for(int j = 0; j < N; j++)
 	{
 		if (clues[j])
-			printf(" %d  ", clues[j]);
+			fprintf(stderr, " %d  ", clues[j]);
 		else
-			printf("    ");
+			fprintf(stderr, "    ");
 		
 	}
-	printf("\n");
-	printf("  ─────────────────────────────\n");
+	fprintf(stderr, "\n");
+	fprintf(stderr, "  ─────────────────────────────\n");
 	for (int i = N - 1; i >= 0; i--)
 	{
 		if (clues[N * 3 + i])
-			printf("%d ", clues[N * 3 + i]);
+			fprintf(stderr, "%d ", clues[N * 3 + i]);
 		else
-			printf("  ");
-		printf("|");
+			fprintf(stderr, "  ");
+		fprintf(stderr, "|");
 		for(int j = 0; j < N; j++)
-			printf(" %d |", wrapper_array[rev_nb(i)][j]);
+			fprintf(stderr, " %d |", wrapper_array[rev_nb(i)][j]);
 		if (clues[N + (rev_nb(i))])
-		printf(" %d", clues[N + (rev_nb(i))]);
+		fprintf(stderr, " %d", clues[N + (rev_nb(i))]);
 		else
-			printf("  ");
-		printf("\n  ─────────────────────────────\n");
+			fprintf(stderr, "  ");
+		fprintf(stderr, "\n  ─────────────────────────────\n");
 	}
-	printf("   ");
+	fprintf(stderr, "   ");
 	for(int j = N - 1; j >= 0; j--)
 	{
 		if (clues[N * 2 + j])
-			printf(" %d  ", clues[N * 2 + j]);
+			fprintf(stderr, " %d  ", clues[N * 2 + j]);
 		else
-			printf("    ");
+			fprintf(stderr, "    ");
 		
 	}
-	printf("\n");
+	fprintf(stderr, "\n");
 	//print array
-	printf(CYAN UNDERLINE"\ngot :\n"RESET);
-	printf("\n   ");
+	fprintf(stderr, CYAN UNDERLINE"\ngot :\n"RESET);
+	fprintf(stderr, "\n   ");
 	for(int j = 0; j < N; j++)
 	{
 		if (clues[j])
-			printf(" %d  ", clues[j]);
+			fprintf(stderr, " %d  ", clues[j]);
 		else
-			printf("    ");
+			fprintf(stderr, "    ");
 		
 	}
-	printf("\n");
-	printf("  ─────────────────────────────\n");
+	fprintf(stderr, "\n");
+	fprintf(stderr, "  ─────────────────────────────\n");
 	for (int i = N - 1; i >= 0; i--)
 	{
 		if (clues[N * 3 + i])
-			printf("%d ", clues[N * 3 + i]);
+			fprintf(stderr, "%d ", clues[N * 3 + i]);
 		else
-			printf("  ");
-		printf("|");
+			fprintf(stderr, "  ");
+		fprintf(stderr, "|");
 		for(int j = 0; j < N; j++)
 		{
 			if (array[rev_nb(i)][j] == wrapper_array[rev_nb(i)][j])
-				printf(" "GREEN"%d"RESET" |", array[rev_nb(i)][j]);
+				fprintf(stderr, " "GREEN"%d"RESET" |", array[rev_nb(i)][j]);
 			else
-				printf(" "RED"%d"RESET" |", array[rev_nb(i)][j]);
+				fprintf(stderr, " "RED"%d"RESET" |", array[rev_nb(i)][j]);
 		}
 		if (clues[N + (rev_nb(i))])
-		printf(" %d", clues[N + (rev_nb(i))]);
+		fprintf(stderr, " %d", clues[N + (rev_nb(i))]);
 		else
-			printf("  ");
-		printf("\n  ─────────────────────────────\n");
+			fprintf(stderr, "  ");
+		fprintf(stderr, "\n  ─────────────────────────────\n");
 	}
-	printf("   ");
+	fprintf(stderr, "   ");
 	for(int j = N - 1; j >= 0; j--)
 	{
 		if (clues[N * 2 + j])
-			printf(" %d  ", clues[N * 2 + j]);
+			fprintf(stderr, " %d  ", clues[N * 2 + j]);
 		else
-			printf("    ");
+			fprintf(stderr, "    ");
 		
 	}
-	printf("\n");
+	fprintf(stderr, "\n");
 }
 
 /**
@@ -147,42 +147,42 @@ int	**wrapped_array(int static_array[N][N])
  */
 void	print_indices(int clues[N * 4])
 {
-	printf("\n   ");
+	fprintf(stderr, "\n   ");
 	for(int j = 0; j < N; j++)
 	{
 		if (clues[j])
-			printf(" %d  ", clues[j]);
+			fprintf(stderr, " %d  ", clues[j]);
 		else
-			printf("    ");
+			fprintf(stderr, "    ");
 		
 	}
-	printf("\n");
-	printf("  ─────────────────────────────\n");
+	fprintf(stderr, "\n");
+	fprintf(stderr, "  ─────────────────────────────\n");
 	for (int i = N - 1; i >= 0; i--)
 	{
 		if (clues[N * 3 + i])
-			printf("%d ", clues[N * 3 + i]);
+			fprintf(stderr, "%d ", clues[N * 3 + i]);
 		else
-			printf("  ");
-		printf("|");
+			fprintf(stderr, "  ");
+		fprintf(stderr, "|");
 		for(int j = 0; j < N; j++)
-			printf("   |");
+			fprintf(stderr, "   |");
 		if (clues[N + (rev_nb(i))])
-		printf(" %d", clues[N + (rev_nb(i))]);
+		fprintf(stderr, " %d", clues[N + (rev_nb(i))]);
 		else
-			printf("  ");
-		printf("\n  ─────────────────────────────\n");
+			fprintf(stderr, "  ");
+		fprintf(stderr, "\n  ─────────────────────────────\n");
 	}
-	printf("   ");
+	fprintf(stderr, "   ");
 	for(int j = N - 1; j >= 0; j--)
 	{
 		if (clues[N * 2 + j])
-			printf(" %d  ", clues[N * 2 + j]);
+			fprintf(stderr, " %d  ", clues[N * 2 + j]);
 		else
-			printf("    ");
+			fprintf(stderr, "    ");
 		
 	}
-	printf("\n");
+	fprintf(stderr, "\n");
 }
 
 /**

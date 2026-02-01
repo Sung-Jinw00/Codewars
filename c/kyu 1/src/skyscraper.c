@@ -91,7 +91,7 @@ int **SolvePuzzle(int *clues)
 	//find guessable numbers before recursive search
 	set_guessable_nbs(available_nbs, solution, clues);
 	/* print_all_nb_arrays(available_nbs, clues);
-	printf("\n\n"); */
+	fprintf(stderr, "\n\n"); */
 	//recursive search
 	solution = backtracking_solve(available_nbs, solution, clues, 0, -1);
 	//print the solution found
