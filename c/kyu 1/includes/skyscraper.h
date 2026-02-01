@@ -70,6 +70,7 @@ int		**backtracking_solve(int ***available_nbs, int **solution, int *clues, int 
 void	sol_dup(int **dest, int **src);
 int		find_empty_box(int **solution, int start);
 int		***available_nbs_dup(int ***available_nbs);
+bool	clues_respected(int **solution, int *clues);
 bool	no_possible_numbers(int **solution, int ***available_nbs);
 void	copy_available(int ***avail_nbs_dup, int ***available_nbs);
 void	get_available_nbs_in_box(int ***available_nbs, int empty_box, int nbs[N], int *len);
@@ -140,7 +141,7 @@ int		***init_availability(void);
 int		is_nb_on_col(int nb, int col, int **solution);
 int		is_nb_on_line(int nb, int line, int **solution);
 int		min_possibility(int ***available_nbs, int line, int col);
-int		visible_towers(Direction way, int line, int col, int **solution, int clue);
+int		visible_towers(Direction way, int line, int col, int **solution);
 bool	lacking_towers(Direction way, int line, int col, int **solution);
 bool	last_boxs_are_filled(Direction way, int **solution, int line, int col);
 int		tiniest_nb_in_box(int ***available_nbs, int start_nb, int line, int col);

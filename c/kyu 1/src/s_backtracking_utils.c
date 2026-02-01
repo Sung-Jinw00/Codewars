@@ -130,3 +130,18 @@ bool no_possible_numbers(int **solution, int ***available_nbs)
 	}
 	return false;
 }
+
+bool clues_respected(int **solution, int *clues)
+{
+	for (int i = 0; i < N * 4;i++)
+	{
+		if (!clues[i])
+		continue;
+		if (!((i < N && visible_towers(TTB, 0, i, solution) == clues[i])
+			|| (i >= N && i < N * 2 && visible_towers(RTL, i - N, 0, solution) == clues[i])
+			|| (i >= N * 2 && i < N * 3 && visible_towers(BTT, 0, rev_nb(i - N * 2), solution) == clues[i])
+			|| (i >= N * 3 && i < N * 4 && visible_towers(LTR, rev_nb(i - N * 3), 0, solution) == clues[i])))
+			return false;
+	}
+	return true;
+}

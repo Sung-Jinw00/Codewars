@@ -167,9 +167,8 @@ int	empty_boxes_until_N(Direction way, int line, int col, int **solution)
  * 
  * @return the amount of visible towers
  */
-int	visible_towers(Direction way, int line, int col, int **solution, int clue)
+int	visible_towers(Direction way, int line, int col, int **solution)
 {
-	(void)clue;
 	if (((way == BTT || way == TTB) && is_nb_on_col(N, col, solution) == -1)
 		|| ((way == RTL || way == LTR) && is_nb_on_line(N, line, solution) == -1))
 		return 0;
