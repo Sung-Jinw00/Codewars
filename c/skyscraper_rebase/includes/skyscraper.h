@@ -93,17 +93,11 @@ void	available_dup(int available_nbs_dup[N][N][N], int available_nbs[N][N][N]);
 int		lowest_available(int available_nbs[N][N][N], int line, int col, int start);
 
 //─────────────────────────────
-// Manage possibilities
+// Deduction
 //─────────────────────────────
 
-
-//─────────────────────────────
-// Find with rules
-//─────────────────────────────
-
-//─────────────────────────────
-// Find with clues
-//─────────────────────────────
+void    put_towers_deduced(int available_nbs[N][N][N], int **solution, int *clues);
+void	actualise_max_clue(int cur_clue, int available_nbs[N][N][N], int **solution);
 
 
 //─────────────────────────────

@@ -30,6 +30,7 @@ int **SolvePuzzle(int *clues)
 	//init the boards of available numbers
 	int available_nbs[N][N][N] = {0}, **solution = init_solution();
 	init_availability(available_nbs);
+	put_towers_deduced(available_nbs, solution, clues);
 	//return the solution
 	return (backtracking_solve(available_nbs, solution, clues, 0));
 }
