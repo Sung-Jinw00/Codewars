@@ -1,5 +1,183 @@
 #include "skyscraper.h"
 
+void print_answer_array(int **array, int **wrapper_array, int clues[N * 4])
+{
+	fprintf(stderr, CYAN UNDERLINE"got :\n"RESET);
+	if (!array || !array[0])
+	{
+		fprintf(stderr, "(null)\n");
+		return ;
+	}
+	fprintf(stderr, "\n   ");
+	for(int j = 0; j < N; j++)
+	{
+		if (clues[j])
+			fprintf(stderr, " %d  ", clues[j]);
+		else
+			fprintf(stderr, "    ");
+		
+	}
+	int len_bar = (4 * N + 1);
+	char bar[(4 * N + 1) + 1] = {0};
+	for (int i = 0; i < len_bar; i++)
+		bar[i] = '-';
+	fprintf(stderr, "\n  %s\n", bar);
+	for (int i = N - 1; i >= 0; i--)
+	{
+		if (clues[N * 3 + i])
+			fprintf(stderr, "%d ", clues[N * 3 + i]);
+		else
+			fprintf(stderr, "  ");
+		fprintf(stderr, "|");
+		for(int j = 0; j < N; j++)
+		{
+			if (array[rev_nb(i)][j] == wrapper_array[rev_nb(i)][j])
+				fprintf(stderr, " "GREEN"%d"RESET" |", array[rev_nb(i)][j]);
+			else
+				fprintf(stderr, " "RED"%d"RESET" |", array[rev_nb(i)][j]);
+		}
+		if (clues[N + (rev_nb(i))])
+		fprintf(stderr, " %d", clues[N + (rev_nb(i))]);
+		else
+			fprintf(stderr, "  ");
+		fprintf(stderr, "\n  %s\n", bar);
+	}
+	fprintf(stderr, "   ");
+	for(int j = N - 1; j >= 0; j--)
+	{
+		if (clues[N * 2 + j])
+			fprintf(stderr, " %d  ", clues[N * 2 + j]);
+		else
+			fprintf(stderr, "    ");
+		
+	}
+	fprintf(stderr, "\n\n");
+}
+
+/**
+ * @brief
+ * Display the expected solution and the computed solution side by side.
+ *
+ * This function prints two boards:
+ * 
+ * - the expected solution (`wrapper_array`)
+ * 
+ * - the solver result (`array`)
+ *
+ * Each cell is colorized:
+ * 
+ * - green if the value matches the expected one
+ * 
+ * - red if the value differs
+ *
+ * The board is displayed with the surrounding `clues` to ease debugging.
+ *
+ * @param array           the solution returned by the solver
+ * @param wrapper_array   a wrapped 2D array containing the expected solution
+ * @param clues           the array of clues surrounding the board
+ */
+void	print_answer(int **array, int **wrapper_array, int clues[N * 4])
+{
+	//print wrapper_array
+	fprintf(stderr, CYAN UNDERLINE"should be :\n"RESET);
+	fprintf(stderr, "\n   ");
+	for(int j = 0; j < N; j++)
+	{
+		if (clues[j])
+			fprintf(stderr, " %d  ", clues[j]);
+		else
+			fprintf(stderr, "    ");
+		
+	}
+	int len_bar = (4 * N + 1);
+	char bar[(4 * N + 1) + 1] = {0};
+	for (int i = 0; i < len_bar; i++)
+		bar[i] = '-';
+	fprintf(stderr, "\n  %s\n", bar);
+	for (int i = N - 1; i >= 0; i--)
+	{
+		if (clues[N * 3 + i])
+			fprintf(stderr, "%d ", clues[N * 3 + i]);
+		else
+			fprintf(stderr, "  ");
+		fprintf(stderr, "|");
+		for(int j = 0; j < N; j++)
+			fprintf(stderr, " %d |", wrapper_array[rev_nb(i)][j]);
+		if (clues[N + (rev_nb(i))])
+		fprintf(stderr, " %d", clues[N + (rev_nb(i))]);
+		else
+			fprintf(stderr, "  ");
+		fprintf(stderr, "\n  %s\n", bar);
+	}
+	fprintf(stderr, "   ");
+	for(int j = N - 1; j >= 0; j--)
+	{
+		if (clues[N * 2 + j])
+			fprintf(stderr, " %d  ", clues[N * 2 + j]);
+		else
+			fprintf(stderr, "    ");
+		
+	}
+	fprintf(stderr, "\n\n");
+	//print array
+	print_answer_array(array, wrapper_array, clues);
+}
+
+/**
+ * @brief
+ * Print an empty board showing only the clue indices.
+ *
+ * This function displays the board layout with all `clues`
+ * but without any numbers inside the grid.
+ *
+ * It is useful to visualize clue placement independently
+ * from the solution.
+ *
+ * @param clues   the array of clues
+ */
+void	print_indices(int clues[N * 4])
+{
+	fprintf(stderr, "\n   ");
+	for(int j = 0; j < N; j++)
+	{
+		if (clues[j])
+			fprintf(stderr, " %d  ", clues[j]);
+		else
+			fprintf(stderr, "    ");
+		
+	}
+	int len_bar = (8 * N + 1);
+	char bar[(8 * N + 1) + 1] = {0};
+	for (int i = 0; i < len_bar; i++)
+		bar[i] = '-';
+	fprintf(stderr, "\n  %s\n", bar);
+	for (int i = N - 1; i >= 0; i--)
+	{
+		if (clues[N * 3 + i])
+			fprintf(stderr, "%d ", clues[N * 3 + i]);
+		else
+			fprintf(stderr, "  ");
+		fprintf(stderr, "|");
+		for(int j = 0; j < N; j++)
+			fprintf(stderr, "   |");
+		if (clues[N + (rev_nb(i))])
+		fprintf(stderr, " %d", clues[N + (rev_nb(i))]);
+		else
+			fprintf(stderr, "  ");
+		fprintf(stderr, "\n  %s\n", bar);
+	}
+	fprintf(stderr, "   ");
+	for(int j = N - 1; j >= 0; j--)
+	{
+		if (clues[N * 2 + j])
+			fprintf(stderr, " %d  ", clues[N * 2 + j]);
+		else
+			fprintf(stderr, "    ");
+		
+	}
+	fprintf(stderr, "\n");
+}
+
 /**
  * @brief
  * Print a 2D array representing a grid, including its surrounding clues.
@@ -16,7 +194,7 @@
  * @param nb      The index of the number array (used for labeling)
  * @param clues   The array of clues
  */
-void	print_array(int **array, int nb, int clues[N * 4])
+void	print_array(int array[N][N], int nb, int clues[N * 4])
 {
 	if (!array || !array[0])
 	{
@@ -35,8 +213,11 @@ void	print_array(int **array, int nb, int clues[N * 4])
 			fprintf(stderr, "    ");
 		
 	}
-	fprintf(stderr, "\n");
-	fprintf(stderr, "  ─────────────────────────────\n");
+	int len_bar = (8 * N + 1);
+	char bar[(8 * N + 1) + 1] = {0};
+	for (int i = 0; i < len_bar; i++)
+		bar[i] = '-';
+	fprintf(stderr, "\n  %s\n", bar);
 	for (int i = N - 1; i >= 0; i--)
 	{
 		if (clues[N * 3 + i])
@@ -55,7 +236,7 @@ void	print_array(int **array, int nb, int clues[N * 4])
 			fprintf(stderr, " %d", clues[N + (rev_nb(i))]);
 		else
 			fprintf(stderr, "  ");
-		fprintf(stderr, "\n  ─────────────────────────────\n");
+		fprintf(stderr, "\n  %s\n", bar);
 	}
 	fprintf(stderr, "   ");
 	for(int j = N - 1; j >= 0; j--)
@@ -87,92 +268,96 @@ void	print_array(int **array, int nb, int clues[N * 4])
  * @param clues           The array of clues
  * @param solution        The current solution grid
  */
-void	print_all_available_each_box(int ***available_nbs, int clues[N * 4], int **solution)
+void	print_all_available_each_box(int available_nbs[N][N][N], int clues[N * 4], int **solution)
 {
-	if (!solution)
-		return ;
-	int i = 0, j = 0, k = -1, l_clue;
-	if (!available_nbs || !available_nbs[0])
+	if (!solution || !available_nbs || !available_nbs[0])//can't print without solution or available nbs
 	{
-		fprintf(stderr, "(null)\n");
+		fprintf(stderr, "%s is null\n", !solution ? "solution" : "available_nbs");
 		return ;
 	}
-	fprintf(stderr, "all nbs available :\n\n    ");
-	while (i < N)
+	int i = 0, j = 0, k = -1, clue, possibility;
+
+	fprintf(stderr, "all nbs available :\n\n      ");
+	while (i < N)//print top conditions
 	{
-		if (clues[i])
-			fprintf(stderr, "  %d  ", clues[i]);
+		if ((clue = clues[top_cond_nb(i)]))//if exist
+			fprintf(stderr, "  %d  ", clue);
 		else
-			fprintf(stderr, "     ");
+			fprintf(stderr, " N/A ");//doesn't exist
 		fprintf(stderr, "   ");
 		i++;
 	}
-	fprintf(stderr, "\n");
-	fprintf(stderr, "  ─────────────────────────────────────────────────────────\n");
-	for (i = 0; i < N; i++)
+	int len_bar = (8 * N + 1);
+	char bar[(8 * N + 1) + 1] = {0};
+	for (int i = 0; i < len_bar; i++)
+		bar[i] = '-';
+	fprintf(stderr, "\n    %s\n", bar);//print separation
+	for (i = 0; i < N; i++)//print possibilities
 	{
-		fprintf(stderr, "  |");
-		for (k = 0; k < N; k++)
+		fprintf(stderr, "    |");
+		for (k = 0; k < N; k++)//print 1, 2 or 3
 		{
 			for (j = 0; j < 3; j++)
 			{
-				if (!solution[i][k] && j < N && available_nbs[j][i][k])
-					fprintf(stderr, " %d", available_nbs[j][i][k]);
+				if (!solution[i][k] && j < N && (possibility = available_nbs[j][i][k]))//if no solution and 1,2 or 3 is available
+					fprintf(stderr, " %d", possibility);//i print
 				else
-					fprintf(stderr, "  ");
+					fprintf(stderr, "  ");//else, blank
 			}
 			fprintf(stderr, " |");
 		}
 		fprintf(stderr, "\n");
-		if ((l_clue = clues[left_cond_nb(i)]))
-			fprintf(stderr, "%d |", l_clue);
+		if ((clue = clues[left_cond_nb(i)]))//print left cond if it exist
+			fprintf(stderr, " %d  |", clue);
 		else
-			fprintf(stderr, "  |");
+			fprintf(stderr, "N/A |");//else N/A
 		for (k = 0; k < N; k++)
 		{
-			for (j = 3; j < 6; j++)
+			for (j = 3; j < 6; j++)//print 4, 5 or 6
 			{
-				if (solution[i][k])
+				if (solution[i][k])//if there's a solution, i print it
 				{
-					fprintf(stderr, GREEN"   %d  "RESET, solution[i][k]);
+					possibility = expe[i][k];
+					char *color = possibility == solution[i][k] ? GREEN : RED;
+					fprintf(stderr, "%s   %d  "RESET, color, solution[i][k]);
 					break ;
 				}	
-				if (j < N && available_nbs[j][i][k])
-					fprintf(stderr, " %d", available_nbs[j][i][k]);
+				if (j < N && (possibility = available_nbs[j][i][k]))//else if 4, 5 or 6 is available
+					fprintf(stderr, " %d", possibility);//i print
 				else
-					fprintf(stderr, "  ");
+					fprintf(stderr, "  ");//else, blank
 			}
 			fprintf(stderr, " |");
 		}
-		if (clues[right_cond_nb(i)])
-			fprintf(stderr, " %d\n", clues[right_cond_nb(i)]);
+		if ((clue = clues[i + N]))
+			fprintf(stderr, "  %d", clue);//print right cond if it exist
 		else
-			fprintf(stderr, "\n");
-		fprintf(stderr, "  |");
+			fprintf(stderr, " N/A ");//else N/A
+		fprintf(stderr, "\n    |");
 		for (k = 0; k < N; k++)
 		{
 			for (j = 6; j < 9; j++)
 			{
-				if (!solution[i][k] && j < N && available_nbs[j][i][k])
-					fprintf(stderr, " %d", available_nbs[j][i][k]);
+				if (!solution[i][k] && j < N && (possibility = available_nbs[j][i][k]))//if 7, 8 or 9 is available
+					fprintf(stderr, " %d", possibility);//i print
 				else
-					fprintf(stderr, "  ");
+					fprintf(stderr, "  ");//else, blank
 			}
 			fprintf(stderr, " |");
 		}
-		fprintf(stderr, "\n  ─────────────────────────────────────────────────────────\n");
+		fprintf(stderr, "\n    %s\n", bar);//print new separation ofr next line
 	}
-	fprintf(stderr, "    ");
-	for(j = 0; j < N; j++)
+	fprintf(stderr, "      ");
+	for(j = 0; j < N; j++)//print bottom conds
 	{
-		if (clues[bottom_cond_nb(j)])
-			fprintf(stderr, "  %d  ", clues[bottom_cond_nb(j)]);
+		if ((clue = clues[bottom_cond_nb(j)]))//if a clue exist, i print
+			fprintf(stderr, "  %d  ", clue);
 		else
-			fprintf(stderr, "     ");
+			fprintf(stderr, " N/A ");//else, blank
 		fprintf(stderr, "   ");
 		
 	}
-	fprintf(stderr, "\n");
+	fprintf(stderr, "\n\n");
 }
 
 /**
@@ -187,7 +372,7 @@ void	print_all_available_each_box(int ***available_nbs, int clues[N * 4], int **
  * @param available_nbs   the array of possible numbers
  * @param clues           The array of clues
  */
-void	print_all_nb_arrays(int ***available_nbs, int clues[N * 4])
+void	print_all_nb_arrays(int available_nbs[N][N][N], int clues[N * 4])
 {
 	for (int nb = 0; nb < N; nb++)
 		print_array(available_nbs[nb], nb, clues);

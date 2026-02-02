@@ -1,4 +1,27 @@
-#include "main.h"
+#include "skyscraper.h"
+
+int (*expe)[N];
+
+bool parse_clues(char *str, int clues[N * 4])
+{
+    int count = 0;
+    char *end;
+
+    while (*str)
+    {
+        while (*str == ' ')
+            str++;
+        if (*str == '\0')
+            break;
+        int value = strtol(str, &end, 10);
+        if (str == end || count >= N * 4)
+            return 0; // caractere invalide ou trop de nombres
+        clues[count] = value;
+        count++;
+        str = end;
+    }
+    return (count == N * 4);
+}
 
 /**
  * @brief
@@ -23,62 +46,59 @@
  *
  * @return 0 on normal execution
  */
-int main(void)
+int main(int ac, char **av)
 {
+	if (ac > 2)
+		return fprintf(stderr, "usage: ./Skyscraper \"<%d clues>\"\n", N * 4);
 	static int clues[][N * 4] = {
-	  { 7, 0, 0, 0, 2, 2, 3,
-		0, 0, 3, 0, 0, 0, 0,
-		3, 0, 3, 0, 0, 5, 0,
-		0, 0, 0, 0, 5, 0, 4 },
-	  { 0, 2, 3, 0, 2, 0, 0,
-		5, 0, 4, 5, 0, 4, 0,
-		0, 4, 2, 0, 0, 0, 6,
-		5, 2, 2, 2, 2, 4, 1 }
+	  { 0, 2, 0, 0,
+		0, 2, 2, 2,
+		0, 0, 0, 1,
+		0, 0, 0, 0 },
+	  { 2, 2, 1, 3,
+		2, 2, 1, 3,
+		2, 3, 2, 1,
+		1, 3, 2, 2 }
 	};
-	
 	static int expected[][N][N] = {
-		{{ 1, 5, 6, 7, 4, 3, 2 },
-		 { 2, 7, 4, 5, 3, 1, 6 },
-		 { 3, 4, 5, 6, 7, 2, 1 },
-		 { 4, 6, 3, 1, 2, 7, 5 },
-		 { 5, 3, 1, 2, 6, 4, 7 },
-		 { 6, 2, 7, 3, 1, 5, 4 },
-		 { 7, 1, 2, 4, 5, 6, 3 }},
-		{{ 7, 6, 2, 1, 5, 4, 3 },
-		 { 1, 3, 5, 4, 2, 7, 6 },
-		 { 6, 5, 4, 7, 3, 2, 1 },
-		 { 5, 1, 7, 6, 4, 3, 2 },
-		 { 4, 2, 1, 3, 7, 6, 5 },
-		 { 3, 7, 6, 2, 1, 5, 4 },
-		 { 2, 4, 3, 5, 6, 1, 7 }}
+		{{ 1, 2, 3, 4 },
+		 { 3, 4, 1, 2 },
+		 { 2, 3, 4, 1 },
+		 { 4, 1, 2, 3 }},
+		{{ 3, 2, 4, 1 },
+		 { 1, 4, 2, 3 },
+		 { 2, 1, 3, 4 },
+		 { 4, 3, 1, 2 }}
 	};
-	int diff = 0;
-
-	for (int i = 0; i < 2; i++)
+	int clues_cli[N * 4];
+	
+	if (ac == 2 && !parse_clues(av[1], clues_cli))
+		return fprintf(stderr, "Erreur: %d nombres attendus pour les clues\n", N * 4);
+	for (int i = 0; i < (ac == 2 ? 1 : 2); i++)
 	{
-		int **result = SolvePuzzle(clues[i]);
-		fprintf(stderr, CYAN UNDERLINE BOLD"Test %d :\n"RESET, i);
-		for (int j = 0; j < N; j++)
+		expe = expected[i];
+		int *clue = (ac == 2 ? clues_cli : clues[i]), **result = SolvePuzzle(clue);
+        if (ac == 2)
+        {
+			print_answer_array(result, result, clue);
+            free_array2(result);
+            break;
+        }
+		fprintf(stderr, CYAN UNDERLINE BOLD "Test %d :\n" RESET, i + 1);
+		if (!result || !compare_solution(result, expe))
 		{
-			if (!result || memcmp(result, expected[i], N * sizeof(int)))
-			{
-				diff = 1;
-				fprintf(stderr, RED "diff !\n"RESET);
-				print_answer(result, wrapped_array(expected[i]), clues[i]);
-				fprintf(stderr, RESET);
-				break ;
-			}
-		}
-		if (!diff)
-			fprintf(stderr, GREEN"no diff !"CYAN" congrats !\n"RESET);
-		fprintf(stderr, "\n\n");
-		diff = 0;
-		if (result)
+			fprintf(stderr, RED "diff !\n" RESET);
+			print_answer(result, wrapped_array(expe), clue);
 			free_array2(result);
-		memset(clues_fullfilled, 0, sizeof(bool) * N * 4);
-		memset(nbs_found, 0, sizeof(int) * N);
-		for (int i = 0; i < 2; i++)
-			memset(nbs_found[i], 0, sizeof(int) * N);
+			break;
+		}
+		else
+		{
+			print_answer_array(result, wrapped_array(expe), clue);
+			fprintf(stderr, GREEN "no diff ! congrats !\n" RESET);
+		}
+		fprintf(stderr, "\n");
+		free_array2(result);
 	}
 	return (0);
 }

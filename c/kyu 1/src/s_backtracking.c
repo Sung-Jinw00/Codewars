@@ -14,50 +14,43 @@
  *
  * @return The solved grid or NULL if no solutions was found
  */
-int	**backtracking_solve(int ***available_nbs, int **solution, int *clues, int depth, int prev_empty_box)
+int	**backtracking_solve(int available_nbs[N][N][N], int **solution, int *clues, int depth)
 {
-	if (depth > N * N || find_empty_box(solution, -1) == -1)//avoid going too deep in the research
+	if (depth >= N * N)//avoid going too deep in the research
 		return (solution);
-	int empty_box, **solution_dup = calloc(N, sizeof(int *)), ***avail_nbs_dup = available_nbs_dup(available_nbs);
-	bool newline = false;
+	
+	int line, col;
+	bool found = false;
 
-	for (int i = 0; i < N; i++)
-		solution_dup[i] = calloc(N, sizeof(int));
-	sol_dup(solution_dup, solution);//i get a duplicate to save my initial progression
-	if (prev_empty_box != -1 && prev_empty_box % N != find_empty_box(solution, prev_empty_box + 1) % N)//if the new empty box is not on the same line as the one before
+	empty_box_coords(solution, &line, &col);//get empty box coordinates
+	if (line == -1 && col == -1 && clues_respected(clues, solution))//if no empty box and clues are respected
+		return solution;//solution found
+	else if (line == -1 && col == -1)//else return NULL, wrong solution
+		return NULL;
+
+	int available_nbs_dup[N][N][N], **solution_dup = init_solution(), nb_try = N + 1;//set nb to try to the highest one
+	while (nb_try > 0)//while i have a number to place
 	{
-		set_guessable_nbs(avail_nbs_dup, solution_dup, clues);//i try to guess with a new full line
-		newline = true;
+		sol_dup(solution_dup, solution);//dup solution
+		available_dup(available_nbs_dup, available_nbs);//dup avaiable nbs
+		nb_try = lowest_available(available_nbs, line, col, nb_try - 1);//get numbers to try, if no numbers are available, return NULL
+		if (!nb_try)
+			break;
+		set_valid_pos(nb_try, line, col, available_nbs_dup, solution_dup);//i put the number in the dup solution and change the dup avaiable numbers accordingly
+		//print_all_available_each_box(available_nbs_dup, clues, solution_dup);
+		int **input = backtracking_solve(available_nbs_dup, solution_dup, clues, depth + 1);//i test if it works recursively
+		if (!input || !clues_respected(clues, input) || empty_box(solution_dup))//if i got NULL, or i didn't get the right solution, or there's no available numbers on the box
+			continue;//i try another one
+		found = true;
+		sol_dup(solution, input);//else, i got the right solution
+		break;
+		
 	}
-	if ((empty_box = find_empty_box(solution_dup, prev_empty_box + 1)) == -1)//all boxes are filled
+	if (!found && !depth)
 	{
-		sol_dup(solution, solution_dup);
-		return (free_array3(avail_nbs_dup), free_array2(solution_dup), solution);
-	}
-	else if (no_possible_numbers(solution_dup, avail_nbs_dup))//no possible numbers has been found in a box, stop the searching here
-		return (free_array3(avail_nbs_dup), free_array2(solution_dup), solution);
-	else//i can still place numbers
-	{
-		int len_array, nbs_for_box[N] = {0};
-		get_available_nbs_in_box(avail_nbs_dup, empty_box, nbs_for_box, &len_array);//i get the possible solutions
-		while (--len_array >= 0)//while i didn't got through all the numbers
-		{
-			sol_dup(solution_dup, solution);//set back the available numbers if one failed
-			copy_available(avail_nbs_dup, available_nbs);//set back the available numbers if one failed
-			if (newline)
-				set_guessable_nbs(avail_nbs_dup, solution_dup, clues);
-			set_valid_pos(NB(nbs_for_box[len_array]), empty_box / N, empty_box % N, avail_nbs_dup, solution_dup);//i put the highest number because they are the ones with the least amount of positions, easy find
-			int **result = backtracking_solve(avail_nbs_dup, solution_dup, clues, depth + 1, empty_box);//i give the solution found to solution
-			if (!result)
-				continue;
-			sol_dup(solution, result);
-			if (find_empty_box(solution, prev_empty_box + 1) == -1 && clues_respected(solution, clues) && different_towers(solution))//if i've found all the numbers
-				return (free_array3(avail_nbs_dup), free_array2(solution_dup), solution);//i return the solution
-		}
-	}
-	if (!depth)
 		free_array2(solution);
+		solution = NULL;
+	}
 	free_array2(solution_dup);
-	free_array3(avail_nbs_dup);
-	return NULL;//no solutions found
+	return solution;
 }

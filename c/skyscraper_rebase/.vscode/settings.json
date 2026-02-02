@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "cstdlib": "c",
-        "skyscraper.h": "c",
-        "string.h": "c",
-        "main.h": "c",
-        "stdio.h": "c"
-    }
-}
