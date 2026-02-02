@@ -7,7 +7,7 @@
  * 
  * @return the smallest possible number in a box
  */
-int	min_possibility(int ***available_nbs, int line, int col)
+int	min_possibility(int available_nbs[N][N][N], int line, int col)
 {
 	for (int nb = 0; nb < N; nb++)
 		if (available_nbs[nb][line][col])
@@ -23,14 +23,22 @@ int	rev_nb(int nb)
 	return (N - nb - 1);
 }
 
-//the 3 functions below return the matching position in the clue array
+//the 4 functions below return the matching position in the clue array
+
+/**
+ * @return the position on the right side of a condition
+ */
+int	top_cond_nb(int col)
+{
+	return (col);
+}
 
 /**
  * @return the position on the right side of a condition
  */
 int	right_cond_nb(int line)
 {
-	return (N + line);
+	return (line - N);
 }
 
 /**
@@ -38,7 +46,7 @@ int	right_cond_nb(int line)
  */
 int	bottom_cond_nb(int col)
 {
-	return (N * 2 + rev_nb(col));
+	return (rev_nb(col - N * 2));
 }
 
 /**
@@ -46,7 +54,7 @@ int	bottom_cond_nb(int col)
  */
 int	left_cond_nb(int line)
 {
-	return (N * 3 + rev_nb(line));
+	return (rev_nb(line - N * 3));
 }
 
 /**
@@ -177,38 +185,46 @@ int	visible_towers(Direction way, int line, int col, int **solution)
 	if (way == LTR)
 	{
 		for (col = 0; col < N && solution[line][col] != N; col++)
+		{
 			if (solution[line][col] && prev_tower < solution[line][col])
 			{
 				visible_towers++;
 				prev_tower = solution[line][col];
 			}
+		}
 	}
 	else if (way == RTL)
 	{
 		for (col = N - 1; col >= 0 && solution[line][col] != N; col--)
+		{
 			if (solution[line][col] && prev_tower < solution[line][col])
 			{
 				visible_towers++;
 				prev_tower = solution[line][col];
 			}
+		}
 	}
 	else if (way == TTB)
 	{
 		for (line = 0; line < N && solution[line][col] != N; line++)
+		{
 			if (solution[line][col] && prev_tower < solution[line][col])
 			{
 				visible_towers++;
 				prev_tower = solution[line][col];
 			}
+		}
 	}
 	else
 	{
 		for (line = N - 1; line >= 0 && solution[line][col] != N; line--)
+		{
 			if (solution[line][col] && prev_tower < solution[line][col])
 			{
 				visible_towers++;
 				prev_tower = solution[line][col];
 			}
+		}
 	}
 	return (visible_towers);
 }
@@ -304,7 +320,7 @@ bool	last_boxs_arent_filled(Direction way, int **solution, int line, int col)
  * 
  * @return the number if he exist, else 0
  */
-int	tiniest_nb_in_box(int ***available_nbs, int start_nb, int line, int col)
+int	tiniest_nb_in_box(int available_nbs[N][N][N], int start_nb, int line, int col)
 {
 	for (int nb = start_nb; nb < N; nb++)
 		if (available_nbs[nb][line][col])
@@ -350,5 +366,80 @@ int	**init_solution(void)
 	int **solution = calloc(sizeof(int *), N);
 	for (int i = 0; i < N; i++)
 		solution[i] = calloc(sizeof(int), N);
-		return solution;
+	return solution;
+}
+
+/**
+ * @brief
+ * Set the number to the current box and remove the number from possibilities in the corresponding columns and lines
+ * 
+ * @param nb			the number (between 1 and N)
+ * @param line			the current line
+ * @param col			the curent column
+ * @param available_nbs	the array of possible numbers
+ * @param solution		the solution board
+ */
+void	set_valid_pos(int nb, int line, int col, int available_nbs[N][N][N], int **solution)
+{
+	//put the number in the solution board
+	solution[line][col] = nb--;//decrease for right increment in available nbs
+	for (int col_inc = 0, line_inc = 0, nb_inc = 0; col_inc < N; col_inc++, line_inc++, nb_inc++)
+	{
+		if (col_inc != col)//set every other box on the same column to zero
+			available_nbs[nb][line][col_inc] = 0;
+		if (line_inc != line)//set every other box on the same line to zero
+			available_nbs[nb][line_inc][col] = 0;
+		if (nb_inc != nb)//remove every other numbers in the possibilities at this position
+			available_nbs[nb_inc][line][col] = 0;
+	}
+}
+
+/**
+ * @brief
+ * Wrap a static 2D array into a double pointer.
+ *
+ * This function converts a static array `int[N][N]` into an `int **`
+ * by creating an array of row pointers.
+ *
+ * The returned pointer must NOT be freed.
+ *
+ * @param static_array    the static 2D array to wrap
+ *
+ * @return a pointer-to-pointer view of `static_array`
+ */
+int	**wrapped_array(int static_array[N][N])
+{
+	static int *rows[N];
+	for (int i = 0; i < N; i++)
+		rows[i] = static_array[i];
+	return (rows);
+}
+
+/**
+ * @brief
+ * Free a dynamically allocated 2D array.
+ *
+ * @param arr2  the 2D array to free
+ */
+void	free_array2(int **arr2)
+{
+	for (int i = 0; i < N; i++)
+		free(arr2[i]);
+	free(arr2);
+}
+
+/* compare results of SolvePouzzle output with expected solution */
+bool compare_solution(int **solution, int expected[N][N])
+{
+    if (!solution)
+        return false;
+    for (int i = 0; i < N; i++)
+    {
+        if (!solution[i])
+            return false;
+        for (int j = 0; j < N; j++)
+            if (solution[i][j] != expected[i][j])
+                return false;
+    }
+    return true;
 }

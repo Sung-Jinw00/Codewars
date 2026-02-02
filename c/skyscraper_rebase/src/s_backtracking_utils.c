@@ -11,11 +11,11 @@ void	empty_box_coords(int **solution, int *line, int *col)
 	*col = *line = -1;
 }
 
-int lowest_available(int available_nbs[N][N][N], int line, int col)
+int lowest_available(int available_nbs[N][N][N], int line, int col, int start)
 {
-	for (int nb = N; nb > 0; nb--)
-		if (available_nbs[N - 1][line][col])
-			return available_nbs[N - 1][line][col];
+	for (int nb = start; nb > 0; nb--)
+		if (available_nbs[nb - 1][line][col])
+			return available_nbs[nb - 1][line][col];
 	return 0;
 }
 
@@ -34,4 +34,17 @@ void available_dup(int available_nbs_dup[N][N][N], int available_nbs[N][N][N])
 			for (int col = 0; col < N; col++)
 				available_nbs_dup[nb][line][col] = available_nbs[nb][line][col];
 	}
+}
+
+bool	clues_respected(int *clues, int **solution)
+{
+	for (int i = 0; i < N * 4; i++)
+	{
+		if (clues[i] && !((i < N && clues[i] == visible_towers(TTB, 0, top_cond_nb(i), solution))
+			|| (i >= N && i < N * 2 && clues[i] == visible_towers(RTL, right_cond_nb(i), 0, solution))
+			|| (i >= N * 2 && i < N * 3 && clues[i] == visible_towers(BTT, 0, bottom_cond_nb(i), solution))
+			|| (i >= N * 3 && clues[i] == visible_towers(LTR, left_cond_nb(i), 0, solution))))
+			return false;
+	}
+	return true;
 }
