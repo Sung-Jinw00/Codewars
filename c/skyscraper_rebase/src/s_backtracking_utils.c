@@ -48,3 +48,14 @@ bool	clues_respected(int *clues, int **solution)
 	}
 	return true;
 }
+
+bool empty_box(int **solution)
+{
+	for (int line = N - 1; line >= 0; line--)
+	{
+		for (int col = N - 1; col >= 0; col--)
+			if (!solution[line][col])
+				return true;
+	}
+	return false;
+}

@@ -12,7 +12,8 @@
 // Defines
 //─────────────────────────────
 
-# define  N  4
+# define  N  5
+extern int (*expe)[N];
 
 # ifndef RESET
 #  define RESET				"\033[0m"
@@ -84,6 +85,7 @@ int		**backtracking_solve(int available_nbs[N][N][N], int **solution, int *clues
 // Backtracking Utils
 //─────────────────────────────
 
+bool	empty_box(int **solution);
 void	sol_dup(int **solution_dup, int **solution);
 bool	clues_respected(int *clues, int **solution);
 void	empty_box_coords(int **solution, int *line, int *col);
@@ -136,7 +138,7 @@ int		bottom_cond_nb(int col);
 void	free_array2(int **arr2);
 int		**wrapped_array(int static_array[N][N]);
 void	init_availability(int available_nbs[N][N][N]);
-bool	compare_solution(int **solution, int expected[4][4]);
+bool	compare_solution(int **solution, int expected[N][N]);
 int		visible_towers(Direction way, int line, int col, int **solution);
 
 #endif

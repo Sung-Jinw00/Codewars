@@ -317,7 +317,9 @@ void	print_all_available_each_box(int available_nbs[N][N][N], int clues[N * 4], 
 			{
 				if (solution[i][k])//if there's a solution, i print it
 				{
-					fprintf(stderr, GREEN"   %d  "RESET, solution[i][k]);
+					possibility = expe[i][k];
+					char *color = possibility == solution[i][k] ? GREEN : RED;
+					fprintf(stderr, "%s   %d  "RESET, color, solution[i][k]);
 					break ;
 				}	
 				if (j < N && (possibility = available_nbs[j][i][k]))//else if 4, 5 or 6 is available
@@ -345,17 +347,17 @@ void	print_all_available_each_box(int available_nbs[N][N][N], int clues[N * 4], 
 		}
 		fprintf(stderr, "\n    %s\n", bar);//print new separation ofr next line
 	}
-	fprintf(stderr, "    ");
+	fprintf(stderr, "      ");
 	for(j = 0; j < N; j++)//print bottom conds
 	{
-		if ((clue = clues[bottom_cond_nb(i)]))//if a clue exist, i print
+		if ((clue = clues[bottom_cond_nb(j)]))//if a clue exist, i print
 			fprintf(stderr, "  %d  ", clue);
 		else
 			fprintf(stderr, " N/A ");//else, blank
 		fprintf(stderr, "   ");
 		
 	}
-	fprintf(stderr, "\n");
+	fprintf(stderr, "\n\n");
 }
 
 /**

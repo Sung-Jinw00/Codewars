@@ -39,7 +39,7 @@ int	**backtracking_solve(int available_nbs[N][N][N], int **solution, int *clues,
 		set_valid_pos(nb_try, line, col, available_nbs_dup, solution_dup);//i put the number in the dup solution and change the dup avaiable numbers accordingly
 		//print_all_available_each_box(available_nbs_dup, clues, solution_dup);
 		int **input = backtracking_solve(available_nbs_dup, solution_dup, clues, depth + 1);//i test if it works recursively
-		if (!input || !clues_respected(clues, input))//if i got NULL, or i didn't get the right solution, or there's no available numbers on the box
+		if (!input || !clues_respected(clues, input) || empty_box(solution_dup))//if i got NULL, or i didn't get the right solution, or there's no available numbers on the box
 			continue;//i try another one
 		found = true;
 		sol_dup(solution, input);//else, i got the right solution

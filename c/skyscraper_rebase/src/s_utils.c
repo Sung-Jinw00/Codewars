@@ -423,6 +423,8 @@ int	**wrapped_array(int static_array[N][N])
  */
 void	free_array2(int **arr2)
 {
+	if (!arr2)
+		return ;
 	for (int i = 0; i < N; i++)
 		free(arr2[i]);
 	free(arr2);
